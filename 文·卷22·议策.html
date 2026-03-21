@@ -3,380 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="宛在堂文集 · 卷二十二 · 策（丁卯鄉試程文） — 宛在堂文集 — 郭之奇（1607—1662）诗文全集数字版">
+    <meta property="og:title" content="宛在堂文集 · 卷二十二 · 策（丁卯鄉試程文） — 宛在堂文集">
+    <meta property="og:description" content="郭之奇（1607—1662）诗文全集 · 富版本 · 1892首诗 · 150篇文">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>宛</text></svg>">
+    <link rel="stylesheet" href="style.css">
     <title>宛在堂文集 · 卷二十二 · 策（丁卯鄉試程文） — 宛在堂文集</title>
-    <style>
-:root {
-    --bg: #faf8f5;
-    --bg-dark: #1a1a2e;
-    --text: #2c2c2c;
-    --text-dark: #e0e0e0;
-    --accent: #8b4513;
-    --accent-light: #d4a574;
-    --border: #d4c5b0;
-    --sidebar-bg: #f0ebe4;
-    --sidebar-bg-dark: #16213e;
-    --card-bg: #ffffff;
-    --card-bg-dark: #0f3460;
-    --poem-bg: #fdf6ec;
-    --poem-bg-dark: #1a1a3e;
-    --trans-bg: #f0f7ed;
-    --trans-bg-dark: #1a3e2e;
-    --note-bg: #eef3f8;
-    --note-bg-dark: #1a2e3e;
-    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
-    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
-    --font-mono: "JetBrains Mono", "Fira Code", monospace;
-    --max-width: 860px;
-    --sidebar-width: 280px;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-    font-family: var(--font-sans);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-    font-size: 16px;
-}
-
-body.dark {
-    background: var(--bg-dark);
-    color: var(--text-dark);
-}
-
-/* ─── Layout ─── */
-.layout {
-    display: flex;
-    min-height: 100vh;
-}
-
-.sidebar {
-    width: var(--sidebar-width);
-    background: var(--sidebar-bg);
-    border-right: 1px solid var(--border);
-    padding: 1.5rem 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    overflow-y: auto;
-    z-index: 100;
-    transition: transform 0.3s;
-}
-
-.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
-
-.sidebar-header {
-    padding: 0 1.2rem 1rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0.8rem;
-}
-
-.sidebar-header h1 {
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-}
-
-.dark .sidebar-header h1 { color: var(--accent-light); }
-
-.sidebar-header .subtitle {
-    font-size: 0.75rem;
-    color: #888;
-    margin-top: 0.2rem;
-}
-
-.nav-section {
-    margin: 0.5rem 0;
-}
-
-.nav-section-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0.3rem 1.2rem;
-    cursor: pointer;
-    user-select: none;
-}
-
-.nav-section-title:hover { color: var(--accent); }
-
-.nav-items { list-style: none; }
-
-.nav-items li a {
-    display: block;
-    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
-    color: var(--text);
-    text-decoration: none;
-    font-size: 0.88rem;
-    transition: all 0.15s;
-    border-left: 3px solid transparent;
-}
-
-.dark .nav-items li a { color: var(--text-dark); }
-
-.nav-items li a:hover,
-.nav-items li a.active {
-    background: rgba(139, 69, 19, 0.08);
-    border-left-color: var(--accent);
-    color: var(--accent);
-}
-
-.dark .nav-items li a:hover,
-.dark .nav-items li a.active {
-    background: rgba(212, 165, 116, 0.1);
-    border-left-color: var(--accent-light);
-    color: var(--accent-light);
-}
-
-/* ─── Main ─── */
-.main {
-    margin-left: var(--sidebar-width);
-    flex: 1;
-    min-width: 0;
-}
-
-.topbar {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(250, 248, 245, 0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
-    padding: 0.6rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.dark .topbar {
-    background: rgba(26, 26, 46, 0.95);
-    border-color: #2a2a4a;
-}
-
-.search-box {
-    flex: 1;
-    max-width: 400px;
-    position: relative;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 0.9rem;
-    background: var(--card-bg);
-    color: var(--text);
-    outline: none;
-}
-
-.dark .search-box input {
-    background: var(--card-bg-dark);
-    color: var(--text-dark);
-    border-color: #3a3a5a;
-}
-
-.search-box input:focus { border-color: var(--accent); }
-
-.search-box::before {
-    content: "🔍";
-    position: absolute;
-    left: 0.7rem;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.85rem;
-    opacity: 0.5;
-}
-
-.search-results {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    max-height: 400px;
-    overflow-y: auto;
-    display: none;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    z-index: 200;
-}
-
-.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
-
-.search-results.visible { display: block; }
-
-.search-result-item {
-    padding: 0.6rem 0.8rem;
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-    cursor: pointer;
-}
-
-.search-result-item:hover { background: rgba(139,69,19,0.05); }
-.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
-.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
-
-.theme-toggle {
-    background: none;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.4rem 0.6rem;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: var(--text);
-}
-
-.dark .menu-toggle { color: var(--text-dark); }
-
-.content {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* ─── Typography ─── */
-.content h1 {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    color: var(--accent);
-    margin: 2rem 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border);
-    letter-spacing: 0.05em;
-}
-
-.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
-
-.content h2 {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    color: var(--accent);
-    margin: 2.5rem 0 0.8rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
-
-.content h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    margin: 1.5rem 0 0.5rem;
-    color: #555;
-}
-
-.dark .content h3 { color: #bbb; }
-
-.content h4 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin: 1.2rem 0 0.4rem;
-    color: #666;
-}
-
-.content p { margin: 0.6rem 0; }
-
-.content blockquote {
-    border-left: 3px solid var(--accent);
-    padding: 0.5rem 1rem;
-    margin: 0.8rem 0;
-    background: var(--note-bg);
-    border-radius: 0 6px 6px 0;
-    font-size: 0.92rem;
-}
-
-.dark .content blockquote {
-    background: var(--note-bg-dark);
-    border-color: var(--accent-light);
-}
-
-.content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-    font-size: 0.9rem;
-}
-
-.content th, .content td {
-    padding: 0.5rem 0.7rem;
-    border: 1px solid var(--border);
-    text-align: left;
-}
-
-.content th { background: var(--sidebar-bg); font-weight: 600; }
-.dark .content th { background: var(--sidebar-bg-dark); }
-
-.content hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 2rem 0;
-}
-
-/* ─── Poetry-specific ─── */
-.content h3 + p,
-.content h4 + p {
-    /* Poem text styling - if it follows a heading */
-}
-
-/* Style poem original text blocks */
-.content h3:has(+ .poem-text),
-h3[id*="原文"] + p,
-h3[id*="原文"] ~ p:first-of-type {
-    font-family: var(--font-serif);
-    line-height: 2;
-}
-
-.internal-link {
-    color: var(--accent);
-    text-decoration: none;
-    border-bottom: 1px dashed var(--accent);
-}
-
-.internal-link:hover {
-    border-bottom-style: solid;
-}
-
-/* ─── Responsive ─── */
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        width: 85vw;
-        max-width: 320px;
-    }
-    .sidebar.open { transform: translateX(0); }
-    .main { margin-left: 0; }
-    .menu-toggle { display: block; }
-    .content { padding: 1rem; }
-    .content h1 { font-size: 1.5rem; }
-}
-
-/* ─── Scrollbar ─── */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* ─── Print ─── */
-@media print {
-    .sidebar, .topbar { display: none; }
-    .main { margin-left: 0; }
-    .content { max-width: 100%; }
-}
-</style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
@@ -391,7 +24,7 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <div class="nav-section-title">生平编年</div>
             <ul class="nav-items" id="nav-biography">
                 
                 <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
@@ -402,7 +35,7 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <div class="nav-section-title">诗歌</div>
             <ul class="nav-items" id="nav-poetry">
                 
                 <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
@@ -453,7 +86,7 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <div class="nav-section-title">散文</div>
             <ul class="nav-items" id="nav-prose">
                 
                 <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
@@ -490,7 +123,7 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <div class="nav-section-title">史料</div>
             <ul class="nav-items" id="nav-history">
                 
                 <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
@@ -499,7 +132,7 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <div class="nav-section-title">附录</div>
             <ul class="nav-items" id="nav-appendix">
                 
                 <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
@@ -519,7 +152,7 @@ h3[id*="原文"] ~ p:first-of-type {
                 <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
                 <div class="search-results" id="search-results"></div>
             </div>
-            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式" aria-label="切换深色模式">🌓</button>
         </div>
 
         <div class="content">
@@ -972,49 +605,6 @@ h3[id*="原文"] ~ p:first-of-type {
         </div>
     </div>
 </div>
-
-<script>
-// Theme
-function toggleTheme() {
-    document.body.classList.toggle('dark');
-    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-}
-if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
-
-// Search
-let searchIndex = [];
-fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
-
-const searchInput = document.getElementById('search-input');
-const searchResults = document.getElementById('search-results');
-
-searchInput.addEventListener('input', function() {
-    const q = this.value.trim().toLowerCase();
-    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
-    const matches = searchIndex.filter(e =>
-        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
-    ).slice(0, 15);
-    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
-    searchResults.innerHTML = matches.map(m =>
-        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
-            <div class="sr-title">${m.title}</div>
-            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
-        </div>`
-    ).join('');
-    searchResults.classList.add('visible');
-});
-
-document.addEventListener('click', e => {
-    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
-});
-
-// Sidebar toggle on mobile
-document.addEventListener('click', e => {
-    const sidebar = document.getElementById('sidebar');
-    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
-        sidebar.classList.remove('open');
-    }
-});
-</script>
+<script src="script.js"></script>
 </body>
 </html>
