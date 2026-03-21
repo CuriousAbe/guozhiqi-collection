@@ -429,9 +429,10 @@ h3[id*="原文"] ~ p:first-of-type {
     .sidebar.open { transform: translateX(0); }
     .main { margin-left: 0; }
     .menu-toggle { display: block; }
-    .content { padding: 1rem; }
+    .content { padding: 1rem 1.2rem; }
     .content h1 { font-size: 1.5rem; }
-    .back-to-top { bottom: 1rem; right: 1rem; }
+    .content ol, .content ul { padding-left: 1.5rem; }
+    .back-to-top { bottom: 4rem; right: 1rem; }
 }
 
 /* ─── Scrollbar ─── */
@@ -978,14 +979,20 @@ h3[id*="原文"] ~ p:first-of-type {
 
 /* Homepage responsive */
 @media (max-width: 768px) {
-    .hero-title { font-size: 2rem; letter-spacing: 0.08em; }
+    .hero-title { font-size: 1.8rem; letter-spacing: 0.08em; }
     .hero-decoration { font-size: 5rem; }
-    .stats-bar { gap: 1rem; padding: 1rem; flex-wrap: wrap; }
+    .hero-author { font-size: 1rem; }
+    .hero-subtitle { font-size: 0.85rem; }
+    .stats-bar { gap: 0.8rem; padding: 1rem 0.8rem; }
     .stat-number { font-size: 1.3rem; }
+    .stat-divider { height: 2rem; }
     .home-grid { grid-template-columns: 1fr; }
     .features { grid-template-columns: repeat(2, 1fr); }
     .featured-quote { padding: 1.5rem; }
     .quote-text { font-size: 1.05rem; }
+    .pipeline { padding-left: 2.5rem; }
+    .step-number { left: -2.5rem; width: 2rem; height: 2rem; font-size: 0.7rem; }
+    .ai-intro { font-size: 0.88rem; }
 }
 
 /* ─── Print ─── */
