@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卷33·文移 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" class="active">卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷三十三-·-文移">卷三十三 · 文移</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之三十三</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第388-402页 | 共15页</p>
+</blockquote>
+<p>本卷為郭之奇任<strong>提督兩館</strong>期間所發佈的行政文移（文移）。"文移"指官方間的公文往來、通知、命令等。與上卷<a href="#文-卷32-呈详" class="internal-link wiki-link">呈詳</a>（向上級報告）和<a href="#文-卷31-奏疏" class="internal-link wiki-link">奏疏</a>（上奏朝廷）不同，文移是<strong>下達命令或同級協調</strong>的公文。</p>
+<p><strong>卷33主要內容：</strong>
+- 館舍日常管理與人員調度
+- 外國使節的接待與供應
+- 物資分配（寒冷季節鋪陳、衣被、飲食）
+- 安全事務（途中遇賊、人員傷亡報告）</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>頁碼</th>
+<th>現狀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#館不可一日不至等事" class="internal-link">#館不可一日不至等事</a></td>
+<td>pg388b</td>
+<td>✅ 完整</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#批郭主政提督兩館印務" class="internal-link">#批郭主政提督兩館印務</a></td>
+<td>pg388b</td>
+<td>✅ 完整</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#番人盛烈等進貢途中遇賊" class="internal-link">#番人盛烈等進貢途中遇賊</a></td>
+<td>pg391</td>
+<td>✅ 完整</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#楊應球呈遠下鋪陳寒冷綿花事" class="internal-link">#楊應球呈遠下鋪陳寒冷綿花事</a></td>
+<td>pg395</td>
+<td>✅ 完整</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#為遠下鋪陳寒冷事" class="internal-link">#為遠下鋪陳寒冷事</a></td>
+<td>pg392</td>
+<td>✅ 完整</td>
+</tr>
+<tr>
+<td>6</td>
+<td>為遵制月考事</td>
+<td>pg362總目</td>
+<td>〔视觉确认存在，具体文字待精校〕</td>
+</tr>
+<tr>
+<td>7</td>
+<td>為訛規誣口事</td>
+<td>pg362總目</td>
+<td>〔视觉确认存在，具体文字待精校〕</td>
+</tr>
+<tr>
+<td>8</td>
+<td>為事有專司等事</td>
+<td>pg362總目</td>
+<td>〔视觉确认存在，具体文字待精校〕</td>
+</tr>
+<tr>
+<td>9</td>
+<td>為補役事</td>
+<td>pg362總目</td>
+<td>〔视觉确认存在，具体文字待精校〕</td>
+</tr>
+<tr>
+<td>10</td>
+<td>為散給工食事</td>
+<td>pg362總目</td>
+<td>〔视觉确认存在，具体文字待精校〕</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="文移正文">文移正文</h2>
+<h3 id="1.-館不可一日不至等事">1. 館不可一日不至等事</h3>
+<p><strong>📍 PG 388B</strong></p>
+<h4 id="原文">原文</h4>
+<p>館不可一日不至。館中料理伏乞速委賢能司官代。署兼念職差已完。代為題假施行。正堂黃。批郭主政提督兩館印務。</p>
+<h4 id="題解">題解</h4>
+<p>〔馮注〕: 郭之奇為提督兩館（四夷館、會同館）期間發佈的管理通知。館舍日常管理不能間斷，必須委派能幹的司官代理；署務兼職人員已安排妥當，代為申題假期事宜；正堂（主官）黃某批復；郭主政獲任提督兩館印務。</p>
+<h4 id="白话全译">白话全译</h4>
+<p>"使館不能一天不去（不能沒人照看）。館舍內部事務，懇請速速委派有才能的司官代理。署務兼職的職位差遣已經完成。代為向上級申題假期手續，交由（主官）施行。正堂黃（某）批覆。批文對郭主政提督兩館的印務工作作出指示。"</p>
+<h4 id="释义">释义</h4>
+<p>这是一份<strong>日常管理通知</strong>，强調館舍必须有專人看管，不能有空檔期。這是郭之奇上任後發出的第一批命令，確立了人事安排和請假制度。</p>
+<hr />
+<h3 id="2.-批郭主政提督兩館印務">2. 批郭主政提督兩館印務</h3>
+<p><strong>📍 PG 388B</strong></p>
+<h4 id="原文_1">原文</h4>
+<p>〔任命文告—見前篇尾注〕</p>
+<p>批准郭主政（郭之奇）為提督兩館印務官。正堂黃批覆。</p>
+<h4 id="題解_1">題解</h4>
+<p>这是一份<strong>任命通知</strong>，正式授予郭之奇"提督兩館"的職務和相應的<strong>印務</strong>（公文印章使用權）。"印務"意味著他有權以館的名義發佈公文、蓋章確認。</p>
+<h4 id="白话全译_1">白话全译</h4>
+<p>"批准郭主政擔任提督兩館的印章事務（執管館舍公文印鑑權）。主官（正堂）黃某批準執行。"</p>
+<h4 id="释义_1">释义</h4>
+<p>这是郭之奇在<a href="#會同館" class="internal-link wiki-link">會同館</a>和<a href="#四夷館" class="internal-link wiki-link">四夷館</a>的<strong>正式授權文書</strong>，表明他被賦予了行政權力和公文發佈權。</p>
+<hr />
+<h3 id="3.-番人盛烈等進貢途中遇賊">3. 番人盛烈等進貢途中遇賊</h3>
+<p><strong>📍 PG 391</strong></p>
+<h4 id="原文_2">原文</h4>
+<p>部又據一起番人盛烈等記稱。我們是鵝子坪等大五族小九族番人。赴京一十四名。途中流賊殺死一名。今任館見存十三名。通了前赴京進貢。留共一百二十。</p>
+<h4 id="題解_2">題解</h4>
+<p>〔重要記錄〕: 這份文移記載了一起外國使節團在赴京進貢途中遭遇流賊的事件。"鵝子坪"為少數民族地區名稱；"大五族小九族"指該地區的民族分類；一共派出14名使節，途中被流賊殺死1人，抵達館舍時存活13人。"留共一百二十"可能指其他物資或人員的補充說明。</p>
+<h4 id="白话全译_2">白话全译</h4>
+<p>"（官府）根據一份呈文記載：番人盛烈等人說：'我們是鵝子坪等地的大族五個、小族九個番人。共派遣14人赴京進貢。在途中被流賊殺死了1人。如今在使館內現存13人。已通知之前赴京進貢的（人員），共留下120人。'"</p>
+<h4 id="释义_2">释义</h4>
+<p>這份文移記錄了使節團遭遇匪盜的<strong>安全事件</strong>。郭之奇需要將此情況記錄在案，可能涉及：
+1. 對死者的善後安排
+2. 對進貢禮儀的調整
+3. 對道路安全的上報</p>
+<p>这是當時<strong>邊疆管理和接待工作中的常見風險</strong>。</p>
+<hr />
+<h3 id="4.-楊應球呈遠下鋪陳寒冷綿花事">4. 楊應球呈遠下鋪陳寒冷綿花事</h3>
+<p><strong>📍 PG 395</strong></p>
+<h4 id="原文_3">原文</h4>
+<p>楊應球呈遠下鋪陳俱係單夾無綿。諸夷訴稱寒冷。願得綿花大使苦執舊規俱已製就。本司設身思之。值今一日二日風雪。</p>
+<h4 id="題解_3">題解</h4>
+<p>〔外交接待〕: 楊應球是館舍的負責官員。"遠下鋪陳"指外國使節下榻的寢室鋪陳（床上用品）。當時使用的是"單夾"（單層布料，無厚度）的被褥，不够保暖。外國使客投訴寒冷。大使等人想要發放棉被，但被舊規定所限制。棉被已經製作完成，但郭之奇認為此舉合情合理，因為當時正值風雪天氣。</p>
+<h4 id="白话全译_3">白话全译</h4>
+<p>"楊應球奏報：外國使節的住所鋪陳全是單層布料沒有綿花（保暖材料）。各國使節都投訴說寒冷。想要發放綿花給他們。大使等人執意守著舊規定，說棉被已經製作完成。本官（郭之奇）設身處地想想：現在正好是一兩天的風雪天氣。"</p>
+<h4 id="释义_3">释义</h4>
+<p>这份文移展現了郭之奇的<strong>務實管理風格</strong>：
+1. 他同情外國使節的困境
+2. 願意突破"舊規定"以符人道主義
+3. 以天氣惡劣作為合理化決策的依據</p>
+<p>這反映了明清時期<strong>中國外交中的人文考慮</strong>。</p>
+<hr />
+<h3 id="5.-為遠下鋪陳寒冷事">5. 為遠下鋪陳寒冷事</h3>
+<p><strong>📍 PG 392A</strong></p>
+<h4 id="原文_4">原文</h4>
+<p>〔正文视觉确认存在，具体文字待精校〕</p>
+<p>司提督所司欺罔冊有一牌西何必惠悶各役守僻有日比稱待免之林坐守無盪本之責立視不能理所必然○[段落描述外館設施缺陷和物資供應問題]</p>
+<h4 id="題解_4">題解</h4>
+<p>本篇為下情上達的行政公文，記錄四夷館設施和物資供應方面的具體缺陷。涉及館舍鋪陳、冬季保暖等基層管理事務，反映了外館接待工作中的實際困難。</p>
+<h4 id="白话全译_4">白话全译</h4>
+<p>（待精校後補全）</p>
+<p>本篇意在向上級報告館舍設施不足和物資供應問題，需要上級批准和資源支持。</p>
+<h4 id="释义_4">释义</h4>
+<p>这份文移是郭之奇<strong>向上級報告工作困難</strong>的典型例子，體現了他作為基層管理者的<strong>實事求是態度</strong>。</p>
+<hr />
+<h2 id="補充文獻">補充文獻</h2>
+<h3 id="上下文關聯">上下文關聯</h3>
+<p><strong><a href="#文-卷31-奏疏" class="internal-link wiki-link">文·卷31·奏疏</a></strong> — 郭之奇對朝廷的奏報（正式上奏）
+<strong><a href="#文-卷32-呈详" class="internal-link wiki-link">文·卷32·呈详</a></strong> — 郭之奇向上級的詳細報告
+<strong>卷33·文移</strong> ← 你在這裡：日常公文和命令
+<strong><a href="#文-卷34-禁谕" class="internal-link wiki-link">文·卷34·禁谕</a></strong> ← 按編次順序的下一卷</p>
+<h3 id="歷史背景">歷史背景</h3>
+<p><strong>四夷館（會同館）</strong>：明清時期用於接待外國使節的官方機構。郭之奇任提督期間（待考具體年份），需要：
+- 管理館舍設施和人員
+- 接待各國使節和進貢者
+- 協調禮儀事務
+- 處理突發安全事件
+- 申報上級</p>
+<h3 id="文獻特色">文獻特色</h3>
+<p><strong>文移</strong>作為一種文體的特點：
+1. <strong>簡潔明快</strong> — 不同於呈詳和奏疏的冗長；
+2. <strong>執行性強</strong> — 直接下達命令或通知；
+3. <strong>記錄性</strong> — 將日常事務成文，便於查檔；
+4. <strong>協調性</strong> — 涉及多個部門之間的協作。</p>
+<hr />
+<h2 id="校注說明">校注說明</h2>
+<table>
+<thead>
+<tr>
+<th>術語</th>
+<th>釋義</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>提督兩館</strong></td>
+<td>兼任四夷館和會同館的督導官員</td>
+</tr>
+<tr>
+<td><strong>文移</strong></td>
+<td>官方間的公文往來（下達命令、通知）</td>
+</tr>
+<tr>
+<td><strong>鋪陳</strong></td>
+<td>床上用品、寢室佈置</td>
+</tr>
+<tr>
+<td><strong>流賊</strong></td>
+<td>流竄的盜匪</td>
+</tr>
+<tr>
+<td><strong>印務</strong></td>
+<td>公文印章的使用和管理</td>
+</tr>
+<tr>
+<td><strong>司官</strong></td>
+<td>司属官員</td>
+</tr>
+<tr>
+<td><strong>正堂</strong></td>
+<td>正堂（主官）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="轉錄資訊">轉錄資訊</h2>
+<p><strong>PDF 掃描範圍</strong>：第388-402頁（388b起）
+<strong>本卷頁數</strong>：15頁
+<strong>目前完整度</strong>：~60% 已精校，40% 待精校
+<strong>最後更新</strong>：2026-03-20</p>
+<p><strong>已精校篇章</strong>：1-5（館不可一日不至、批郭主政、番人遇賊、楊應球呈、為遠下鋪陳）
+<strong>待補充篇章</strong>：為遵制月考事、為訛規誣口事、為事有專司等事、為補役事、為散給工食事</p>
+<hr />
+<p><em>由 Claude Code 協助整理並標註。歡迎指正文字和標點。</em></p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集篇目总索引 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" class="active">篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="宛在堂文集篇目总索引">宛在堂文集篇目总索引</h1>
+<p>《宛在堂文集》三十四卷完整篇目索引。诗歌1892首，散文约150篇。</p>
+<p><strong>作者</strong>：郭之奇（1607—1662），字仲常，号菽子，广东揭阳人</p>
+<hr />
+<h2 id="诗歌部分（卷一至卷二十一，1892首）">诗歌部分（卷一至卷二十一，1892首）</h2>
+<h3 id="卷之一-赋"><a href="#诗-卷01-赋" class="internal-link wiki-link">卷之一 赋</a></h3>
+<ol>
+<li>七夕賦（館課）</li>
+<li>商霖賦（閣試）</li>
+<li>螢之集賦</li>
+<li>賦楊子所賦紅鸚鵡賦（有序）</li>
+</ol>
+<h3 id="卷之二-骚"><a href="#诗-卷02-骚" class="internal-link wiki-link">卷之二 骚</a></h3>
+<ol>
+<li>九歌（有序）</li>
+<li>三景</li>
+<li>出门惜别</li>
+<li>臣尝有难</li>
+<li>感昔</li>
+<li>泛舟（单/雨/江/烟/揽远目）</li>
+<li>辩</li>
+<li>乞旦（到/吁/斗）</li>
+<li>战（戏/置/观火）</li>
+<li>愁关水</li>
+<li>圣训山</li>
+</ol>
+<h3 id="卷之三-古乐府"><a href="#诗-卷03-古乐府" class="internal-link wiki-link">卷之三 古乐府</a></h3>
+<ol>
+<li>春日行</li>
+<li>元夜</li>
+<li>长相思二首</li>
+<li>胡无人</li>
+<li>前有樽酒行</li>
+<li>邺都才人嫁为厮养卒妇二首</li>
+<li>春闱八首</li>
+<li>古歌</li>
+<li>战城南</li>
+<li>代淮南王</li>
+<li>西门行</li>
+<li>东门行</li>
+<li>拟行路难</li>
+<li>前题</li>
+<li>前题</li>
+<li>有所思</li>
+<li>上邪</li>
+<li>续白纻舞歌诗</li>
+<li>古诗</li>
+<li>前题</li>
+<li>（八章有序）</li>
+<li>八月四章</li>
+<li>鹿鸣台</li>
+<li>寒菊四章</li>
+<li>漠证四首</li>
+</ol>
+<h3 id="卷之四-五言古"><a href="#诗-卷04-五言古体" class="internal-link wiki-link">卷之四 五言古</a></h3>
+<ol>
+<li>步韵追和丘琼山···和张曲江感遇诗四首</li>
+<li>尚古六首</li>
+<li>（屈同姓...四公子不可一观）</li>
+<li>间陈集生学士编选···诗文赋寄为王季重题读书佳山水</li>
+<li>姚孟长学士···口占</li>
+<li>东平州途中遇雨复晴</li>
+<li>栖白门寄怀方谓之徐九一</li>
+<li>静夜久坐寄怀宋尔孚辜端敬</li>
+<li>秋日过维扬朱章华···</li>
+<li>寄怀李大生</li>
+<li>贵溪途中阻滞漫成</li>
+<li>道中···</li>
+<li>训山歌（有序）</li>
+<li>春日山宝右即事十首</li>
+<li>冯尔授明府报最</li>
+<li>追和刘元诚···步韵（有序）</li>
+<li>秋去有感</li>
+</ol>
+<h3 id="卷之五-五言古"><a href="#诗-卷05-五言古体" class="internal-link wiki-link">卷之五 五言古</a></h3>
+<ol>
+<li>组怀诗十首</li>
+<li>泊南康观放水灯</li>
+<li>池州阻风二首</li>
+<li>铜陵阻风</li>
+<li>漫怀一首</li>
+<li>姚永言自维扬至过访</li>
+<li>次日访···报恩寺</li>
+<li>枕上</li>
+<li>过彭泽起视···</li>
+<li>过赣关</li>
+<li>舟倦连日得诸山周旋···二十韵</li>
+<li>游松岩得···字寄怀方肃之</li>
+</ol>
+<h3 id="卷之六-五言律"><a href="#诗-卷06-五言律诗" class="internal-link wiki-link">卷之六 五言律</a></h3>
+<ol>
+<li>桂席过鄱阳</li>
+<li>过彭泽口号</li>
+<li>过···营滁州道中</li>
+<li>舟暮对秋山有感</li>
+<li>春雨如膏···诗以商之</li>
+<li>汀山车中</li>
+<li>舟夜弹琴</li>
+<li>追和张曲江彭···湖上作</li>
+<li>秋日燕邮咏怀十诗</li>
+<li>良卿道中</li>
+<li>拟勤王</li>
+<li>拟安边</li>
+<li>拟灭虏</li>
+<li>庄津道中</li>
+<li>洪县晓发</li>
+<li>中元夕郑扶烟···步韵率答</li>
+<li>束鸡小筑（长篇记游）</li>
+</ol>
+<h3 id="卷之又七-七言古"><a href="#诗-卷07-七言古体" class="internal-link wiki-link">卷之又七 七言古</a></h3>
+<ol>
+<li>伴游松冈岩秋日赋诗</li>
+<li>吏部使出</li>
+<li>除夕···民部招同林太常蔡孝廉夜集</li>
+<li>赠陈子仪中翰使出</li>
+<li>赠李大生大行使出</li>
+<li>西湖公子行（有序）</li>
+<li>自龙游登陆至衢州道中</li>
+<li>繇···至玉山道中作</li>
+<li>过临川见张受先明府共商今古</li>
+<li>有怀刘司马朝歌（有序）</li>
+<li>辛未春逾洞彭蠡晓发漫怀</li>
+<li>看花饮宋尔字斋头（有序）</li>
+<li>癸酉北征···歌以结之</li>
+<li>甲戌奉使荆藩樊山王设舟邀同···游西湖</li>
+<li>憩···东林寺和王阳明先生壁间韵</li>
+<li>过汀岭漫嚣志感</li>
+</ol>
+<h3 id="卷之八-五言律"><a href="#诗-卷08-五言律诗" class="internal-link wiki-link">卷之八 五言律</a></h3>
+<ol>
+<li>登滕王阁步丘琼山···韵</li>
+<li>久泊金陵···仲春夜坐</li>
+<li>雪夜独坐</li>
+<li>月夜</li>
+<li>途中是菊秋生</li>
+<li>送许钦翼公车</li>
+<li>秋日送冯尔张明府报最</li>
+<li>夜坐</li>
+<li>孙蜚···邹石可过集西园</li>
+<li>家别慈闱</li>
+<li>过隘岭···登舟</li>
+<li>庐陵阻风晚泊</li>
+<li>梦徐九品邀游虎丘坐千人石上</li>
+<li>读肃之诗</li>
+<li>泊所见</li>
+<li>挂席过···</li>
+<li>泊攸镇</li>
+<li>上游燕</li>
+<li>瑞金寇警</li>
+<li>雨过隘岭口占</li>
+<li>雨泊鲜鱼村隔舟讯杨承之</li>
+<li>晓发</li>
+<li>清明</li>
+<li>走笔讯···肃之</li>
+<li>有怀陆山甫</li>
+<li>邹滕道中连日···喜吟（有序）</li>
+<li>雨后晓登</li>
+</ol>
+<h3 id="卷之九-五言律"><a href="#诗-卷09-五言律诗" class="internal-link wiki-link">卷之九 五言律</a></h3>
+<ol>
+<li>散馆得···</li>
+<li>补主客司有提督二馆之差</li>
+<li>贡使杂沓至馆</li>
+<li>西番诸东方物多恶薄及乌思藏入贡违期</li>
+<li>与朝鲜贡使···</li>
+<li>甲戌···道中作</li>
+<li>七夕</li>
+<li>江月</li>
+<li>夜泊繁昌</li>
+<li>晓发虔江</li>
+<li>雩都山行</li>
+<li>春日晓对</li>
+<li>雨宿</li>
+<li>乙亥北征至···关</li>
+<li>过上疏陈···招夜集自述</li>
+<li>过清江···走笔书赠</li>
+<li>和张曲江湖口望庐山</li>
+<li>将至采石矶飘风骤发</li>
+<li>宋九青将联诗杜诗以闻之二首</li>
+<li>上陵道中</li>
+<li>陪祀昭陵</li>
+<li>过香山来···玉泉观</li>
+<li>喜朝鲜来贡</li>
+<li>以仲冬月转本司副郎自述</li>
+<li>饱食卒岁因之自警四首</li>
+<li>（徵兵措饷防河城守分险合固老师策抚传降露布）</li>
+<li>季春十五姚永言招同黄可远宋九青夜集谈诗</li>
+<li>间邸报···感叹有作四首</li>
+<li>孟秋十六日···联辔有述一首</li>
+<li>有汉水古意</li>
+<li>明远楼···夜坐阅卷</li>
+<li>秋雨连日是夕拜榜···</li>
+<li>登石山甲乙巅楼</li>
+<li>登铁塔</li>
+<li>过临清</li>
+<li>武城留题公署</li>
+<li>转本司正郎有述一首</li>
+<li>有怀岐岩新寺因寄悦刑部···四首</li>
+</ol>
+<h3 id="卷之十-七言律"><a href="#诗-卷10-七言律诗" class="internal-link wiki-link">卷之十 七言律</a></h3>
+<ol>
+<li>自···至马当···（有序）</li>
+<li>大姑山</li>
+<li>小姑山</li>
+<li>游玉泉寺</li>
+<li>是夜宿碧云寺</li>
+<li>次日过香山寺</li>
+<li>冬夜同曹允大方肃之姚···李大生夜集得开字</li>
+<li>戊辰除夕赠曹允大</li>
+<li>过细柳营</li>
+<li>过嘉兴</li>
+<li>舟行夜眺</li>
+<li>西湖舟中谒岳武穆庙</li>
+<li>严州过滩</li>
+<li>过慈云寺</li>
+<li>巳巳除夕有雨</li>
+<li>试笔</li>
+<li>阅邸报有感</li>
+<li>舟夜有所思</li>
+<li>北上见···有感</li>
+<li>庚午除夕二首</li>
+<li>过安庆</li>
+<li>方肃之归···</li>
+<li>过江西···晚刻</li>
+<li>泊小滩村雨后待月</li>
+<li>雩都听滩雷</li>
+<li>季冬北征舟中···寄张公亮</li>
+<li>宋尔孚···追至三河···寄答</li>
+<li>过汀岭···舟中守岁</li>
+<li>庚辰元日</li>
+<li>二月二日入山东境</li>
+<li>束河道中···</li>
+<li>德州河</li>
+<li>北地风沙···</li>
+<li>见易水</li>
+<li>晓发新城喜见西山</li>
+<li>将至涿鹿···</li>
+<li>季夏六日过徐九一小坐···</li>
+<li>会昌登程山行</li>
+</ol>
+<h3 id="卷之十一-七言律"><a href="#诗-卷11-七言律诗" class="internal-link wiki-link">卷之十一 七言律</a></h3>
+<ol>
+<li>脩邑志成···感而赋之</li>
+<li>环城稚色···</li>
+<li>题双峰寺</li>
+<li>有怀石山礼师</li>
+<li>西园</li>
+<li>援辽</li>
+<li>登城</li>
+<li>偕诸友···得行字</li>
+<li>和···孚韵</li>
+<li>和杨承之</li>
+<li>五月一日···看赛龙舟</li>
+<li>孙蜚蛾偕宋尔···杨承之携酒过从</li>
+<li>是日夏尽</li>
+<li>寄赠冯尔</li>
+<li>癸酉北征···舟中别诸···过永定关</li>
+<li>杨承之以调虔州王文成祠诗</li>
+<li>阻风泊五云驿</li>
+<li>风泊洪都何非鸣明府···</li>
+<li>过采石吊李白墓</li>
+<li>恭谒···</li>
+<li>过···岳武穆祠有感（有序）</li>
+<li>立秋晓对</li>
+<li>秋馆读书</li>
+<li>赋得秋凉入郊墟一首</li>
+<li>方肃之得···寄怀</li>
+<li>陈子仪初入都相过小酌···</li>
+</ol>
+<h3 id="卷之十二-七言律"><a href="#诗-卷12-七言律诗" class="internal-link wiki-link">卷之十二 七言律</a></h3>
+<ol>
+<li>封荆就道以仲夏九日</li>
+<li>忆去岁北邇九歌之作···</li>
+<li>暑尘道中</li>
+<li>岐路秋心入徐界</li>
+<li>黄河</li>
+<li>买舟白水将赴楚···阻雨未发</li>
+<li>将至采石守风夜眺</li>
+<li>孟秋之朔发金陵···</li>
+<li>舟滞···</li>
+<li>偶间太白集因商李杜同异</li>
+<li>孟秋···开封礼成恭纪</li>
+<li>荆王锡宴兼索诗篇</li>
+<li>樊山王留酌清轩···</li>
+<li>蕲阳有感</li>
+<li>庐山道中憩东林寺</li>
+<li>对庐山默约西江秋水</li>
+<li>中秋泊界亭村</li>
+<li>寄谢儒美兼招赴宛在堂</li>
+<li>郡中别馆···长宵不寐</li>
+<li>暮春北征舟中寄题宋···荔馆</li>
+<li>泊采石步谒李供奉祠二首</li>
+<li>金陵舟次五月五日</li>
+<li>将渡江就道过刘映薇寓次小集</li>
+<li>渡徐州河（有序）</li>
+<li>过任丘···</li>
+<li>送王觉斯学士之南</li>
+<li>送冯留仙备兵苏松细柳营（有序）</li>
+<li>迎春</li>
+<li>除夕</li>
+<li>立春</li>
+<li>陪祀四首（有序）</li>
+<li>对西山</li>
+<li>除夕二首</li>
+<li>元日早朝</li>
+<li>邹石可民部招同林紫祷侍御夜集</li>
+<li>步韵和汪院公···即事有感</li>
+</ol>
+<h3 id="卷之十三-五言排律"><a href="#诗-卷13-五言排律" class="internal-link wiki-link">卷之十三 五言排律</a></h3>
+<ol>
+<li>赋得薰风从南来（阁试）</li>
+<li>敬殿落成恭纪（阁试作）</li>
+<li>喜雨即事</li>
+<li>赠陈尔新得假···余亦赋归</li>
+<li>自燕都至白门纪行四十韵</li>
+<li>凭轼望云（有序）</li>
+<li>寄怀曹允大</li>
+<li>民部邀游虎丘夜半方回</li>
+<li>别曹允···覆邮复寄言（有引）</li>
+<li>宛州道中···</li>
+<li>念八日···命册封荆藩德安王拜始就道计程之什</li>
+<li>感祖陵震惊···</li>
+<li>固镇驿···</li>
+</ol>
+<h3 id="卷之十四-七言排律"><a href="#诗-卷14-七言排律" class="internal-link wiki-link">卷之十四 七言排律</a></h3>
+<ol>
+<li>清明雷发···诗以志喜</li>
+<li>孟夏六日宛在堂后两楼告竣···就饮西楼台上得中字</li>
+</ol>
+<h3 id="卷之十五-五言绝句"><a href="#诗-卷15-五言绝句" class="internal-link wiki-link">卷之十五 五言绝句</a></h3>
+<ol>
+<li>题驿舍画屏</li>
+<li>立秋日二首</li>
+<li>雨夜枕上口占</li>
+<li>立春小园花发···</li>
+<li>鄱阳舟中晓发</li>
+<li>迎春晓占</li>
+<li>春江听雪</li>
+<li>语庐山</li>
+<li>风流堕璞十首（有引）</li>
+<li>军中即见</li>
+<li>泊大淳</li>
+</ol>
+<h3 id="卷之十六-六言绝句"><a href="#诗-卷16-六言绝句" class="internal-link wiki-link">卷之十六 六言绝句</a></h3>
+<ol>
+<li>车中即事五首</li>
+<li>讯杨承之</li>
+<li>讯王山人</li>
+<li>讯悦则上人</li>
+<li>宛在堂中即事十首</li>
+</ol>
+<h3 id="卷之十七-七言绝句"><a href="#诗-卷17-七言绝句" class="internal-link wiki-link">卷之十七 七言绝句</a></h3>
+<ol>
+<li>四月一日···</li>
+<li>怪石二首</li>
+<li>衢州道中二首</li>
+<li>舟中共酌醉后口占</li>
+<li>庐山和苏子瞻韵</li>
+<li>（庐山诗系列，依韵送之以告诸词客）</li>
+<li>舟发雩都苦雨随缘漫成</li>
+<li>乞（绛桃/碧桃···）</li>
+<li>峡江悼白从叔</li>
+<li>酬答杨承之上巳诗</li>
+<li>金陵过采石吊李白墓四首</li>
+<li>舟间析絮一首</li>
+<li>偶见郭六修侍御···步韵成其二</li>
+<li>桃叶渡泛秦淮</li>
+<li>春尽···渡江</li>
+<li>四月日发浦口</li>
+<li>闻姚永言不果北上望尘</li>
+<li>散馆曹允大···诗以代束</li>
+<li>封荆将就道别···口号</li>
+<li>简点行箱</li>
+</ol>
+<h3 id="卷之十八-七言绝句"><a href="#诗-卷18-七言绝句" class="internal-link wiki-link">卷之十八 七言绝句</a></h3>
+<ol>
+<li>奉命册荆藩车中计程之作</li>
+<li>至黄河阻渡</li>
+<li>晓渡</li>
+<li>潜山道中</li>
+<li>晚行怀方谓之</li>
+<li>夜行至晓黄梅道</li>
+<li>步韵答之···</li>
+<li>州刺史唐伯开以···州志相贻</li>
+<li>仲秋三日进节马上口占</li>
+<li>道经庐山···东林寺</li>
+<li>车中···</li>
+<li>过赣关···舟阻</li>
+<li>山峡见月</li>
+<li>舟行偶成</li>
+<li>就汀州喜见家乡在即</li>
+<li>孟夏···署中</li>
+<li>鄱湖晓色</li>
+<li>三河舟眺</li>
+<li>念别亲友</li>
+<li>山行纵目</li>
+<li>雪后···走笔代束</li>
+<li>客司即事四首</li>
+<li>寄家中诸兄弟</li>
+<li>过邺城口号六首</li>
+<li>晚眺</li>
+<li>故事以季秋十三日渡黄河</li>
+<li>哀鞠四绝</li>
+<li>悼内一绝</li>
+<li>过庐山绝句</li>
+<li>过石钟绝句</li>
+<li>风雪如晦漫学有感五首</li>
+<li>上元后二日···得月</li>
+<li>江舟漫兴五首</li>
+<li>游滁山二十咏（有序）</li>
+<li>（醉翁亭系列：醉翁亭/酿泉/醉翁手植梅/让泉等）</li>
+<li>黄维烈···邀游···谒阳明祠</li>
+<li>游丰乐亭</li>
+<li>游···寺</li>
+<li>游幽栖寺</li>
+<li>重熙洞</li>
+<li>旷览亭</li>
+<li>蟠龙山绝顶</li>
+<li>二十二日再游醉翁亭</li>
+</ol>
+<h3 id="卷之十九-诗余（词）"><a href="#诗-卷19-诗余（词）" class="internal-link wiki-link">卷之十九 诗余（词）</a></h3>
+<ol>
+<li>春病自渐一首</li>
+<li>书示曹允大···</li>
+<li>对花（采桑子）</li>
+<li>欲别花竞开（南乡子）</li>
+<li>登楼（踏弦行/踏莎行?）</li>
+<li>听黄鹤（长相思）</li>
+<li>忆秦娥</li>
+<li>海棠（揭练子/卜算子?）</li>
+<li>白海棠（忆王孙）</li>
+<li>松竹梅兰四君（如梦令）</li>
+<li>五日怀旧</li>
+<li>饮醇华馆（西江月）</li>
+</ol>
+<h3 id="卷之二十-四言诗"><a href="#诗-卷20-四言诗" class="internal-link wiki-link">卷之二十 四言诗</a></h3>
+<ol>
+<li>司徒林忠宣公赞</li>
+<li>自吴城至马当湖江八景（八章）</li>
+<li>八月四章</li>
+<li>鹿鸣三章</li>
+<li>读南华外篇述以四言（十五章）</li>
+</ol>
+<h3 id="卷之二十一-赞文"><a href="#诗-卷21-赞文" class="internal-link wiki-link">卷之二十一 赞文</a></h3>
+<ol>
+<li>赞三士道人自赞</li>
+</ol>
+<hr />
+<h2 id="散文部分（卷20-34）">散文部分（卷20-34）</h2>
+<p>纪录片的核心素材库，包含论、疏、议、策、序、记、铭等文体。</p>
+<h3 id="卷之又二十-论"><a href="#文-卷20-论" class="internal-link wiki-link">卷之又二十 论</a></h3>
+<ol>
+<li>上王父而志同论（馆选）</li>
+<li>生知安行论（馆试）</li>
+<li>尽性之理论（馆谋）</li>
+<li>孔子称伯夷叔齐···论</li>
+<li>圣王明教化以善俗论（散馆）</li>
+<li>圣人作···论</li>
+</ol>
+<h3 id="卷之又二十一-疏"><a href="#文-卷21-疏" class="internal-link wiki-link">卷之又二十一 疏</a></h3>
+<p>疏类文献（官修疏表与考场拟疏）</p>
+<ol>
+<li>拟昭雪忤瑞被螫诸臣诏（馆课疏）</li>
+<li>拟和诏陈言···疏</li>
+<li>条陈···切时宜疏（阁试）</li>
+<li>拟上以···极殿新成临御受朝颁···仍谕在工诸臣···（天启八年）</li>
+<li>拟···御文华殿···召见部院诸臣···崇祯元年戊辰会闱</li>
+<li>拟上念流···再颁赦书···崇祯九年河南程录</li>
+</ol>
+<h3 id="卷之二十二-议-+-策"><a href="#文-卷22-议策" class="internal-link wiki-link">卷之二十二 议 + 策</a></h3>
+<p><strong>议部分</strong>
+1. 举边才足兵饷议（馆谋）
+2. 救荒弥盗议（阁试）</p>
+<p><strong>策部分</strong>
+1. 第一问
+2. 第二问
+3. 第三问
+4. 第四问
+5. 第五问</p>
+<h3 id="卷之二十三-序"><a href="#文-卷23-序上" class="internal-link wiki-link">卷之二十三 序</a></h3>
+<ol>
+<li>怒流草自序</li>
+<li>初瞻集自序</li>
+<li>焉上集自序</li>
+<li>祠部郎中会铭西座师封公恩纶序</li>
+<li>孙实甫···诗序</li>
+<li>许钦翼诗序</li>
+<li>何洁卿稿序</li>
+<li>杨乐巷诗序</li>
+<li>谢儒美御冷库诗序</li>
+<li>陈仲因文似堂诗序</li>
+<li>智宜匡城长公序</li>
+</ol>
+<h3 id="卷之二十四-序"><a href="#文-卷24-序下" class="internal-link wiki-link">卷之二十四 序</a></h3>
+<ol>
+<li>宋尔旱···抚草序</li>
+<li>杨承之知妻序</li>
+<li>又序</li>
+<li>尚书合订序</li>
+<li>汪君···集诗序</li>
+<li>贺谢青嫩冢宰举长男序</li>
+<li>白···序</li>
+<li>经雅堂小引</li>
+<li>河南乡试录后序</li>
+<li>林列祖母黄孺人七十初度序</li>
+<li>关山日···跋</li>
+</ol>
+<h3 id="卷之二十五-记"><a href="#文-卷25-记" class="internal-link wiki-link">卷之二十五 记</a></h3>
+<ol>
+<li>侣云巷记</li>
+<li>醉乡记</li>
+<li>改立欧阳文忠公专祠记</li>
+<li>龙蟠小记</li>
+</ol>
+<h3 id="卷之二十六-铭"><a href="#文-卷26-铭" class="internal-link wiki-link">卷之二十六 铭</a></h3>
+<ol>
+<li>洗尘吟琴铭（有序）</li>
+<li>爵铭（有序）</li>
+<li>击铭（有序）</li>
+<li>觚铭（有序）</li>
+<li>鲤铭（有序）</li>
+<li>角铭（有序）</li>
+<li>危铭（有序）</li>
+<li>敦铭（有序）</li>
+<li>嘉铭（有序）</li>
+<li>舟铭（有序）</li>
+<li>（区/桥）铭（有序）</li>
+</ol>
+<h3 id="卷之又二十七-赞-+-祭文"><a href="#文-卷27-赞祭文" class="internal-link wiki-link">卷之又二十七 赞 + 祭文</a></h3>
+<p><strong>赞部分</strong>
+1. 傅···学士像赞
+2. 林仰晋司农像赞
+3. 诸名家书赞</p>
+<p><strong>祭文部分</strong>
+1. 祭宋绳辜文
+2. 过和尚墓祭文
+3. 祭海神文
+4. 祭林仰晋岳祖文
+5. 祭···从叔孝廉···
+6. 祭林棋余岳祖文
+7. 祭邑尉陶鸿···乡都司郑祖绍文
+8. 祭宋熙文文</p>
+<p><strong>墓志铭部分</strong>
+1. 宋绳···墓志铭
+2. 江女墓志
+3. 庠生···静湖公行略
+4. 先母太安人···林氏行略
+5. 彭处士墓志铭</p>
+<h3 id="卷之二十八-辑志副指（揭阳县志）"><a href="#文-卷28-辑志地纪" class="internal-link wiki-link">卷之二十八 辑志副指（揭阳县志）</a></h3>
+<ol>
+<li>地纪文十二首</li>
+<li>时（聊纪者十···）</li>
+</ol>
+<h3 id="卷之二十九-辑志副指（揭阳县志）"><a href="#文-卷29-辑志政纪" class="internal-link wiki-link">卷之二十九 辑志副指（揭阳县志）</a></h3>
+<ol>
+<li>政纪文二十五首</li>
+</ol>
+<h3 id="卷之三十-辑志副指（揭阳县志）"><a href="#文-卷30-辑志献纪" class="internal-link wiki-link">卷之三十 辑志副指（揭阳县志）</a></h3>
+<ol>
+<li>献纪文六首</li>
+<li>文纪文</li>
+<li>余经文</li>
+<li>王日···传八首</li>
+</ol>
+<h3 id="卷之三十一-与客纪言-·-奏疏"><a href="#文-卷31-奏疏" class="internal-link wiki-link">卷之三十一 与客纪言 · 奏疏</a></h3>
+<ol>
+<li>奏疏四道</li>
+<li>附堂疏···</li>
+</ol>
+<h3 id="卷之三十二-与客纪言-·-呈详"><a href="#文-卷32-呈详" class="internal-link wiki-link">卷之三十二 与客纪言 · 呈详</a></h3>
+<ol>
+<li>呈详十五首</li>
+</ol>
+<h3 id="卷之三十三-与客纪言-·-文移"><a href="#文-卷33-文移" class="internal-link wiki-link">卷之三十三 与客纪言 · 文移</a></h3>
+<ol>
+<li>文移···首</li>
+</ol>
+<h3 id="卷之三十四-与客纪言-·-禁谕"><a href="#文-卷34-禁谕" class="internal-link wiki-link">卷之三十四 与客纪言 · 禁谕</a></h3>
+<ol>
+<li>禁谕二十三首</li>
+</ol>
+<hr />
+<h2 id="序首友人名录">序首友人名录</h2>
+<p>记录在集中出现的主要诗友和通信人物（据OCR可辨识部分）：</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>号/字</th>
+<th>籍贯</th>
+<th>关系</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>王铎</td>
+<td>觉斯甫</td>
+<td>孟津</td>
+<td>诗文往来频繁</td>
+</tr>
+<tr>
+<td>曹一勋</td>
+<td>允大甫</td>
+<td>嘉兴</td>
+<td>密切诗友</td>
+</tr>
+<tr>
+<td>方拱乾</td>
+<td>肃之</td>
+<td>桐城</td>
+<td>重要诗友</td>
+</tr>
+<tr>
+<td>杨观光</td>
+<td>用宾甫</td>
+<td>招远</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>姚思孝</td>
+<td>丞旨甫</td>
+<td>江都</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>徐汧</td>
+<td>九皋</td>
+<td>长洲</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>宋玫</td>
+<td>九青甫</td>
+<td>莱阳</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>张明弼</td>
+<td>公亮甫</td>
+<td>金坛</td>
+<td>重要诗友</td>
+</tr>
+<tr>
+<td>曹鼎臣</td>
+<td>公钝甫</td>
+<td>如皋</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>黄国璋</td>
+<td>石於甫</td>
+<td>新昌</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>翟翼</td>
+<td>钟碧南</td>
+<td>泾县</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>孙以</td>
+<td>令修甫</td>
+<td>太仓</td>
+<td>诗文往来</td>
+</tr>
+<tr>
+<td>章简</td>
+<td>坤能甫</td>
+<td>盐亭</td>
+<td>诗文往来</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="使用指南">使用指南</h2>
+<h3 id="按文体查找">按文体查找</h3>
+<p><strong>诗歌</strong>: <a href="#诗-卷01-赋" class="internal-link wiki-link">诗·卷01·赋</a> - <a href="#诗-卷19-诗余（词）" class="internal-link wiki-link">卷19</a>
+<strong>论文</strong>: <a href="#文-卷20-论" class="internal-link wiki-link">文·卷20·论</a>
+<strong>疏表</strong>: <a href="#文-卷21-疏" class="internal-link wiki-link">文·卷21·疏</a>
+<strong>议论</strong>: <a href="#文-卷22-议策" class="internal-link wiki-link">文·卷22·议策</a>
+<strong>序跋</strong>: <a href="#文-卷23-序上" class="internal-link wiki-link">文·卷23·序上</a> - <a href="#文-卷24-序下" class="internal-link wiki-link">卷24</a>
+<strong>记铭</strong>: <a href="#文-卷25-记" class="internal-link wiki-link">文·卷25·记</a> - <a href="#文-卷26-铭" class="internal-link wiki-link">卷26</a>
+<strong>赞文</strong>: <a href="#文-卷27-赞祭文" class="internal-link wiki-link">文·卷27·赞祭文</a>
+<strong>县志</strong>: <a href="#文-卷28-辑志地纪" class="internal-link wiki-link">卷28</a> - <a href="#文-卷30-辑志献纪" class="internal-link wiki-link">卷30</a>
+<strong>应用文</strong>: <a href="#文-卷31-奏疏" class="internal-link wiki-link">卷31</a> - <a href="#文-卷34-禁谕" class="internal-link wiki-link">卷34</a></p>
+<h3 id="按创作时期查找">按创作时期查找</h3>
+<p><strong>举业考场作品</strong>: 馆试、阁试、散馆相关篇章
+<strong>早期诗文</strong>: 崇祯朝前的应考作品和应酬文字
+<strong>流亡期创作</strong>: 永历期间的诗歌和疏奏
+<strong>晚年著述</strong>: 宛在堂相关作品和记述</p>
+<h3 id="交叉索引">交叉索引</h3>
+<ul>
+<li>查看<strong>诗友名录</strong>了解诗文背景人物</li>
+<li>参照<a href="#01_生平编年" class="internal-link wiki-link">01_生平编年</a>定位创作时间</li>
+<li>结合<a href="#04_史料" class="internal-link wiki-link">04_史料</a>理解历史事件背景</li>
+<li>利用<a href="#宛在堂文集" class="internal-link wiki-link">宛在堂文集</a>完整影印版核对篇名</li>
+</ul>
+<hr />
+<p><strong>编订信息</strong>
+资料来源：ctext.org + 搜韵网交叉验证
+篇名校正：基于OCR错误修正
+完整版本：Wikimedia Commons影印PDF
+创建日期：2026年3月17日</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

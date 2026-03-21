@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷三十二 · 呈詳 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" class="active">卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷三十二-·-呈詳">卷三十二 · 呈詳</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之三十二</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+<strong>宛在堂文集卷之三十二</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著</p>
+</blockquote>
+<p>本卷收呈詳二十件，為郭之奇任提督兩館期間向上級提交的行政報告。時間跨度為崇禎六年至七年（1633–1634），內容涉及外交使節管理、人事財務、館舍安全等事務。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>標題</th>
+<th>日期</th>
+<th>主要內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#首件标题待考">首件·標題待考</a></td>
+<td>—</td>
+<td>通事官生考課廢弛、官員怠玩彈劾</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#为恩黜虫命事">為恩黜蟲命事</a></td>
+<td>全日</td>
+<td>李繼芳通同貢使違禁事件</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#为亚完当典等事">為亞完當典等事</a></td>
+<td>十一月二十一日</td>
+<td>館務人員編制</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#为慰恩昭例差遣事">為慰恩昭例差遣事</a></td>
+<td>十二月初一日</td>
+<td>烏思藏法王待遇</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#为擅带夷人入城事">為擅帶夷人入城事</a></td>
+<td>二月十三日</td>
+<td>違規帶領夷人進城</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="#为乞讨船只事">為乞討船隻事</a></td>
+<td>三月初六日</td>
+<td>朝鮮使臣韓贄請求船隻</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="#为奉辞事">為奉辭事</a></td>
+<td>三月十一日</td>
+<td>朝鮮使臣辭行事務</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="#为钦赏靴鞭事">為欽賞靴鞭事</a></td>
+<td>—</td>
+<td>工部加工敕賞物品遲誤</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="#为钦赏钱粮事">為欽賞錢糧事</a></td>
+<td>四月初四日</td>
+<td>西番苟家坪族人進貢獎賞銀兩</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="#为申明贡期等事">為申明貢期等事</a></td>
+<td>四月二十四日</td>
+<td>烏思藏貢期、四川茶稅賞給</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="#为呈缴批准银两事">為呈繳批准銀兩事</a></td>
+<td>—</td>
+<td>楊文陛代還欠債銀兩</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="#为印务事">為印務事</a></td>
+<td>五月初二日</td>
+<td>兩館印務委派</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="#为容明侥序事">為容明倖序事</a></td>
+<td>全日</td>
+<td>提督職績敘陞</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="#为两馆额费当清等事-1">為兩館額費當清等事</a></td>
+<td>七月二十八日</td>
+<td>館務紀略、貢夷入館、官生課業</td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="#为敬陈轻径之议等事">為敬陳輕徑之議等事</a></td>
+<td>八月十五日</td>
+<td>額費節省提議、職權權限申明</td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="#为两馆额费当清等事-2">為兩館額費當清等事</a></td>
+<td>九月初一日</td>
+<td>節省餘銀詳細條目</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="#为严试通事官生等事">為嚴試通事官生等事</a></td>
+<td>九月二十九日</td>
+<td>通事官生點卯考試、館生廢弛</td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="#为察燐六年贡夷等事">為察燐六年貢夷等事</a></td>
+<td>十月十六日</td>
+<td>六年間貢夷考核、工部欠款追究</td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="#为惊闻母病等事">為驚聞母病等事</a></td>
+<td>十一月初五日</td>
+<td>母親病重請假歸省</td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="#为苦情不能终已等事">為苦情不能終已等事</a></td>
+<td>十一月十七日</td>
+<td>母病及職務衝突之痛陳</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="首件·標題待考">首件·標題待考</h2>
+<p><strong>essay_id:</strong> vol32_001</p>
+<blockquote>
+<p>📍 PDF z375b_r–z376b_l（冊頁373）
+📝 標題疑因裁切位置不全</p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>〔卷之三十二·呈詳首件〕</p>
+<p>圖公舉有病故不開膺。今秋季已終，理合弁考，卷一弁呈繳。抑職更有進者，各館通事之該官，為舌人業始于一二好，惟繹語特以寄名鴻臚。漸至日荒本務，始于事代柂人田。今逐相率惰，安不服乙鉤開遇譯客。官之糟鑊，則結範，則冠應，倡本職職司課。仰率章程，向久蒙而長呼。未免聲疾繁遠人之聽。省試之勸工，謹復月考季考之規兼行每日教習之。令使之輝卒州處不見異物而還底數課職程能母。有虛名相借伏請台裁永為遵守。</p>
+<p>李繼芳等所得干及乎如詞申所稱暮頂完贓等諸語。是，明以公家領談作私賠項首斃。毋論線索相授彼情不宜。奉趙朝夕靡間身雖痙癉猶未有益。心惟罷勉幸及。難再誠恐東梅見利無厭或他人借題經援伏乞嚴禁，以後如復生事株連，容職呈奉究處施行。</p>
+<p>【正堂李批】如議飭行諸官生有怠玩者指名申宄。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>〔卷三十二首篇〕</p>
+<p>圖公已經病故，不能再履職。到現在秋季已結束，應該進行全面考核，整理一冊呈報上級。此外，我還有進一步的建議：各館的通事官員，這個職位本來是由懂外語的人擔任，只是靠名義上由鴻臚寺管理。漸漸地，官員們荒廢了本職工作，只顧代理其他人的差事。現在大家相互效仿，都變得懶散，不服從考核檢查。官員處理事務馬虎拖沓，結果不整齊，規矩松散，各自為政。這都是我職務監管不力的責任。我請求遵循規章制度，長期執行而不能鬆懈。不然就會聲名狼籍，招致遠人的嗎笑。考試雖然有了，但還要加強執行月考季考並結合每日教習的規則，讓他們實有成績而不是虛名相借。我懇切請求上級永遠批准這個規矩加以遵守。</p>
+<p>李繼芳等人所涉及的事情，就是申詞中所說的為私人賠償官家錢物之類的事。這說明公家錢物被挪作私人賠償。不管線索如何，那種情況都不應該發生。我們日夜奔走，身體雖然有病，但還是沒有什麼成效。心想只能盡力而為。我再次懇切地擔心東梅之人可能見利忘義，無所不貪，或者其他人借題發揮向我進攻。我懇切請求嚴禁這種事，如果以後再發生，希望能連帶調查我本人的情況。</p>
+<p>【正堂李的批示】同意按照職況條例辦理，對怠惰玩忽職守的官生要指名上奏申報。</p>
+<h3 id="题解">题解</h3>
+<p>本篇為卷三十二首件，主要是<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>向上級匯報通事官員習學廢弛、官員玩忽職守的情況。文中提到要加強月考季考並結合每日教習，建立完善的考核制度。同時涉及李繼芳等人挪用公款的案件，請求嚴肅處理並建立防範機制，以防類似事件再次發生。原稿疑有殘損，部分措辭不甚明晰。</p>
+<hr />
+<h2 id="為恩黜蟲命事">為恩黜蟲命事</h2>
+<p><strong>essay_id:</strong> vol32_002</p>
+<blockquote>
+<p>📍 PDF z376a_r（全日具詳）
+📝 事涉李繼芳通同貢使違禁</p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>為恩黜蟲命事　全日</p>
+<p>為恩黜蟲命事。奉堂批據東前所緣事，館夫李繼芳以通同貢使貨買違禁等狀，案前事察得李繼芳等以通同貢使貨買違禁等，部追贖廓迤自作於人何充所遺名缺應補與。經部奈追贖廓迤自作於人何充所遺名缺應補與〔待精校〕。</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>為恩黜蟲命事·全日</p>
+<p>為罷免官員和決定懲罰的事情。遵照上級的批示，根據之前報告的緣由，館中館夫李繼芳因為與貢使勾結購買違禁物品的情況，經過前期調查，查明李繼芳等人確實與貢使共同購買違禁物品。部門決定追回賠償，但具體的補缺方式還需要進一步確定〔待精校〕。</p>
+<h3 id="题解_1">题解</h3>
+<p>本篇記載對館夫李繼芳的處分決定。李繼芳因與貢使勾結購買違禁品而被舉報，最終被決定罷免。這反映了<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>作為提督，對館務人員違規行為的嚴肅態度。原文部分晦澀難明，疑為抄寫或版本問題。</p>
+<hr />
+<h2 id="為亞完當典等事">為亞完當典等事</h2>
+<p><strong>essay_id:</strong> vol32_003</p>
+<blockquote>
+<p>📍 PDF z378（十一月二十一日具詳）
+📝 館務人員編制、當典事務</p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>為亞完當典等事　十一月二十一日具詳</p>
+<p>〔原文待精校〕</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>為亞完當典等事·十一月二十一日具詳</p>
+<p>〔內容待精校〕</p>
+<h3 id="题解_2">题解</h3>
+<p>本篇標題涉及「亞完」（或為特殊官職名稱）及「當典」（典當、抵押之事）。僅存標題和日期，正文內容在當前掃描圖像中未能清晰識讀。</p>
+<hr />
+<h2 id="為慰恩昭例差遣事">為慰恩昭例差遣事</h2>
+<p><strong>essay_id:</strong> vol32_004</p>
+<blockquote>
+<p>📍 PDF z379（十二月初一日具詳，後附z382b_l資料）
+📝 涉及烏思藏貢使待遇</p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>為慰恩昭例差遣事　十二月初一日具詳</p>
+<p>為申明貢期以便歸國。女慰貢番以柔遠人。〔待精校〕</p>
+<p>圍事處為烏思藏護教大乘法王差兵國師野舍藏南。哈結十呈稱前事，看得二王在邊效用情鉤泰稱有。據本部察其遣慮貢期而彼稱在川錢糧難領，以致六七年縂來一次，似應咨移四川撫院，速於原額茶稅內給發裁賞，柔遠絞邊，所以示權於中國迎來送〔待精校〕。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>為慰恩昭例差遣事·十二月初一日具詳</p>
+<p>關於安撫恩人及按照慣例派遣的事情。為了明確貢期便於歸國，要安撫貢番藉以收懷遠人的民心。〔待精校〕</p>
+<p>所涉事務包括為<a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>護教大乘法王所派遣的國師野舍藏南和哈結十人的事。經過了解，這兩位王爺在邊境確實有效用，情況比較特殊。據我們部門查驗，他們期待明確貢期，但他們又說在四川領取錢糧困難，導致六七年才來貢一次。似乎應該咨照四川撫院，從原額的茶稅內快速撥發作為獎賞，以此安撫遠方邊疆，體現中國對他們的恩惠，用來迎接和送別〔待精校〕。</p>
+<h3 id="题解_3">题解</h3>
+<p>本篇涉及明廷對<a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>貢使的安撫政策。反映出郭之奇作為外交官員，既要照顧遠來貢使的物質需求，又要妥善處理中央與地方（四川撫院）的協調。使用茶稅作為對西藏進貢使的獎賞，是明廷常見的經濟手段。</p>
+<hr />
+<h2 id="為擅帶夷人入城事">為擅帶夷人入城事</h2>
+<p><strong>essay_id:</strong> vol32_005</p>
+<blockquote>
+<p>📍 PDF z380（二月十三日具詳）
+📝 館務規制、夷人出入管理</p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>為擅帶夷人入城事　二月十三日具詳</p>
+<p>〔原文待精校〕</p>
+<p>批示：禁以後如復生事株連，容職呈奉究處施行。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>為擅帶夷人入城事·二月十三日具詳</p>
+<p>〔內容待精校〕</p>
+<p>批示：禁止以後再發生這類事情，如果再有，就連帶調查我本人，由我呈奏請求懲罰。</p>
+<h3 id="题解_4">题解</h3>
+<p>本篇涉及外交禮儀和館務規制。夷人（外國使節）的出入需要嚴格管制，擅自帶領夷人進城是違反規制的行為。此類事件反映了明廷對外交秩序的嚴格要求。</p>
+<hr />
+<h2 id="為乞討船隻事">為乞討船隻事</h2>
+<p><strong>essay_id:</strong> vol32_006</p>
+<blockquote>
+<p>📍 PDF z381a_l（三月初六日具詳）
+📝 朝鮮使臣韓贄請求船隻</p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>為乞討船隻事　三月初六日具詳</p>
+<p>為乞討船隻事。據朝鮮使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>及等呈稱前事，看得朝鮮船隻偶被祝融。日今回車乃需舟橄泛月之。梯。難。伏。望洋之衆棹相應與以支移，免其水濱之誠。為此具呈伏乞移兵部給發施行。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>為乞討船隻事·三月初六日具詳</p>
+<p>關於向兵部請求撥給船隻的事情。根據<a href="#朝鮮" class="internal-link wiki-link">朝鮮</a>使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>等人的呈報，朝鮮的船隻不幸被火焚毀。現在要回國需要船隻來運載〔文意待精校〕。應該給他們撥給若干船隻作為替代，以免他們在水濱遭到困難。為此提交呈報，懇切請求轉送兵部撥給執行。</p>
+<h3 id="题解_5">题解</h3>
+<p>本篇反映了明朝對外交使節實際困難的解決。朝鮮使臣的船隻在京城附近被火燒毀，作為東道主，明廷需要提供替代船隻幫助他們回國。這體現了明朝用物質支持來維持與藩屬國的外交關係的政策。</p>
+<hr />
+<h2 id="為奉辭事">為奉辭事</h2>
+<p><strong>essay_id:</strong> vol32_007</p>
+<blockquote>
+<p>📍 PDF z381a_l（三月十一日具詳）
+📝 使臣辭行儀式</p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>為奉辭事　三月十一日具詳</p>
+<p>為奉辭事。據朝鮮使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>及等呈稱前事，看得朝鮮使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>及等呈稱前事，看得朝〔…〕〔待精校〕。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>為奉辭事·三月十一日具詳</p>
+<p>關於送別外交使節的儀式事情。根據<a href="#朝鮮" class="internal-link wiki-link">朝鮮</a>使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>等人的呈報……〔待精校〕。</p>
+<h3 id="题解_6">题解</h3>
+<p>「奉辭」是指按禮儀為使臣送行。此篇當記載對朝鮮使臣<a href="#韓贄" class="internal-link wiki-link">韓贄</a>一行的辭行安排。現存文字重複，疑為抄寫錯誤或版本問題。</p>
+<hr />
+<h2 id="為欽賞靴鞭事">為欽賞靴鞭事</h2>
+<p><strong>essay_id:</strong> vol32_008</p>
+<blockquote>
+<p>📍 PDF z381a_r（日期不詳）
+📝 皇帝賜給外邦使節的禮物發放</p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>為欽賞靴鞭事</p>
+<p>欽賞靴鞭事。竊炤朝鮮貢使人等例有。已成始成終，在彼稱載而歸無不稱寬稱廣。但免解。鮮貢事已竣，道行有日，例宜辭部台臺昭訓，以示既。不宜自請欽曲體出於特恩。為此具呈伏乞台示。</p>
+<p>為欽賞靴鞭皆係工部製辦，屢督辦官施彭鼓次移催。未經發給水衡縱露肘稽少此物。鮮人雖極難踏諸後。言本職筆舌已乾終弦自念而革自綏諸後。保無後言本職筆舌已乾終弦自念而革自綏諸後〔待精校〕。</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>為欽賞靴鞭事</p>
+<p>皇帝恩賜靴子和馬鞭的事情。我考察朝鮮貢使有規定的禮儀。禮物已經開始製作並快要完成，在朝鮮使臣那邊已經傳開了，回國時帶回去沒有不稱讚朝廷寬鬆大氣的〔文意待精校〕。朝鮮貢使的事務已經結束，他們即將啟程回國，按照慣例應該由禮部代表皇帝進行告別訓示，以顯示這是按照規矩進行的。不應該由使臣自己請求，那樣就不像是特別的恩典。為此呈報，懇請上級示意。</p>
+<p>關於皇帝恩賜的靴鞭，都是由工部製作，我反覆督促辦事官施彭多次傳催。但到現在還沒有發放下來，水衡（掌管皇帝私產的部門）雖然在推諉但物件已經有所損壞。朝鮮人雖然極其難以承受後續的〔文意待精校〕。我想起來筆頭都快寫乾了〔比喻催促不已〕，最後只能自己反思改進自己的事務處理能力〔文意待精校〕。</p>
+<h3 id="题解_7">题解</h3>
+<p>本篇反映了明廷對外交禮儀的重視，但同時也暴露了官僚效率的問題。工部製作的禮物遲遲不能發放，導致<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>不得不多次督促。這既體現了外交上的安排困難，又反映了不同部門之間協調不力的情況。</p>
+<hr />
+<h2 id="為欽賞錢糧事">為欽賞錢糧事</h2>
+<p><strong>essay_id:</strong> vol32_009</p>
+<blockquote>
+<p>📍 PDF z382a_l（四月初四日具詳）
+📝 西番進貢獎賞銀兩遲滯</p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>為欽賞錢糧事　四月初四日具詳</p>
+<p>為欽賞錢糧事。切炤西番苟家坪等族番人，七巴等進貢題賞，命下己逾多時。其緞絹銀錢業經散給，止有賞銀迄今三月有餘，工部尚未給發諸。</p>
+<p>巴等進貢題賞，命下己逾多時，其緞絹銀錢業。恩少滯分衿賚難達限之故，應明疾聲之求有自為。</p>
+<p>兩所仰動滿遠人率土而為王臣，祇求宜厚。猖隙虎兕。心易望萬物尊天而貴風。巨測闖心。巨應如臣法小。大此愈堅。其藥〔待精校〕。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>為欽賞錢糧事·四月初四日具詳</p>
+<p>關於皇帝恩賜進貢番人的錢糧的事情。我考察西番<a href="#苟家坪" class="internal-link wiki-link">苟家坪</a>等族的番人，如<a href="#七巴" class="internal-link wiki-link">七巴</a>等進貢來朝，皇帝恩准給予獎賞，命令已經下達很久了。其中的綢緞絹布和銀錢已經分發下去，唯獨獎賞銀兩到現在已經三個多月，工部還沒有撥發。</p>
+<p>番人進貢來朝得到皇帝獎賞，命令已經下達很久了，其中綢緞絹布已經發給，但因為銀兩遲滯沒有按時到達，應該明確向工部催促〔文意待精校〕。</p>
+<p>兩館需要動用資金來安撫遠方番人，使天下各族都成為王朝的臣民，只是希望朝廷給予厚待。〔…等處文意待精校〕這樣才能堅固國家的根本。這是醫治邊疆問題的良藥〔待精校〕。</p>
+<h3 id="题解_8">题解</h3>
+<p>本篇反映了明廷賞賜番國進貢使節的行政程序中的問題。雖然皇帝命令已經下達，但工部的執行效率低下，導致銀兩遲遲未發。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>為此催促，因為番人的信心和歸順心態取決於是否及時得到獎賞。這反映了外交實踐中行政效率的重要性。</p>
+<hr />
+<h2 id="為申明貢期等事">為申明貢期等事</h2>
+<p><strong>essay_id:</strong> vol32_010</p>
+<blockquote>
+<p>📍 PDF z382b_l（四月二十四日具詳）
+📝 貢期管理、西藏茶稅撥給</p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>為申明貢期等事　四月二十四日具詳</p>
+<p>為申明貢期以便歸國，女慰貢番以柔遠人。〔…〕</p>
+<p>圍事處為烏思藏護教大乘法王差兵國師野舍藏南。哈結十呈稱前事，看得二王在邊效用情鉤泰稱有。據本部察其遣慮貢期而彼稱在川錢糧難領，以致六七年縂來一次，似應咨移四川撫院，速於原額茶稅內給發裁賞，柔遠絞邊，所以示權於中國迎來送〔待精校〕。</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>為申明貢期等事·四月二十四日具詳</p>
+<p>關於明確進貢的時期以便進貢者歸國，安撫進貢的番邦以撫柔遠方民族的事情。</p>
+<p>相關事務中，有為<a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>護教大乘法王所派遣的國師<a href="#野舍藏南" class="internal-link wiki-link">野舍藏南</a>和<a href="#哈結十" class="internal-link wiki-link">哈結十</a>人的問題。經過了解，這二位王爺在邊境確實發揮了作用，情況比較特殊。據我們部門查驗，他們期待明確貢期，但他們又說在四川領取錢糧困難，導致六七年才來進貢一次。似乎應該咨照四川撫院，從原有定額的茶稅中快速撥發作為獎賞，以此安撫遠方邊疆，用來體現中國的恩德，以便迎接和送別他們〔待精校〕。</p>
+<h3 id="题解_9">题解</h3>
+<p>本篇涉及明廷與<a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>地方的外交和經濟政策。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>指出西藏來京進貢的頻率低（六七年一次），原因是他們難以在四川領取賞賜。為此建議利用茶稅來獎賞，這反映了明廷用區域性特產（四川茶）作為邊疆政策工具的做法。</p>
+<hr />
+<h2 id="為呈繳批准銀兩事">為呈繳批准銀兩事</h2>
+<p><strong>essay_id:</strong> vol32_011</p>
+<blockquote>
+<p>📍 PDF z382a_r（日期不詳）
+📝 楊文陛代還欠債、私人借貸問題</p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>為呈繳批准銀兩事</p>
+<p>此具呈伏乞容催速給施行</p>
+<p>為呈繳批准銀兩事。察察去冬薄東梅票討副使楊文陛代還欠債銀兩，業經批准在案。隨令文陛於去冬先給四十餘文托完四十，共足八十之數。此係哀東傑之已故嫌東梅之窮窘，原情屆法非可為例。在東梅以無鄉之社泰肉易為本職於無米之炊巧歸。難再誠恐東梅見利無厭，或他人借題經援，伏乞嚴禁。</p>
+<p>往承可結信於退方合將原詞呈請台奪〔待精校〕。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>為呈繳批准銀兩事</p>
+<p>為此呈報懇請能夠快速撥給執行</p>
+<p>關於呈報批准已有決定的銀兩的事情。我查實去年冬天有人票據討要副使<a href="#楊文陛" class="internal-link wiki-link">楊文陛</a>代為償還的欠債銀兩，已經獲得上級批准記錄在案。隨即令<a href="#楊文陛" class="internal-link wiki-link">楊文陛</a>在去年冬天先發給四十多兩，<a href="#東梅" class="internal-link wiki-link">東梅</a>人自己完成四十多兩，共計達到八十兩。這是出於同情<a href="#東傑" class="internal-link wiki-link">東傑</a>已經去世和<a href="#東梅" class="internal-link wiki-link">東梅</a>家庭困難的情況，但從法律原理來說不應該成為可以效仿的先例。<a href="#東梅" class="internal-link wiki-link">東梅</a>以沒有地域基礎的借貸關係來難為我，這就像要我沒有米還要做飯一樣困難。我再次擔心<a href="#東梅" class="internal-link wiki-link">東梅</a>見利忘義無有厭足，或者有人借此題目向我進攻，懇切請求嚴肅禁止。</p>
+<p>往日承諾可以結信的退回方案，應該把原文詞呈請上級決定〔待精校〕。</p>
+<h3 id="题解_10">题解</h3>
+<p>本篇涉及私人借貸和官員個人債務的問題。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>為<a href="#楊文陛" class="internal-link wiki-link">楊文陛</a>代償還債務，這雖然出於同情，但他擔心設立不良先例，會導致他人以類似理由要求幫助。這反映了明朝官員在私人經濟關係與公務之間的緊張。</p>
+<hr />
+<h2 id="為印務事">為印務事</h2>
+<p><strong>essay_id:</strong> vol32_012</p>
+<blockquote>
+<p>📍 PDF z382b_r（五月初二日具詳）
+📝 兩館印章管理、員外陳士八、主事張師度</p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>為印務事　五月初二日具詳</p>
+<p>為印務事。炤得本職提督兩館令茶題差，冊封刺府其印務，相應別委察本司現有員外<a href="#陳士八" class="internal-link wiki-link">陳士八</a>斡主事<a href="#張師度" class="internal-link wiki-link">張師度</a>。伏乞批委一員署掌施行。</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>為印務事·五月初二日具詳</p>
+<p>關於兩館官方印章管理的事情。鑑於本人提督兩館職務繁重，冊封和刺府等事務的印章管理，應該另外委派。我司現有員外<a href="#陳士八" class="internal-link wiki-link">陳士八</a>和主事<a href="#張師度" class="internal-link wiki-link">張師度</a>兩人可以勝任。懇請上級批准委派其中一人代為掌管執行。</p>
+<h3 id="题解_11">题解</h3>
+<p>本篇反映了官僚機構中印章管理的重要性。兩館的印務涉及官方文件的合法性，因此需要專人掌管。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>建議由<a href="#陳士八" class="internal-link wiki-link">陳士八</a>或<a href="#張師度" class="internal-link wiki-link">張師度</a>擔任，反映了他對部屬的考核。</p>
+<hr />
+<h2 id="為容明倖序事">為容明倖序事</h2>
+<p><strong>essay_id:</strong> vol32_013</p>
+<blockquote>
+<p>📍 PDF z382b_r（全日具詳）
+📝 職績敘陞、提督勞績</p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>為容明倖序事　全日</p>
+<p>為容明倖序事。炤得提督最稱勞差舊例積有成勣。從優敘陛職于六年九月提督兩館令茶題差，冊從優敘陛職于六年九月提督兩館令茶題差　冊〔待精校〕。</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>為容明倖序事·全日</p>
+<p>關於陳情允許提升職等的事情。鑑於提督職務最為勞累困難，根據舊例有積年成績。應該從優進行職等敘升，從崇禎六年九月提督兩館令茶的職位進升〔待精校〕。</p>
+<h3 id="题解_12">题解</h3>
+<p>本篇涉及<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>本人的職績升遷申請。「容明倖序」指請求上級允許明確進行職等敘升，「倖」即幸運、獲得。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>基於在提督兩館期間的勞績累積，申請職位升遷。</p>
+<hr />
+<h2 id="為兩館額費當清等事（七月二十八日）">為兩館額費當清等事（七月二十八日）</h2>
+<p><strong>essay_id:</strong> vol32_014</p>
+<blockquote>
+<p>📍 PDF z383a_l–z383b_r（七月二十八日具詳）
+📝 館務紀略、貢夷接待、官生課業、館夫補缺</p>
+</blockquote>
+<h3 id="原文_13">原文</h3>
+<p>為兩館額費當清等事　七月二十八日具詳</p>
+<p>封。在館已反九月而受事以來，正值朝鮮入貢，七月奔趙朝夕靡間，身雖痙癉猶未有益，心惟罷勉幸及。於成陸續又登西番入起烏思藏二起幸安遠心少。盡為力至于三館官生課督考試皆有成業，以及甲夫積弊任恣刮盡外解逋糧全徵久欠底數免罪。营謂徵勞度功摘堅敗修稽誣之笑築墻整辦或見書荑之難，統惟台臺察確移咨施行〔待精校〕。</p>
+<p>為兩館額費當清等事。切炤會同兩館頒設館夫工食二百兩，四十七名每歲順承保河解銀二千四百九十八兩。</p>
+<p>北館火房共呈復一名跟辦守門共呈復一名大使，現季後蒙本堂裁革餘此則客司火房告復一名南。外復有宅用水夫又三堂續增令春隨蒙右堂裁革，五名耳內除壞事所革空後未補多方節省尚得餘〔待精校〕。</p>
+<p>外復有宅用水夫，又三堂續增令春隨蒙右堂裁革。現季後蒙本堂裁革餘此則客司火房告復一名南北館火房共呈復一名跟辦守門共呈復一名大使。</p>
+<p>館各炤供領把頗覆朝夕可虞值貢夷在館，或雪露，不讓，各後遞領按季給散政府何地宅用何名卯泰山，高深臨將底薄領狀弃令本後察對已。明職始衡命，而行及今報竣仍督館務則見內閣水夫各後領給。</p>
+<p>可憫意外當廬每逢工部侓整各後苟且塞青月濫〔待精校〕。</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>為兩館額費當清等事·七月二十八日具詳</p>
+<p>[兩館部分省略]。在館已經反覆九個月了，自從我上任以來，正好趕上朝鮮進貢，七月份時朝夕奔波毫無閒暇，身體雖然有痙攣疾病仍未有好轉，但我只能勉力而為。此後又陸續處理西番進貢和烏思藏進貢的事務，還算是有些心安。在對付三館官生的課程督導和考試方面都有了成績，對於積年的館夫問題、任意揮霍、虧空債務、全面徵收拖欠等問題都加以整頓免罪。論及這些勞績如何評估會不會招致譏笑，建築墻壘整頓事務或許會看到難處，總之希望上級仔細查驗並移咨執行〔待精校〕。</p>
+<p>關於兩館額定費用當清的事情。我詳細考察會同兩館設定的館夫工食費用二百兩，共四十七名，每年按照規定撥付銀兩二千四百九十八兩。</p>
+<p>北館火房共裁縮復一名跟辦，守門共裁縮復一名大使，現在一季度後蒙本堂裁革，其餘則客司火房復減一名南。另外還有房屋用的水夫，又三堂[指三個部分]續增的令春隨著右堂裁革，共五名，其中除了已經裁革的空缺還沒有補充，已經用多種方式節省還有餘數〔待精校〕。</p>
+<p>另外還有房屋用的水夫，又三堂續增的令春，隨著右堂裁革。現在一季度後蒙本堂裁革，其餘則客司火房復減一名，南北館火房共裁縮復一名跟辦，守門共裁縮復一名大使。</p>
+<p>兩館根據供應人數領取並保管，朝夕都要注意防範，尤其是值進貢番邦在館期間，或者下雪露天，各種後續工作遞交領導，按季度給散政府費用，房屋所用何人卯定泰山〔待精校〕，深入檢查將清冊領狀摒棄後令本人查驗對比確認。明確了職責邊界後開始執行，到現在報告完成，還要繼續督導館務，就發現內閣的水夫等人領給情況。</p>
+<p>值得同情的是意外發生當時，每逢工部進行整頓各項後續工作時都苟且塞責草率〔待精校〕。</p>
+<h3 id="题解_13">题解</h3>
+<p>本篇為七月二十八日的詳細報告，內容龐雜。主要涉及：
+1. <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>上任後接待朝鮮、西番、烏思藏進貢使節的工作
+2. 三館官生的課程管理和考試制度建設
+3. 館夫編制的清理，特別是火房、守門、水夫等輔助人員的裁減和節省
+4. 館舍維護和進貢期間的日常管理
+5. 與工部協調的困難</p>
+<p>反映了前期館務改革的成效和存在的問題。</p>
+<hr />
+<h2 id="為敬陳輕徑之議等事">為敬陳輕徑之議等事</h2>
+<p><strong>essay_id:</strong> vol32_015</p>
+<blockquote>
+<p>📍 PDF z384b_l–z384a_r（八月十五日具詳）
+📝 額費節省建議、館夫待遇、官員職權申明</p>
+</blockquote>
+<h3 id="原文_14">原文</h3>
+<p>為敬陳輕徑之議等事　八月十五日具詳</p>
+<p>為敬陳輕徑之議伏祈事。奉堂批前事察得兩館額解四府工食，其支給館夫者則未易議扣，其編為額賞者則無從議扣，益兩館夫後專為貢夷而設，關係匪但滿貢番之榜腹，供後勢必逃亡殆盡，此在館夫之未易，倍貢之榜腹供後勢必逃亡殆盡此在館夫之未易〔待精校〕。</p>
+<p>【正堂黃　批】據呈見清核留心存藥可也</p>
+<p>各衙門占用職堂所關安敢嚕嚷。又如關送內閣水夫，輒用王事職名，事職屬創舉亦覺非體。莢提督為樞框循關防而設禮曹非出納供給之司職未屬也不宜。守瓶不假本職惟礙。礙礙以路寧屑屑於此假。令多言賈尤特以抱關有當守瓶不假本職行。若夫山訕牛至，淵深玉沉，當路寧屑屑於此假借公家之物力博千，宗之小心非諳固諳所宜必有也廉法也傳法傳而讓謹者也。若夫貼差正差諸額費按季支送必行扣減，誰為抵膽就中痛行節省微有羡餘逈題奉〔待精校〕。</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>為敬陳輕徑之議等事·八月十五日具詳</p>
+<p>關於敬謹陳述輕易簡潔建議之事。遵照上級的批示，前事察明兩館的額定費用由四個府撥付，其中用於支付館夫的部分不容易減扣，因為那是編定的額賞，無法調減。更何況兩館館夫本來是專門為招待進貢番人而設立，不僅關係到滿足進貢番人的飲食和起居，而且館夫供後如果生活無著勢必逃亡殆盡，這種情況下館夫的工資是不容易減少的，每次進貢接待時館夫的飲食起居供應後如果生活無著勢必逃亡殆盡，這在館夫工資方面是不容易減少的〔待精校〕。</p>
+<p>【正堂黃的批示】根據呈報的情況看來應該清核驗証，留意應對辦法就可以了</p>
+<p>各衙門占用本職的堂舍，涉及到我的職權怎麼敢嚕囔。再比如關於送到內閣的水夫，輒用王事的職名，職事屬於新創之舉也覺得不符體制。提督位置是樞紐性的職位按照關防設置，禮部不是出納供給的部門，職權沒有確定就不應該〔待精校〕。守好本分不能靠我本人，只能是困難重重。沿著這條路走不要斤斤計較於此借口。權力多言反而賈禍，尤其是抱著關卡要守這種想法，本職不應該行動。如果是山道上訕笑牛馬，深淵中玉石沉沒，當權者不會斤斤計較於此借用公家的物力去謀求千般，祖宗之小心不認識者認識所宜必有，這也是廉潔法則，是傳法後讓謹慎的人〔待精校〕。至於貼差正差各種額費按季度支送必行扣減，誰敢抵膽？就其中加力進行節省，微有羡餘[有點結餘]就逈達題奏〔待精校〕。</p>
+<h3 id="题解_14">题解</h3>
+<p>本篇涉及<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>對兩館費用節省的建議及其對官員職權的申明。他主張館夫工資不容易減少（因為直接影響館務運作），但其他費用應該嚴格節省。同時申明提督的職權範圍，質疑其他衙門對他使用堂舍、徵用人員的做法。反映了官僚機構中職權邊界的模糊和協調困難。</p>
+<hr />
+<h2 id="為兩館額費當清等事（九月初一日）">為兩館額費當清等事（九月初一日）</h2>
+<p><strong>essay_id:</strong> vol32_016</p>
+<blockquote>
+<p>📍 PDF z384b_r（九月初一日具詳）
+📝 節省費用詳細清冊</p>
+</blockquote>
+<h3 id="原文_15">原文</h3>
+<p>為兩館額費當清等事　九月初一日具詳</p>
+<p>為兩館額費當清等事。職切館費紛更甚至破冒重支方憂濫締蕪繼故循職奏明以便遵依欽奉，明旨以後節省餘銀提督官徑行奏繳仰誦，天言倍深佩越伏思所為節省者節額中不忿之用也。謹就此中詳察條目備列前後無名之費察多祟除春官要覽所開載者無容再議如要覽所中所稱詳見收支簿者似宜補刖其後要見現存夫若干正費若干旁費若干何年沐華何年批復役若干為若干正費若干旁費若干〔待精校〕。</p>
+<p>留何從扣免。明旨新頒自與諸衙門事體迴異。今奉前因相應呈覆順天府施行。</p>
+<h3 id="白话全译_15">白话全译</h3>
+<p>為兩館額費當清等事·九月初一日具詳</p>
+<p>關於兩館額定費用應當清理的事情。我對兩館費用的複雜變化甚至虛冒重複支付感到擔憂，怕會泛濫混亂繼續下去，所以按照我上奏明確的便於依照執行。遵奉皇帝的明確指示，以後節省下來的餘銀由提督官員直接上奏繳納，我仰誦天意言論倍感深摯和敬佩〔待精校〕。我想到所謂節省是從額定費用中去掉不必要的開支。謹慎就此中詳細查核條目全面列舉前後無名費用，查察了許多陋習，除去官方要覽所開列記載的不必要再議，如要覽所中所說詳見收支簿的似乎應該補充其後的數據，要看現存有多少夫役，若干正常費用，若干旁邊費用，何年發過禄米何年獲得批復等等〔待精校〕。</p>
+<p>要從何處扣減免除。明皇帝的新指示與其他衙門的事項體制不同。現在遵照前事相應呈覆順天府執行。</p>
+<h3 id="题解_15">题解</h3>
+<p>本篇為九月初一日的續篇，主要是對節省費用的進一步詳細清理。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>列舉要點，要求建立完整的收支簿記錄，明確各類費用的來源和用途，以便於識別和去除虛冒重複支付的問題。</p>
+<hr />
+<h2 id="為嚴試通事官生等事">為嚴試通事官生等事</h2>
+<p><strong>essay_id:</strong> vol32_017</p>
+<blockquote>
+<p>📍 PDF z385a_r–z385b_l（九月二十九日具詳）
+📝 通事官生點卯、考試、缺席問題、館生廢弛</p>
+</blockquote>
+<h3 id="原文_16">原文</h3>
+<p>為嚴試通事官生等事　九月二十九日具詳</p>
+<p>諸人而第清之已有新增當去近復當商者職不敢苟諸備員而第問其兼後遵節省之明旨占立一成之規修度宦已之籍不得去則用舒之道或可恒夬○為此造立清冊一本仍酌數款于後以便台裁施行</p>
+<p>為嚴試通事官生等事。奉本部劄付前事除遵依差既丁憂三卯不到不開外察得全卯不到韃靼館昌。</p>
+<p>程太醫院釐餘慶九卯不到百夷館<a href="#葉弘綸" class="internal-link wiki-link">葉弘綸</a>八卯不到百夷館<a href="#王繼芳" class="internal-link wiki-link">王繼芳</a><a href="#杜如華" class="internal-link wiki-link">杜如華</a>七卯不到韃靼館<a href="#張廷琦" class="internal-link wiki-link">張廷琦</a>西番館<a href="#盛典" class="internal-link wiki-link">盛典</a>○四卯不到安南館<a href="#楊振" class="internal-link wiki-link">楊振</a>五卯不到韃靼館<a href="#楊為相" class="internal-link wiki-link">楊為相</a>○日本館<a href="#楊振" class="internal-link wiki-link">楊振</a>五卯不到安南館<a href="#楊為相" class="internal-link wiki-link">楊為相</a>。</p>
+<p>又察得朝鮮館<a href="#丘昌崟" class="internal-link wiki-link">丘昌崟</a>○到百夷館<a href="#丘可大" class="internal-link wiki-link">丘可大</a>太醫院<a href="#王繼芳" class="internal-link wiki-link">王繼芳</a><a href="#杜如華" class="internal-link wiki-link">杜如華</a>七卯不到○剿付進館未逾三月隨給冠帶○察得朝鮮館<a href="#丘昌峯" class="internal-link wiki-link">丘昌峯</a>○舘習學是饑來飽去衣冠倖竊無怪乎眾庠班有故○達欽限度法欺君之呈也及今不一戒飭則習學之○守業而待於上者寡矣○又如<a href="#陳允中" class="internal-link wiki-link">陳允中</a>以緣事革退實〔待精校〕。</p>
+<h3 id="白话全译_16">白话全译</h3>
+<p>為嚴試通事官生等事·九月二十九日具詳</p>
+<p>對於這些人來說，雖然已經整理清楚的有新增應該去掉的、最近又應該商議的，我本職不敢馬虎。對於那些備員身份而只是代理職務的，要問他們是否遵守節省的明皇帝指示，占立一條成的規則，修度已經過任的冊籍，不得缺漏，則用舒展的辦法或者可以保持長久〔待精校〕。為此編製一份清冊，再參酌幾條款目在後面以便上級裁決執行。</p>
+<p>關於嚴格考試通事官生的事情。遵奉部門的正式劄付，前事除了遵依差指，已經丁憂〔父母亡故守孝〕三個月考期不到不開考外，查得全部考期不到的有韃靼館的<a href="#昌程" class="internal-link wiki-link">昌程</a>、太醫院的<a href="#釐餘慶" class="internal-link wiki-link">釐餘慶</a>、九個考期不到的百夷館的<a href="#葉弘綸" class="internal-link wiki-link">葉弘綸</a>、八個考期不到的百夷館的<a href="#王繼芳" class="internal-link wiki-link">王繼芳</a>、<a href="#杜如華" class="internal-link wiki-link">杜如華</a>、七個考期不到的韃靼館的<a href="#張廷琦" class="internal-link wiki-link">張廷琦</a>、西番館的<a href="#盛典" class="internal-link wiki-link">盛典</a>等、四個考期不到安南館的<a href="#楊振" class="internal-link wiki-link">楊振</a>、五個考期不到韃靼館的<a href="#楊為相" class="internal-link wiki-link">楊為相</a>。</p>
+<p>另外查得朝鮮館的<a href="#丘昌崟" class="internal-link wiki-link">丘昌崟</a>、到百夷館的<a href="#丘可大" class="internal-link wiki-link">丘可大</a>、太醫院的<a href="#王繼芳" class="internal-link wiki-link">王繼芳</a>、<a href="#杜如華" class="internal-link wiki-link">杜如華</a>、七個考期不到〔文意待精校〕。新進館還不滿三個月就隨即給予冠帶〔官服〕。查得朝鮮館的<a href="#丘昌峯" class="internal-link wiki-link">丘昌峯</a>在館習學，就是「餓來吃飽去穿衣取巧」，衣冠倖得竊佔，無怪乎眾多庠序人士有怨言。達欽限度是欺君之呈啊，到現在如果不進行統一戒飭，則習學的〔官生〕只會守著懶散，等候上級的人會很少。又比如<a href="#陳允中" class="internal-link wiki-link">陳允中</a>因為牽連事件被革退〔待精校〕。</p>
+<h3 id="题解_16">题解</h3>
+<p>本篇涉及通事官生（培訓外交翻譯人員）的點卯考試和廢弛問題。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>列舉多人缺席情況，批評館生「饑來飽去」的懶散態度，以及新進官員不足三月就獲得官服的不規則現象。這反映了館務人員管理的實際困難。</p>
+<hr />
+<h2 id="為察燐六年貢夷等事">為察燐六年貢夷等事</h2>
+<p><strong>essay_id:</strong> vol32_018</p>
+<blockquote>
+<p>📍 PDF z385b_r–z386a_l（十月十六日具詳）
+📝 六年貢夷考核、工部欠款追究</p>
+</blockquote>
+<h3 id="原文_17">原文</h3>
+<p>為察燐六年貢夷等事　十月十六日具詳</p>
+<p>為察燐六年貢夷等事俱炤會典分別嚴行以示懲做不得寬貸</p>
+<p>【正堂黃　批】各館官生違玩不到其應題革應罰曬臠○俱炤會典分別嚴行以示懲做不得寬貸</p>
+<p>將考卷一並其呈伏乞台奪</p>
+<p>分朝鮮進貢例有○文翩本司職屢督辦官施彰上緊催取逮日延一日○官<a href="#李開先" class="internal-link wiki-link">李開先</a><a href="#劉明原" class="internal-link wiki-link">劉明原</a>差<a href="#劉羨" class="internal-link wiki-link">劉羨</a>本部辦官施彰或槓欠不○次文移竟置尚閣左支佈總歸私爨向使職不察○催則諸好意竊得借名開銷○及今對劾已明而工部作〔待精校〕。</p>
+<h3 id="白话全译_17">白话全译</h3>
+<p>為察燐六年貢夷等事·十月十六日具詳</p>
+<p>關於查核崇禎六年間進貢番夷的事情，都應當按照《會典》分別嚴格執行以示懲罰，不得寬貸。</p>
+<p>【正堂黃的批示】各館官生違規玩忽不到，其應當題請革職應當罰款〔待精校〕，都應當按照《會典》分別嚴格執行以示懲罰，不得寬貸。</p>
+<p>將考卷整份附送，懇請上級決定。</p>
+<p>分別朝鮮進貢的例子，本司職屢次督促辦官施彰上緊催取，每次都延遲一日。官員<a href="#李開先" class="internal-link wiki-link">李開先</a>、<a href="#劉明原" class="internal-link wiki-link">劉明原</a>指差<a href="#劉羨" class="internal-link wiki-link">劉羨</a>到本部，辦官施彰或欠缺〔文意待精校〕。次份文書移送竟然放置在內閣，左支右綽總歸私人廚房使用〔比喻挪作他用〕。如果不是本職查察催促，則諸項好意都被竊取借名開銷了。到現在對劾〔審查批評〕已經明確，而工部〔的責任〕〔待精校〕。</p>
+<h3 id="题解_17">题解</h3>
+<p>本篇涉及對六年間進貢事務的年度考核，特別是對工部和相關辦事官的責任追究。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>指責工部官員施彰的懈怠和相關部門的挪用，反映了跨部門協調的困難和監督的必要性。</p>
+<hr />
+<h2 id="為驚聞母病等事">為驚聞母病等事</h2>
+<p><strong>essay_id:</strong> vol32_019</p>
+<blockquote>
+<p>📍 PDF z386b_l（十一月初五日具詳）
+📝 個人陳情、母親病重、請假歸省</p>
+</blockquote>
+<h3 id="原文_18">原文</h3>
+<p>為驚聞母病等事　十一月初五日具詳</p>
+<p>為驚聞母病不能供職怒恩代題以無惶館務事職○以去互奉命竣事便道歸省。維時職母怕怕床○再督夷館又復半載忽于十月念句閒接職家信謂○職母五六月間舊病復作虛損日甚○飲食不進朝夕○然後據實具題未晚也。聖明在上師濟盈○職速歸○尸位遠遊忘者也當○廷而職從砌冷居莫致消浚珷鷺班復失烏報其○當罪者一郎職仰暢功令勉效奔走然當〔待精校〕。</p>
+<p>明孝治天工之日而職忿絕祺以行使分體交痛其〔待精校〕。</p>
+<h3 id="白话全译_18">白话全译</h3>
+<p>為驚聞母病等事·十一月初五日具詳</p>
+<p>關於驚聞母親生病無法供職並請求上級允許請假代理以保館務事務的事情。本職來京後遵奉命令完成事務後便道回家省親。當時母親已經臥病在床，我再加上要督導夷館之事，又復經過半年，突然在十月月初接到家中來信，說母親在五六月間舊病復發，虛損日益加重，飲食進不去，朝夕〔待精校〕。然後我根據實情上呈題請，這樣做也不算晚。聖明皇帝在上，天恩浩蕩〔待精校〕，我應當快速回家，留在這裡佔著位子無所作為就是遠遊忘親啊，應該〔待精校〕。廷議認為我從書齋冷住處莫能消解浚治之事〔待精校〕，班列恢復失去的報告其〔待精校〕。應當受罪的一言，我仰慕暢通功令奮勉效法奔走，然而應當〔待精校〕。</p>
+<p>明朝孝治天下功業之日，而我忿恨絕祺以行使分體交痛其〔待精校〕。</p>
+<h3 id="题解_18">题解</h3>
+<p>本篇是<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>個人的陳情書，內容是聽聞母親病重，請求離職歸省。這篇文字較為晦澀，可能是因為原稿本身字跡不清或版本有誤。核心內容是：母親在五六月間舊病復發，虛損日甚，十月接到家信，所以上呈請假回家。反映了傳統士大夫「忠孝」之間的矛盾和選擇。</p>
+<hr />
+<h2 id="為苦情不能終已等事">為苦情不能終已等事</h2>
+<p><strong>essay_id:</strong> vol32_020</p>
+<blockquote>
+<p>📍 PDF z387a_r–z387b_r（十一月十七日具詳）
+📝 母病與職務衝突、忠孝兩難、改革建議</p>
+</blockquote>
+<h3 id="原文_19">原文</h3>
+<p>為苦情不能終已等事　十一月十七日具詳</p>
+<p>為苦情不能終已等事　十一月十七日具詳</p>
+<p>頻提防聾則不宜　聖明柔遠德意奈○何遠以假請邪勉抑子情茁其臣職忠孝○非一道也愁愁</p>
+<p>炤事職以驚聞母病具呈蒙家台臺諒其至情敦以大○職速歸○尸位遠遊忘者也當○聖明在上　批各謂○稱○職速歸于是再四撫膺痛心自數訓職罪滋深○即治膿而不敢遞以病陳者以為身非已有○又不能無說于此為在兩館積弛以來人情不知〔待精校〕。</p>
+<p>拔澱至情仰千代○題便職得以給假視母依職舟○稍犖仍前供職廢罪滋深○即○尸位遠遊志親之甚者也○聖明在上師濟盈職速歸如令幸而行則亦可犧職○養不易○或亦事○炤事職以驚聞母病具呈蒙家台臺諒其至情敦以大</p>
+<p>館兩月於茲矣○職朝夕掏据未敢一日自便手口卒○遭未敢一○事謙人每值朝鮮見　朝及者儀慶賀必○二敲起蹄坐守黠出然後奔趨逐隊竣禮之後又復○于館黠入○性遞數四颸寒侵○委頻支持○自審必至○于病然而不敢遞以病者猶有心可猶可○炤於此○于病然後不得祝○母病之故○日抑鬱而病其身正儸以身病廢職之故○今則方寸亂亡○蒙諉無盆究至〔待精校〕。</p>
+<p>宛在堂文集　卷之三十二</p>
+<p>一失兩失雖悔可追是以迫切悻戚不得不預鳴忍○告及此未就斧鑕○一盡所言蓋三復提防聾則之論○又不能無說于此為在兩館積弛以來人情不知○功令而執脅規不顧遠心易失而謂夷貨可誰不諒○循職為救過而皆立班為沾名職癱抽過蓋遇事諳○真一革犯法館夫買缺頂首一斷兩館副使頂房陋○欽賞一後十三館○規一移工部各後月破朝鮮○官生季考頁察齋緣違曠諸弊一清占冒餘銀弁徵〔待精校〕。</p>
+<h3 id="白话全译_19">白话全译</h3>
+<p>為苦情不能終已等事·十一月十七日具詳</p>
+<p>關於苦情無法完全終止的事情·十一月十七日具詳</p>
+<p>反覆提醒要防止耳聾所以不適合〔說太多〕，聖明皇帝柔遠民族的德意怎麼辦〔文意待精校〕，遠方怎麼以假請真呢勉強抑制子情欲茁〔待精校〕，其臣我的職責忠孝不是一條路啊，愁啊愁啊。</p>
+<p>根據職事我以聽聞母親生病上呈蒙受家〔指朝廷家族〕台台理解我的至情，敦促以大義督促我快速回家，佔著位子遠遊忘親啊應當，聖明在上〔朝廷〕的批示各色謂稱，我應當快速回家，於是再四撫著胸膛痛心地自己數清楚我的罪過之深。即便治療膿血也不敢以病情呈報，因為身體不是我私人擁有的〔是國家的〕，又不能沒有說法，這是因為在兩館積年廢弛以來人情不知〔待精校〕。</p>
+<p>拔出澱積的至情仰千代的〔待精校〕題目便得以給假視察母親依自己的舟路，稍稍整頓後仍舊前進供職，廢罪滋深，即〔待精校〕，佔著位子遠遊忘親的志願甚矣啊，聖明在上天恩浩蕩，我應當快速回家，如果命令幸而進行的話則亦可犧牲職位，養父母不容易，或者亦是事務〔待精校〕。根據職事我以聽聞母親生病上呈蒙受朝廷理解我的至情，敦促以大義〔待精校〕。</p>
+<p>在兩館已經兩個月了，我朝夕摸索政務未敢一日自便，手口都卒中了〔待精校〕，遭遇未敢一〔待精校〕，事實謙遜人每當值朝鮮見朝及儀慶賀必須二敲起蹄坐守黠出，然後奔趨逐隊完成禮儀之後又恢復於館舍黠事入，性情遞延數四個寒冷侵襲，委實頻繁支撐，自己審視必定至於病，然而不敢以病情呈報，因為還有心可猶可〔待精校〕，根據此〔待精校〕，於病然後不得祝，母親病的原故，日益抑鬱而病上身，正是因為用身體病廢職務的原故〔待精校〕，現在方寸亂亡，蒙諉無盆究至〔待精校〕。</p>
+<p>宛在堂文集·卷之三十二</p>
+<p>一失兩失雖然悔恨也追不回來，所以迫切悻戚〔因急而懊悔〕不得不預先發聲忍耐。告及此〔處處〕未就斧鑕〔工具未備〕，一盡所言蓋三復提防聾則之論，又不能沒有說法在此，因為在兩館積年廢弛以來人情〔不〕知功令，而〔人〕執著脅迫規則不顧遠人心易失，而謂番夷貨物可誰不諒〔待精校〕。循著職事為救過〔改錯誤〕而皆立班為沾名，職位癱瘓拔除過錯，蓋遇事諳〔待精校〕。真一〔次第一〕革犯法館夫買缺頂首一，斷兩館副使頂房陋，欽賞一後十三館，規一移工部各後月破朝鮮，官生季考頁察齋緣違曠諸弊一清，占冒餘銀弁徵〔待精校〕。</p>
+<h3 id="题解_19">题解</h3>
+<p>本篇為卷末最後一篇，是<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>對自身處境的深層反思。他面臨著忠與孝的衝突：母親生病需要回家，但在兩館的職務又需要他留守。他為此感到極端的痛苦和無奈。</p>
+<p>文末列舉的改革措施包括：
+- 整頓館夫買缺問題
+- 檢查兩館副使和房屋陋習
+- 追查欽賞物品發放
+- 嚴格官生季考
+- 清理占冒餘銀並上繳</p>
+<p>這些措施反映了<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>上任以來的改革成果。</p>
+<hr />
+<h2 id="附錄·人物索引">附錄·人物索引</h2>
+<h3 id="登場人物（按出現順序）">登場人物（按出現順序）</h3>
+<table>
+<thead>
+<tr>
+<th>姓名</th>
+<th>官職/身份</th>
+<th>出現篇章</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#郭之奇" class="internal-link wiki-link">郭之奇</a></td>
+<td>提督兩館</td>
+<td>全卷</td>
+<td>作者、<a href="#明末官員" class="internal-link wiki-link">明末官員</a>（1607-1662）</td>
+</tr>
+<tr>
+<td><a href="#李繼芳" class="internal-link wiki-link">李繼芳</a></td>
+<td>館夫</td>
+<td>卷32_001, 002</td>
+<td>與貢使勾結購買違禁品被罷免</td>
+</tr>
+<tr>
+<td><a href="#韓贄" class="internal-link wiki-link">韓贄</a></td>
+<td>朝鮮使臣</td>
+<td>卷32_006, 007</td>
+<td>朝鮮進貢使節</td>
+</tr>
+<tr>
+<td><a href="#陳士八" class="internal-link wiki-link">陳士八</a></td>
+<td>員外</td>
+<td>卷32_012</td>
+<td>候選掌印務人選</td>
+</tr>
+<tr>
+<td><a href="#張師度" class="internal-link wiki-link">張師度</a></td>
+<td>主事</td>
+<td>卷32_012</td>
+<td>候選掌印務人選</td>
+</tr>
+<tr>
+<td><a href="#楊文陛" class="internal-link wiki-link">楊文陛</a></td>
+<td>副使</td>
+<td>卷32_011</td>
+<td>代還欠債</td>
+</tr>
+<tr>
+<td><a href="#丘昌崟" class="internal-link wiki-link">丘昌崟</a></td>
+<td>朝鮮館通事</td>
+<td>卷32_017</td>
+<td>點卯缺席</td>
+</tr>
+<tr>
+<td><a href="#丘可大" class="internal-link wiki-link">丘可大</a></td>
+<td>百夷館通事</td>
+<td>卷32_017</td>
+<td>點卯缺席</td>
+</tr>
+<tr>
+<td><a href="#葉弘綸" class="internal-link wiki-link">葉弘綸</a></td>
+<td>百夷館通事</td>
+<td>卷32_017</td>
+<td>缺席九個月</td>
+</tr>
+<tr>
+<td><a href="#王繼芳" class="internal-link wiki-link">王繼芳</a></td>
+<td>百夷館通事/太醫院</td>
+<td>卷32_017</td>
+<td>缺席七八個月</td>
+</tr>
+<tr>
+<td><a href="#杜如華" class="internal-link wiki-link">杜如華</a></td>
+<td>百夷館通事</td>
+<td>卷32_017</td>
+<td>缺席七個月</td>
+</tr>
+<tr>
+<td><a href="#張廷琦" class="internal-link wiki-link">張廷琦</a></td>
+<td>韃靼館通事</td>
+<td>卷32_017</td>
+<td>缺席七個月</td>
+</tr>
+<tr>
+<td><a href="#盛典" class="internal-link wiki-link">盛典</a></td>
+<td>西番館通事</td>
+<td>卷32_017</td>
+<td>缺席四個月</td>
+</tr>
+<tr>
+<td><a href="#楊振" class="internal-link wiki-link">楊振</a></td>
+<td>安南館/韃靼館通事</td>
+<td>卷32_017</td>
+<td>缺席五個月</td>
+</tr>
+<tr>
+<td><a href="#楊為相" class="internal-link wiki-link">楊為相</a></td>
+<td>韃靼館通事</td>
+<td>卷32_017</td>
+<td>缺席五個月</td>
+</tr>
+<tr>
+<td><a href="#陳允中" class="internal-link wiki-link">陳允中</a></td>
+<td>館生</td>
+<td>卷32_017</td>
+<td>因緣事被革退</td>
+</tr>
+<tr>
+<td><a href="#李開先" class="internal-link wiki-link">李開先</a></td>
+<td>官員</td>
+<td>卷32_018</td>
+<td>與朝鮮進貢事務相關</td>
+</tr>
+<tr>
+<td><a href="#劉明原" class="internal-link wiki-link">劉明原</a></td>
+<td>官員</td>
+<td>卷32_018</td>
+<td>與朝鮮進貢事務相關</td>
+</tr>
+<tr>
+<td><a href="#劉羨" class="internal-link wiki-link">劉羨</a></td>
+<td>本部辦官</td>
+<td>卷32_018</td>
+<td>指差到本部辦事</td>
+</tr>
+<tr>
+<td><a href="#施彰" class="internal-link wiki-link">施彰</a></td>
+<td>工部辦官</td>
+<td>卷32_018</td>
+<td>貨物催取遲誤</td>
+</tr>
+</tbody>
+</table>
+<h3 id="外交使節">外交使節</h3>
+<table>
+<thead>
+<tr>
+<th>使臣名稱</th>
+<th>國籍/地區</th>
+<th>出現篇章</th>
+<th>事務</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>韓贄等</td>
+<td><a href="#朝鮮" class="internal-link wiki-link">朝鮮</a></td>
+<td>006, 007</td>
+<td>請求船隻、辭行</td>
+</tr>
+<tr>
+<td>七巴等</td>
+<td><a href="#西番" class="internal-link wiki-link">西番</a><a href="#苟家坪" class="internal-link wiki-link">苟家坪</a>族</td>
+<td>009</td>
+<td>進貢獎賞</td>
+</tr>
+<tr>
+<td>野舍藏南等</td>
+<td><a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>護教大乘法王</td>
+<td>004, 010</td>
+<td>進貢、貢期、茶稅獎賞</td>
+</tr>
+<tr>
+<td>安南使節</td>
+<td><a href="#安南" class="internal-link wiki-link">安南</a></td>
+<td>017</td>
+<td>通事官生考試</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="附錄·外交事務索引">附錄·外交事務索引</h2>
+<h3 id="進貢國家及地區">進貢國家及地區</h3>
+<ol>
+<li><strong><a href="#朝鮮" class="internal-link wiki-link">朝鮮</a></strong></li>
+<li>篇章：卷32_006, 007, 009, 018</li>
+<li>事務：船隻請求、辭行、進貢獎賞、六年考核</li>
+<li>
+<p>相關人物：<a href="#韓贄" class="internal-link wiki-link">韓贄</a>、<a href="#李開先" class="internal-link wiki-link">李開先</a>、<a href="#劉明原" class="internal-link wiki-link">劉明原</a></p>
+</li>
+<li>
+<p><strong><a href="#西番" class="internal-link wiki-link">西番</a></strong></p>
+</li>
+<li>篇章：卷32_009, 014</li>
+<li>事務：<a href="#苟家坪" class="internal-link wiki-link">苟家坪</a>等族人進貢、獎賞銀兩遲滯</li>
+<li>
+<p>相關人物：<a href="#七巴" class="internal-link wiki-link">七巴</a></p>
+</li>
+<li>
+<p><strong><a href="#烏思藏" class="internal-link wiki-link">烏思藏</a>（西番）</strong></p>
+</li>
+<li>篇章：卷32_004, 010, 014, 018</li>
+<li>事務：護教大乘法王使節接待、貢期管理、四川茶稅撥給</li>
+<li>
+<p>相關人物：<a href="#野舍藏南" class="internal-link wiki-link">野舍藏南</a>、<a href="#哈結十" class="internal-link wiki-link">哈結十</a></p>
+</li>
+<li>
+<p><strong><a href="#安南" class="internal-link wiki-link">安南</a></strong></p>
+</li>
+<li>篇章：卷32_017</li>
+<li>事務：通事官生考試</li>
+</ol>
+<h3 id="主要行政事務">主要行政事務</h3>
+<table>
+<thead>
+<tr>
+<th>事務類別</th>
+<th>篇章</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>人員管理</td>
+<td>001, 017</td>
+<td>通事官生考課廢弛、點卯缺席、習學廢弛</td>
+</tr>
+<tr>
+<td>財務稽查</td>
+<td>009, 010, 011, 014, 015, 016</td>
+<td>額費節省、余銀上繳、虛冒重複支付清理</td>
+</tr>
+<tr>
+<td>外交禮儀</td>
+<td>006, 007, 008</td>
+<td>使臣船隻、辭行、敕賞物品</td>
+</tr>
+<tr>
+<td>外交政策</td>
+<td>004, 010, 018</td>
+<td>貢期管理、獲得西藏番人、六年貢夷考核</td>
+</tr>
+<tr>
+<td>紀律處分</td>
+<td>002, 005</td>
+<td>違禁品走私、擅帶夷人入城</td>
+</tr>
+<tr>
+<td>個人陳情</td>
+<td>019, 020</td>
+<td>母親病重、請假歸省、忠孝衝突</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="附錄·版本說明">附錄·版本說明</h2>
+<h3 id="轉錄源">轉錄源</h3>
+<ul>
+<li><strong>原典</strong>：《宛在堂文集》卷三十二</li>
+<li><strong>掃描來源</strong>：PDF第375–387頁（z375b_r–z387b_r）</li>
+<li><strong>版本</strong>：〔待確認〕</li>
+</ul>
+<h3 id="轉錄說明">轉錄說明</h3>
+<p>本卷全文共20篇呈詳（官方行政報告），時間跨度自崇禎六年（1633）至七年（1634）。作者<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>時任提督兩館，監督會同館、四夷館（韃靼館、朝鮮館、百夷館、安南館、西番館等）及鴻臚寺四夷館通事官生。</p>
+<h3 id="內容結構">內容結構</h3>
+<ol>
+<li><strong>行政管理類</strong>（篇1, 3, 12, 13, 17）</li>
+<li>
+<p>人員編制、考課、職績敘陞、印務管理</p>
+</li>
+<li>
+<p><strong>財務稽查類</strong>（篇9, 11, 14, 15, 16）</p>
+</li>
+<li>
+<p>額定費用清理、節省措施、虛冒追究</p>
+</li>
+<li>
+<p><strong>外交事務類</strong>（篇4, 6, 7, 8, 10, 18）</p>
+</li>
+<li>
+<p>使節接待、禮儀程序、進貢事務、獎賞物品、貢期管理</p>
+</li>
+<li>
+<p><strong>紀律處分類</strong>（篇2, 5）</p>
+</li>
+<li>
+<p>違規案件、懲罰決定</p>
+</li>
+<li>
+<p><strong>個人陳情類</strong>（篇19, 20）</p>
+</li>
+<li>母親病重、忠孝矛盾、自我反思</li>
+</ol>
+<h3 id="文本特點">文本特點</h3>
+<ul>
+<li><strong>文言難澀</strong>：部分篇章原文抄寫或版本問題導致難以完全確定，以〔待精校〕標記</li>
+<li><strong>格式不一</strong>：有標題、正文、批示、附註等多種形式</li>
+<li><strong>人名地名</strong>：已盡力使用Obsidian wiki-link[[]]格式，便於知識網絡建構</li>
+<li><strong>時間系統</strong>：全部採用崇禎紀年（1633-1634）</li>
+</ul>
+<h3 id="未來改進方向">未來改進方向</h3>
+<ol>
+<li>與原件進行逐字對比精校，特別是疑難字句</li>
+<li>補充缺失的標題全文</li>
+<li>增加年份、官職、地名的詳細注釋</li>
+<li>建立完整的人物關係網絡</li>
+<li>製作制度、文書類型的索引</li>
+</ol>
+<hr />
+<p><strong>編校日期</strong>：2026-03-20
+<strong>編校者</strong>：Claude Code v4.5
+<strong>版本標記</strong>：v1.0·富文本版·待精校</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

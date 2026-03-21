@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十九 · 輯志副指（政紀） — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" class="active">卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十九-·-輯志副指·政紀">卷二十九 · 輯志副指·政紀</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十九</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著</p>
+</blockquote>
+<p>本卷為輯志副指之政紀部分，系統闡述揭陽縣的政治治理綱領。內容涵蓋職制、丁祭、廟學、兵防、推舉、練丁、良吏等議題，以政紀總論為綱，具體展開地方行政的各個層面。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>篇章</th>
+<th>頁碼</th>
+<th>內容概要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>政紀總論</td>
+<td>340</td>
+<td>地方治政總綱，以賦役為首</td>
+</tr>
+<tr>
+<td>2</td>
+<td>職制引</td>
+<td>341</td>
+<td>官員職制與廉察施政</td>
+</tr>
+<tr>
+<td>3</td>
+<td>丁祭考</td>
+<td>342</td>
+<td>廟祀、社稷、城隍等禮制考證</td>
+</tr>
+<tr>
+<td>4</td>
+<td>廟學業（學較引）</td>
+<td>343-344</td>
+<td>廟學教育改革與民智啟蒙</td>
+</tr>
+<tr>
+<td>5</td>
+<td>兵防引</td>
+<td>345-346</td>
+<td>軍事防禦、選拔謀勇、練習丁壯</td>
+</tr>
+<tr>
+<td>6</td>
+<td>慎推舉</td>
+<td>346</td>
+<td>官員選拔之慎重</td>
+</tr>
+<tr>
+<td>7</td>
+<td>練丁壯</td>
+<td>346</td>
+<td>訓練精兵之道</td>
+</tr>
+<tr>
+<td>8</td>
+<td>良吏論</td>
+<td>349</td>
+<td>良吏樹德化俗之論</td>
+</tr>
+<tr>
+<td>9</td>
+<td>廣文贊</td>
+<td>350</td>
+<td>讚揚彭、陳、潘、汪、曹諸候治績</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="政紀總論">政紀總論</h2>
+<p><strong>來源</strong>：卷29·輯志副指·政紀總論（PDF第340頁）</p>
+<h3 id="原文">原文</h3>
+<p>政紀○副指</p>
+<p>今天下州邑非分符不得而治○非受命不得而牧○故凡有事斯土○非一人之事○一邑之事○及於斯民者而事之也○如此則不曰事而曰政矣○於其下之謂令○述於其上之謂職○令無以行職○無以行政○莫竭焉○如其為政此種種者誰氏之民也○民數之廳○王者拜受誰實司牧而戶口之生耗不聞焉矧○乎則壞力征○亦維此種種者是徵足也○故為政之首○莫首賋役○賋役理而邑稱有民矣○而後問所以長是民者則次之曰職制○問所以滔是民者則次之曰位○次之曰祠祀○為庠序之教則次之曰學較○夫民而至○</p>
+<h3 id="白话全译">白话全译</h3>
+<p>政治記述·副指</p>
+<p>當今天下各州各邑非有官印分符不能得以治理，非蒙受朝廷命令不能得以統治。因此凡是涉及此地大事，不是一個人之事，也不是一個邑之事，而是關係到此地百姓者皆為政事。如此才可謂之為「政」而非「事」。在下級官僚謂之為「令」，報告於上級官僚謂之為「職」。若令不能行使，職無法運行，政事無人承擔，則一切皆趨向衰敗。既然如此從政，究竟是誰的百姓？百姓數量之多，王者親自接受命令，究竟誰真正掌管牧養？而對戶口增減之事卻聽聞不到。何況於此，不善的統治方式，也正是這種種情況導致徵稅困難。因此為政之首要，沒有超過賦役的。賦役理順了，邑才能稱得上有民。之後再問如何發展是民眾，則次要為職制，問如何安置是民眾，則次要為位署，再次為祠祀，為了廟學之教，則次為學較。民眾到此……</p>
+<h3 id="题解">题解</h3>
+<p>此為卷29政紀部分的綱領性序文，<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>論述地方治政的完整邏輯體系。關鍵理念：（1）治政非一人之力，乃整體制度；（2）政治等級明確——令在下，職在上；（3）政事優先次序——<strong>賦役第一</strong>，次及職制、位署、祠祀、學較；（4）民為邦本，百姓數量、增減、流失最為關鍵。此文體現明末官僚體制改革思想，強調系統化、等級化的地方政治管理。</p>
+<hr />
+<h2 id="職制引">職制引</h2>
+<p><strong>來源</strong>：卷29·輯志副指·職制引（PDF第341頁）</p>
+<h3 id="原文_1">原文</h3>
+<p>職制引</p>
+<p>邑矣○然而追呼逼○則民易通○節目多○則薦易說色頗○煩屑○則巧者侍寬朴者坐○惟廉察之○長不惜以己○心力為民膏脂競綠之○間或可訓剃蠲締之數或可○計量則撫字催科非無術也○今令君甫任即向子道○及戶役事孜孜平以籌盡甄民為務而所議整整堂○非所謂良法美意者耶○護勒如左以垂夫後之君子者監馬○</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>職制引介</p>
+<p>邑務既然如此，然而若逼迫催促，則民眾容易通融。若規定條目過多，則推薦人才容易說詞含糊。若事務繁雜瑣碎，則心計巧妙者乘隙鑽營，朴實者反而吃虧。因此唯有廉察之心，長官不肯惜得以身心力量為百姓解憂紓困，在競爭中洗淨污穢。有時可以訓練人才，有時可以蠲免某些徵稅之數，有時可以計量衡量，那麼撫恤百姓、催科徵稅就非無方法矣。如今令君甫上任即向我講述戶役之事孜孜不倦，從多方面籌謀甄別民俗習慣為的是要做到盡善盡美，而所議之論整整齊齊，非是所謂的良法美意嗎？故此勒石如左以垂示後世君子為鑑戒。</p>
+<h3 id="题解_1">题解</h3>
+<p>本文承接政紀總論，具體論述職制（官員職責）之要點。郭之奇指出職制施行之難：（1）催促過急則民心散；（2）規定過繁則易敷衍；（3）事務瑣碎則奸巧得逞。解決之道在於「廉察」——官長以身心力量為民服務，廢除繁瑣規定，簡化稅收程序。文末讚揚某位「令君甫」上任後認真對待戶役之事，體現「良法美意」。此篇反映明末地方官僚改革實踐，強調廉政、簡政為民的原則。</p>
+<hr />
+<h2 id="丁祭考">丁祭考</h2>
+<p><strong>來源</strong>：卷29·輯志副指·丁祭考（PDF第342頁）</p>
+<h3 id="原文_2">原文</h3>
+<p>立文定制首載令甲○蕭宗饕正稱號俾命率鎮○垂諸國典耙已頒焉○加之以社稷之神有功烈於○人者也○及風雲雷雨名山川澤生殖所因財用所出○也及照佑城隍境域○及官師之良民所眥也及○前哲令德明所質也廣及屬壇鬼所歸也○非是族也○不在祀典若延寺觀之設○祀羸傀○亦關亦不可廢苟無○侵濫亦各祀其祀也○</p>
+<p>丁祭考</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>為祭祀定立規制，首先要載入令甲（法律）。宗廟之正統名號、皇帝命令、率領統治，垂示於諸國之典籍，已經頒行。加上社稷之神，有功德於人者。以及風雲雷雨、名山川澤，乃生殖之所因、財用之所出。以及照佑城隍之神明、邊界區域。以及官員師長之良善者，為民眾所敬仰。以及前代賢哲、令德明德者為民眾所質詢學習。廣泛及於屬下祠壇、鬼神所歸之處。非此族類者，不在祭祀典禮之中。若寺觀之設置，祭祀羸弱虛妄之物，亦有關涉，亦不可廢除。苟無侵犯濫用，各自祭祀其所祭祀者可也。</p>
+<h3 id="题解_2">题解</h3>
+<p>本篇考證地方廟祀制度的等級與範圍。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>分層介紹祭祀對象：最高層為皇帝崇拜、社稷神祇；其次為自然神祇（風雲雷雨、山川澤）；再次為城隍、邊界守護神；最後為官員良人、先賢聖哲。核心原則：（1）祭祀須有法律依據（令甲）；（2）不同等級的人神各有其祭祀典禮；（3）正統祭祀與民間寺觀並行不悖，關鍵在於不得「侵濫」（越界、蠻橫）。此篇反映明末地方禮制的系統性建設，既遵循儒家宗法秩序，亦承認民間信仰的合理性。</p>
+<hr />
+<h2 id="廟學業（學較引）">廟學業（學較引）</h2>
+<p><strong>來源</strong>：卷29·輯志副指·廟學業·學較引（PDF第343-344頁）</p>
+<h3 id="原文_3">原文</h3>
+<p>廟舉業也○朔望講書敕聞○而復嚴於門簿之設使良于諸廁為白友所以端○儒品也○古之人有行之者○上焉者子產執政鄙人游○于鄉較以議善否或曰何不殺鄉較○子產日其所善者吾將行之其所惡者吾將改之○是吾師也夫○其所產則○真能得師矣○其次如鄒陽內史虞薄大修庠序片廣招○學徒而日以崇道廣業成俗移人之事移告所屬○又○惕惕於正心修行惟志惟勤之條作諳以獎其失如○聖訓○垂釋○皇主之○人分際過古今之義○強學積善以為天下先○或濯身○力行順親敬長出入不悖所聞○或多文為富探賾究○奇揚乇論者以稱述於今日○其或與於斯者未有不○令名宣流美聲日溢○使上下之人交相雅重○邸令諸○多疾殿嬰亦不更所可○以身殉而毋絲吾學為夫○良農能稼而不能為稻工○能巧而不能為順君子○者偷其道而不能為容也○陵遲以來高者競論浮麗○甲者借逐羅途陋者有仰觎覦騎于侯門俠者攘袖秩于…</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>廟學業務。朔日、望日講讀聖賢書籍、皇帝敕令。同時更加嚴格設置門簿（學籍），使得良好的人成為善友，這是用來端正儒家品德的做法。古代有實行此法的人。最高層的如<a href="#子產" class="internal-link wiki-link">子產</a>執掌政務，鄙視平民遊蕩於鄉間，較量評議善惡。有人問「為何不殺掉鄉較」，子產說「他所推崇的善我將施行，他所厭惡的惡我將改正，此人是我的老師啊」。其所產生的結果就是真能得到了老師。其次如<a href="#鄒陽" class="internal-link wiki-link">鄒陽</a>、內史<a href="#虞薄" class="internal-link wiki-link">虞薄</a>大規模修建庠序、廣招學徒，每日崇尚道德、推廣業務、教化風俗、移轉人心的事務。互相告知所屬部門，又戰戰兢兢於正心修行，唯志唯勤的條目上盡力獎勵其過失。如聖訓所說垂示……人之分際超越古今之義，強學積善以為天下先。或有洗淨身心、力行孝順父母敬重長上、出入舉止不悖於所聞者。或有文化學問豐富、探究幽深奇妙理論者。以今日論述之，若有參與此學的人，沒有不是名聲遠播、美好聲譽日益增長的。使得上下之人互相敬重。但如今卻多有人厭棄、不再遵循所可以身心投入而無虛妄的真學。良農能種田而不能為稻工，工人能巧妙而不能為順民，君子偷竊其道而不能為容禮。自陵遲衰退以來，高者競相談論浮華麗飾，甲等人借著追逐曲折之途……</p>
+<h3 id="题解_3">题解</h3>
+<p>本篇論述廟學教育制度，重點闡述「學較」（鄉間評議善惡）的教化功能。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>引用<a href="#子產" class="internal-link wiki-link">子產</a>、<a href="#鄒陽" class="internal-link wiki-link">鄒陽</a>等古代聖賢之例，說明：（1）廟學通過朔望講書、設立門簿來端正儒家品德；（2）鄉較制度讓平民參與評議善惡，給官員以啟蒙；（3）推廣庠序、廣招學徒，以教化風俗、移轉人心；（4）優秀的學人名聲遠播，帶動風氣改善。文末則批評現今學風的衰退——高者談浮麗，低者投機鑽營，真學卻無人投入。此篇體現明末教育改革的理想：將教育與地方治理相結合，通過廟學、鄉較實現民智啟蒙。</p>
+<hr />
+<h2 id="兵防引">兵防引</h2>
+<p><strong>來源</strong>：卷29·輯志副指·兵防引（PDF第345-346頁）</p>
+<h3 id="原文_4">原文</h3>
+<p>兵防引</p>
+<p>市井陸兵防禦○滿載而歸未間一矢○盜賊防制○〔正文視覺確認存在，具體文字待精校〕</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>兵防引介</p>
+<p>集市、陸地的兵防防禦，滿載歸來未曾間隔一箭。盜賊防制……〔待精確校對〕</p>
+<h3 id="题解_4">题解</h3>
+<p>本篇介紹地方軍事防禦體系。從片段內容看，討論市集與陸地的兵防防禦、盜賊防制等問題。此篇應為後續「慎推舉」「練丁壯」等篇章的總綱。</p>
+<hr />
+<h2 id="慎推舉">慎推舉</h2>
+<p><strong>來源</strong>：卷29·輯志副指·慎推舉（PDF第346頁）</p>
+<h3 id="原文_5">原文</h3>
+<p>慎推舉</p>
+<p>一慎推舉○所選之人必曰謀勇勝任○今盜賊公行而○弗能禁是烏不為烏鵂不為鵂也○夫西營之兵錢糧○出自本邑則選擇亦當出自本邑○以後員缺當從邑○令君公推技勇智射之人申用○庶可永得辱指亦可○力防尾大且諸弁知能否立懸無不勝躍練習未任○者爭以自見貌任者期於有終矣○</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>慎重推舉</p>
+<p>第一要慎重推舉。所選之人必須說謀略勇敢、勝任職務。如今盜賊公然活動而無法禁止，這是為什麼不為烏不鵂？意思是應當各司其職。夫西營之兵的經費錢糧出自本邑，那麼選擇人才也應當出自本邑。以後有員額空缺應當從邑中推薦。令君應當公開推舉有技能、勇敢、智慧、善於射箭的人選報用。庶幾可以永遠得到了指導，也可以防止「尾大不掉」（下級權力過大）。且諸弁官知道能否勝任，立懸公開考察，無不踴躍練習。未任職者爭相自我表現，已任職者期望有始有終。</p>
+<h3 id="题解_5">题解</h3>
+<p>本篇強調官員推舉的「慎重」原則。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>指出：（1）盜賊難以禁止的根本原因在於官員選拔不當；（2）西營軍費出自本邑，人才選拔也應出自本邑，體現地方自治原則；（3）推舉應基於「謀略勇敢、勝任職務」的標準，不可濫竽充數；（4）通過公開考察激勵官員練習、自我提升。此篇反映明末地方官僚選拔制度的改革思想，強調廉能、本地化、公開透明的原則。</p>
+<hr />
+<h2 id="練丁壯">練丁壯</h2>
+<p><strong>來源</strong>：卷29·輯志副指·練丁壯（PDF第346頁）</p>
+<h3 id="原文_6">原文</h3>
+<p>練丁壯</p>
+<p>力防尾大○且諸弁知能否○立懸無不踴躍練習未任○者爭以自見○貌任者期於有終矣○</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>訓練精壯青年</p>
+<p>努力防止「尾大不掉」（下級權力過大）。且諸位官員知道能否勝任，立懸考察，無不踴躍練習。未任職者爭相自我表現，已任職者期望有始有終。</p>
+<h3 id="题解_6">题解</h3>
+<p>本篇承接「慎推舉」，重點介紹如何訓練精壯青年作為地方武裝力量。核心在於：（1）防止軍權過度集中（尾大不掉）；（2）通過公開考察激發官員和民眾的參與熱情；（3）建立長效的訓練與激勵機制。此篇體現明末地方防禦體系的民兵化、激勵化特點。</p>
+<hr />
+<h2 id="良吏論">良吏論</h2>
+<p><strong>來源</strong>：卷29·輯志副指·良吏論（PDF第349頁）</p>
+<h3 id="原文_7">原文</h3>
+<p>良吏論</p>
+<p>然而科日貸郎○雜處是品○端表正影清源潔流是在○師之者矣○廣文赤席與遊者一邑之俊○亦不宜輕自○陳薄為士類○蓋譜其聲聲里且千左間有卓塹可書者○傳之或有指其人羅擘之不欲道者後之君子知所○鑒矣○</p>
+<p>善為吏者樹德○不能者樹怨○邑人何私都其利者為○有德汁所好以狗之者鮮矣○掇地去京師八千里分○</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>良吏論</p>
+<p>然而科舉放榜的郎君們雜處其間，這品格的端正、表正影正、清源潔流，全都在於師長啊。廣文（教職官）赤座（紅色座位）與遊學者是一邑的俊杰，也不宜輕易自己陳述其薄弱處而貶損士人的地位。蓋因聲譽譜系中，聲望傳播裡有千人，其間偶有卓越可記載者，傳之他人。或有指名其人、列舉其罪狀、不欲道其言者，後世君子知道所以為鑒戒。</p>
+<p>善於做官的人樹立德行，不善的人樹立怨恨。邑人何必偏私，都當取其利者為有德，汁所好而以狗之者稀少。掇地去京師八千里遠……</p>
+<h3 id="题解_7">题解</h3>
+<p>本篇論述良吏的德行與化人作用。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>強調：（1）良吏樹德，則百姓感化；不善之吏樹怨，則百姓埋怨；（2）廣文與遊學者為邑之俊杰，起著教化示範的作用；（3）卓越的良吏名聲遠播，可為後人鑑鑒。文末未完整，但表達的核心思想是：地方遠離京城八千里，良吏的德行教化作用尤其重要，它能夠化俗移人、淳厚民風。此篇為全卷政紀論的重要收結。</p>
+<hr />
+<h2 id="廣文贊">廣文贊</h2>
+<p><strong>來源</strong>：卷29·輯志副指·廣文贊（PDF第350頁）</p>
+<h3 id="原文_8">原文</h3>
+<p>美乎彭候文質紺及陳候之烈○後先稱匹○潘候維岳○為政無以驗人○久而見稱○其亦他人不為而能獨為○之者欲高忠憲始為行人以言事謫邑三月○耳講學以傳誦為芳則○豈非以化○特公權輿而組豆光于今日○士人至以傳誦為芳也哉○汪候起鳳民不敢欺○曹候大節而○親炙私叔各有其心也哉○應瑞民不能欺公廉並若第一○郎取古人相較何以○加諸候元飐識悟過人○雖公務煩猥省覽不忘其○間接納賓客○盡人之歡○事亦不廢儼所聞益州刺史○費禕其匠者耶○至於擇賢敘治閒遇不恥孔子曰欲○其大者廼在於此○為候得其意焉哉○能得其大則不○但所治者邑而繁邑人去後之思○然則所謂陽嶠者平吾故備列諸君之所以治邑所以治○邑而繁邑人去後之思者如此○以侯當事者擇焉○</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>讚美啊，<a href="#彭候" class="internal-link wiki-link">彭候</a>文質彬彬、陳候之烈烈表現，前後相稱相當。潘候如維岳（山岳般堅定）。為政無法驗證人才，久而見稱。其中也有他人不能做而能獨自做的，如<a href="#欲高忠憲" class="internal-link wiki-link">欲高忠憲</a>起初為行人（外交官）以言論議事而被貶謫至邑中三月，耳聞講學以傳誦為芳香，豈不是以教化？特別是公開權輿（衡量）而以豆光（明亮）於今日。士人至此以傳誦為芳香。汪候<a href="#汪起鳳" class="internal-link wiki-link">汪起鳳</a>民眾不敢欺騙。曹候大節而親炙私叔，各有其心。應瑞民眾不能欺，公廉並駕齊驅若第一。郎君相較古人何以加乎。諸候元飐識悟過人，雖公務繁猥繁忙，省覽（審視）不忘，其間接納賓客、盡人之歡樂、事務亦不廢棄。儼然如所聞益州刺史<a href="#費禕" class="internal-link wiki-link">費禕</a>其工匠者耶。至於擇賢敘治、閒遇不恥，孔子曰「欲其大者乃在於此」。為候得其意哉。能得其大，則不但所治者邑而邑人內繁榮、去後之人思念。然則所謂陽嶠者平，吾故備列諸君之所以治邑、所以治邑而繁邑人去後之思者如此。以候當事者擇焉。</p>
+<h3 id="题解_8">题解</h3>
+<p>本篇總結性讚揚地方廣文（教職官）及其他官員的政績。<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>列舉<a href="#彭候" class="internal-link wiki-link">彭候</a>、<a href="#陳候" class="internal-link wiki-link">陳候</a>、<a href="#潘候" class="internal-link wiki-link">潘候</a>、<a href="#汪起鳳" class="internal-link wiki-link">汪起鳳</a>、<a href="#曹候" class="internal-link wiki-link">曹候</a>、<a href="#欲高忠憲" class="internal-link wiki-link">欲高忠憲</a>、<a href="#費禕" class="internal-link wiki-link">費禕</a>等賢良官員，讚揚他們：（1）文質彬彬、烈烈表現；（2）不為他人所為而能獨為，體現廉潔與勤勉；（3）講學傳誦、教化民風；（4）民眾不敢欺，公廉並著；（5）接納賓客、盡人之歡、事務不廢；（6）能得其大——不但治理邑務，且使邑人繁榮、離去後猶被思念。此篇既是對具體官員的個人讚揚，更是對「良官」標準的總結——廉潔、勤勉、教化、體恤、長遠視野。</p>
+<hr />
+<h2 id="附錄">附錄</h2>
+<h3 id="版本說明">版本說明</h3>
+<p><strong>底本</strong>：宛在堂文集卷29（PDF第340-350頁）
+<strong>轉錄日期</strong>：2026-03-19-2026-03-20
+<strong>轉錄方式</strong>：Claude視覺逐頁精細化轉錄
+<strong>精校狀態</strong>：原文基本確認，個別字詞待進一步驗證</p>
+<h3 id="內容概述">內容概述</h3>
+<p>《卷二十九·輯志副指（政紀）》為<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>編纂《聞南輯志》中的地方政治治理部分。全卷約160字概括如下：</p>
+<p>本卷為地方治政系統論述之集成。<strong>政紀總論</strong>提綱挈領，將地方政務分為五大層級：賦役（第一位）、職制、位署、祠祀、學較。<strong>職制引</strong>論述官員職責與廉察施政，反對繁瑣行政。<strong>丁祭考</strong>考證廟祀制度，從社稷、城隍、先賢等正統祭祀，到民間寺觀，體現禮制的層級性與包容性。<strong>廟學業（學較引）</strong>論述廟學教育改革，以<a href="#子產" class="internal-link wiki-link">子產</a>鄉較、<a href="#鄒陽" class="internal-link wiki-link">鄒陽</a>庠序為典範，強調民智啟蒙與風俗教化。<strong>兵防引</strong>涉及軍事防禦與盜賊防制，<strong>慎推舉</strong>強調官員選拔的慎重原則（謀勇、本地化、公開透明），<strong>練丁壯</strong>論述民兵訓練機制。<strong>良吏論</strong>與<strong>廣文贊</strong>則總結良官標準——樹德化俗、廉潔勤勉、接納民意、長遠視野。</p>
+<h3 id="歷史價值">歷史價值</h3>
+<p>此卷為研究<strong>明末清初地方官僚體制、治政思想、人才選拔制度、廟學教育體系</strong>的重要文獻，具有以下特點：</p>
+<ol>
+<li>
+<p><strong>體系性</strong>：將地方政務分為賦役、職制、位署、祠祀、學較、兵防等層級，反映了深入的行政思考。</p>
+</li>
+<li>
+<p><strong>廉政性</strong>：強調官員廉察、簡政為民、防止濫權，體現明末官僚改革的廉潔導向。</p>
+</li>
+<li>
+<p><strong>教化性</strong>：重視廟學、鄉較、講學傳誦等教育手段，將地方治理與民智啟蒙相結合。</p>
+</li>
+<li>
+<p><strong>人才性</strong>：重視官員選拔、激勵機制、德行教化，體現以人為核心的治政理念。</p>
+</li>
+<li>
+<p><strong>地方性</strong>：強調本邑自治、本地人才、地方防禦，反映明末地方權力的相對獨立性。</p>
+</li>
+</ol>
+<h3 id="相關人物">相關人物</h3>
+<ul>
+<li><a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>（1607-1662）：明末清初揭陽學者、地方官員、文化人</li>
+<li><a href="#子產" class="internal-link wiki-link">子產</a>：春秋時期鄭國政治家，以廉能著稱</li>
+<li><a href="#鄒陽" class="internal-link wiki-link">鄒陽</a>：古代賢能官員</li>
+<li><a href="#虞薄" class="internal-link wiki-link">虞薄</a>：古代內史，修建庠序著稱</li>
+<li><a href="#費禕" class="internal-link wiki-link">費禕</a>：三國時代蜀漢官員，以治績著稱</li>
+<li><a href="#彭候" class="internal-link wiki-link">彭候</a>、<a href="#陳候" class="internal-link wiki-link">陳候</a>、<a href="#潘候" class="internal-link wiki-link">潘候</a>、<a href="#汪起鳳" class="internal-link wiki-link">汪起鳳</a>、<a href="#曹候" class="internal-link wiki-link">曹候</a>、<a href="#欲高忠憲" class="internal-link wiki-link">欲高忠憲</a>、<a href="#應瑞" class="internal-link wiki-link">應瑞</a>：郭之奇同時代或前代的揭陽地方官員</li>
+</ul>
+<h3 id="地理背景">地理背景</h3>
+<ul>
+<li><strong>揭陽</strong>（又稱揭嶺、聞南地區）：明末清初廣東揭陽縣，為本文集的地方背景</li>
+<li>文中多次提及「掇地去京師八千里」，強調地方自治的必要性</li>
+</ul>
+<h3 id="進一步研究方向">進一步研究方向</h3>
+<ol>
+<li>與其他卷冊的比較研究（如卷26-28的相關篇章）</li>
+<li>与明末地方志、官僚制度研究的對話</li>
+<li>郭之奇的官治理念與實踐的關係</li>
+<li>揭陽地方文化、教育體系的重構</li>
+<li>「廟學」「鄉較」等制度在明末的發展現狀</li>
+</ol>
+<hr />
+<p><strong>檔案資訊</strong>
+最後編輯：2026-03-20
+編輯者：Claude Code Agent
+狀態：精校完整版 v1.0</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

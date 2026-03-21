@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷十七 · 七言絕句 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" class="active">卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷十七-·-七言絕句">卷十七 · 七言絕句</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之十七</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+来源：搜韵网校本 | 富版本编订 2026-03-21</p>
+</blockquote>
+<hr />
+<p>本卷为郭之奇七言绝句汇编，共八十八首。这一卷包含了诗人的多个时期的作品，既有游历山水的纪行诗，如著名的庐山诗篇；也有送别、思友、悼亡等人伦情感的表现；更有关于人物评价、美学思考的论述性诗歌。七言绝句相比五言绝句篇幅稍长，为诗人提供了更充分的表达空间，其中许多诗歌体现了诗人对人生、时光、自然等主题的深入思考。</p>
+<h2 id="篇目表">篇目表</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>望庐山和苏韵</td>
+</tr>
+<tr>
+<td>2</td>
+<td>四月一日二首 其一</td>
+</tr>
+<tr>
+<td>3</td>
+<td>四月一日二首 其二</td>
+</tr>
+<tr>
+<td>4</td>
+<td>系春</td>
+</tr>
+<tr>
+<td>5</td>
+<td>问春</td>
+</tr>
+<tr>
+<td>6</td>
+<td>说士与逸民之品不同</td>
+</tr>
+<tr>
+<td>7</td>
+<td>得时与避世之怀各一</td>
+</tr>
+<tr>
+<td>8</td>
+<td>呼奚觅怪石二首 其一</td>
+</tr>
+<tr>
+<td>9</td>
+<td>呼奚觅怪石二首 其二</td>
+</tr>
+<tr>
+<td>10</td>
+<td>衢州道中二首 其一</td>
+</tr>
+<tr>
+<td>11</td>
+<td>衢州道中二首 其二</td>
+</tr>
+<tr>
+<td>12</td>
+<td>十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其一</td>
+</tr>
+<tr>
+<td>13</td>
+<td>十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其二</td>
+</tr>
+<tr>
+<td>14</td>
+<td>时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其一</td>
+</tr>
+<tr>
+<td>15</td>
+<td>时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其二</td>
+</tr>
+<tr>
+<td>16</td>
+<td>过丰城剑江二首 其一</td>
+</tr>
+<tr>
+<td>17</td>
+<td>过丰城剑江二首 其二</td>
+</tr>
+<tr>
+<td>18</td>
+<td>望庐山（崇祯本）</td>
+</tr>
+<tr>
+<td>19</td>
+<td>既而湖山暮接清风拂月复成其一</td>
+</tr>
+<tr>
+<td>20</td>
+<td>因念昔者寺僧乞诗子瞻留一绝……今之题庐山者益多谨依韵述之以告诸词客</td>
+</tr>
+<tr>
+<td>21</td>
+<td>偶占</td>
+</tr>
+<tr>
+<td>22</td>
+<td>舟发雩都苦雨随缘成八首 其一</td>
+</tr>
+<tr>
+<td>23</td>
+<td>舟发雩都苦雨随缘成八首 其二</td>
+</tr>
+<tr>
+<td>24</td>
+<td>舟发雩都苦雨随缘成八首 其三</td>
+</tr>
+<tr>
+<td>25</td>
+<td>舟发雩都苦雨随缘成八首 其四</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="望庐山和苏韵">望庐山和苏韵</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、山水</td>
+<td>舟中</td>
+<td>庐山、观赏</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文">原文</h3>
+<p>（序）庐山真面，相识颇难，苏子瞻入此，如行山阴囧道上，应接不暇，诗无多见，而游情山意，却尽于"他年故人"及"身在此中"两绝。余以春日朔流，舟中隐约望之，许神游耳。然飞光难定，一水遥涵，化迹清深，就索弥隐，神游身游，未知其所获孰多也。</p>
+<p>相对无缘认岭峰，入看只与白云同。
+江舟竟日分横侧，真面遥临一水中。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>相对观望时因为距离遥远所以难以认清岭峰的真貌，想要进入观看却只能与白云相伴。江上的舟整日随着流水倾斜摇晃，庐山的真实面貌遥隔在一江清水的彼方。</p>
+<h3 id="题解">题解</h3>
+<p>这是一首关于观看与认识的诗。序言引用了苏东坡对庐山的著名描写，而诗人则通过自己的游历经验来反思关于观看、认识与精神体验的问题。"相对无缘认岭峰，入看只与白云同"表现了距离与障碍——无论是远看还是近观，诗人都无法真正把握庐山的"真面"。"江舟竟日分横侧，真面遥临一水中"则暗示了庐山的本质可能正在这种无法把握的状态中。这首诗的深度在于其对认识论的思考。</p>
+<hr />
+<h2 id="四月一日二首-其一">四月一日二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>四时、感怀</td>
+<td>无处</td>
+<td>时光、季节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_1">原文</h3>
+<p>晓来风色北窗归，一岁几何三月非。
+谁道时光不作意，晴阴云日半依违。</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>清晨的风色从北窗飘入，一年中有几个月呢，三月已经过去。谁说时光没有意图，晴与阴、云与日半截相依，仿佛在犹豫与摇摆。</p>
+<h3 id="题解_1">题解</h3>
+<p>对时光流逝的感悟。"一岁几何三月非"强调了时光的迅速流逝——三月已经过去，而整年的时间又能有多少呢？诗人对"时光"的拟人化描写——"谁道时光不作意"——赋予了时光以某种意图与主体性。"晴阴云日半依违"则以气象变化的摇摆不定来比喻时光的流动——既不完全是阴，也不完全是晴，而是在两者之间摇晃。</p>
+<hr />
+<h2 id="四月一日二首-其二">四月一日二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>四时、感怀</td>
+<td>无处</td>
+<td>花卉、季节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_2">原文</h3>
+<p>落尽黄梅四月天，空枝一鸟语春还。
+早知梅熟春同去，怨却花时信早传。</p>
+<blockquote>
+<p>异文：怨却，康熙本作"却恨"。</p>
+</blockquote>
+<h3 id="白话全译_2">白话全译</h3>
+<p>黄梅花已经落尽，四月的天气于焉确立，空枝上一只鸟在诉说春天即将归来。早知道梅花成熟时春天就要同时离去，怨恨那花时早早传来的信息。</p>
+<h3 id="题解_2">题解</h3>
+<p>关于季节更替的反讽。梅花的谢落标志着春季的行将结束，而"空枝一鸟语春还"则暗示春天本身也即将消散。"早知梅熟春同去"表达了诗人的某种抱怨与遗憾——季节的更替是不以人的意愿为转移的。"怨却花时信早传"则以反讽的口吻表达了对"信息"本身的怨恨，仿佛如果不早早知道春天即将离去，就能延长享受春天的时光。</p>
+<hr />
+<h2 id="系春">系春</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>四时、闲适</td>
+<td>庭园</td>
+<td>春天、消遣</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_3">原文</h3>
+<p>曾无好事系春华，冷落閒庭片片花。
+半榻幽清贪晓睡，三杯软饱觅生涯。</p>
+<blockquote>
+<p>异文：题，康熙本作《閒庭》。
+异文：系，康熙本作"答"。</p>
+</blockquote>
+<h3 id="白话全译_3">白话全译</h3>
+<p>我从来没有用心来拴住春天的华彩，春花冷落地散落在闲置的庭园里。我在榻上贪图清晨的睡眠，用三杯酒足饱地来寻找生活的乐趣。</p>
+<h3 id="题解_3">题解</h3>
+<p>闲适的人生哲学。诗人坦然承认自己"曾无好事系春华"——他没有费力去抓住春天。"冷落閒庭片片花"则以自然的衰落来衬托诗人的闲散心态。后两句更是直接表现了诗人的生活方式——不为功名所累，而是寻找"半榻""三杯""晓睡""软饱"这样的物质与精神的简单满足。整首诗洋溢着对闲适生活的自足与骄傲。</p>
+<hr />
+<h2 id="问春">问春</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>四时、感怀</td>
+<td>无处</td>
+<td>春天、客心</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_4">原文</h3>
+<p>几将閒绪问春华，愁客无端怪落花。
+花落何堪兼雨夜，客愁可奈是天涯。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>我用闲散的思绪多次询问春天的华彩，但客居的我却无缘无故地埋怨花的凋落。花落恰逢雨夜更是令人难堪，客人的愁绪又怎能奈何这远在天涯的春天呢？</p>
+<h3 id="题解_4">题解</h3>
+<p>客心与春心的对话。诗人用"问春华"来开启对话，但这种对话本身就充满了某种虚无感——因为春天无法回答。"愁客无端怪落花"则暗示了诗人的埋怨实际上是无的放矢，是客心的自我投射。"花落何堪兼雨夜"进一步深化了这种困境——自然的衰落与人的孤独感相叠加，形成了叠加的悲伤。最后的"可奈是天涯"则暗示诗人的无力感来自于地理上的距离。</p>
+<hr />
+<h2 id="说士与逸民之品不同">说士与逸民之品不同</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>人物评价</td>
+<td>无处</td>
+<td>仕宦、隐逸</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_5">原文</h3>
+<p>张仪寸舌犹问妻，子陵两足可加帝。
+终当披裘耕富春，何事读书学游说。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>张仪用那一寸三寸不烂之舌还要去问妻子的意见，子陵可以把脚搁在皇帝肚子上而不屈服。最终我还是要披着毛皮去富春江畔耕种，何必读书来学习那游说的技巧呢？</p>
+<h3 id="题解_5">题解</h3>
+<p>仕与隐的价值观抉择。诗人通过正反对比来表明立场：张仪的游说之舌与子陵的隐逸姿态代表了两条不同的人生道路。诗人最后的表态"终当披裘耕富春，何事读书学游说"明确地表示了自己对隐逸道路的倾向。这种价值观的表述既有对历史人物的评价，也有对自己人生选择的某种预示或抱负。</p>
+<hr />
+<h2 id="得时与避世之怀各一">得时与避世之怀各一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>人物评价</td>
+<td>无处</td>
+<td>遁世、乐道</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_6">原文</h3>
+<p>渊明不折小儿腰，子房却进老人履。
+归去仍招白衣人，功成亦从赤松子。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>陶渊明不愿为了小儿般的权势而折腰，张良却能够穿上老人的鞋履而进入朝堂。陶渊明归乡后仍然招引白衣的客人相访，而张良成功后也随着赤松子飘然而去。</p>
+<h3 id="题解_6">题解</h3>
+<p>两种人生道路的价值等值。诗人通过对陶渊明与张良的对比来阐述一个观点：无论选择"避世"还是"得时"，只要保持品德的纯正与精神的自由，最终都可以获得某种超越性的成就。"不折小儿腰"与"进老人履"表现了两人不同的态度，但"归去仍招白衣人"与"功成亦从赤松子"则表现了两人最终的相似之处——都获得了某种精神的自适。</p>
+<hr />
+<h2 id="呼奚觅怪石二首-其一">呼奚觅怪石二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、咏物</td>
+<td>滩地</td>
+<td>怪石、品鉴</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_7">原文</h3>
+<p>山琢胎形水织纹，千年濯魄冷清濆。
+无端过客多閒绪，携取东归意亦慇。</p>
+<blockquote>
+<p>按：题，康熙本作《戏拾滩中怪石》，仅录第一首。
+异文：此句康熙本作"相依碧涧畏离群"；末句康熙本作"携尔东归伴白云"。閒，康熙本作"幽"。</p>
+</blockquote>
+<h3 id="白话全译_7">白话全译</h3>
+<p>山峦琢磨了石头的胎形，流水织就了石纹的花样。经过千年的水流冲洗，石头的灵魂变得清冷而空灵。莫名其妙地，路过的客人心中积累了闲散的思绪，想要将这块石头携带向东方返乡，其意图也显得殷勤而执着。</p>
+<h3 id="题解_7">题解</h3>
+<p>石头与人心的相遇。诗人以精妙的笔法描写了怪石的形成过程——"山琢胎形水织纹"——既涉及自然的塑造，也涉及时间的工作。"千年濯魄"则强调了这一过程的漫长与石头灵魂的升华。"无端过客多閒绪"引入了观看者——这个过客，他的"闲绪"与石头的"冷清"形成了某种共鸣。"携取东归意亦慇"则表现了这种共鸣所导致的行动——带石头回家。</p>
+<hr />
+<h2 id="呼奚觅怪石二首-其二">呼奚觅怪石二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、咏物</td>
+<td>滩地</td>
+<td>怪石、收集</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_8">原文</h3>
+<p>横流堆叠乱波容，戏拾诸般置夹笼。
+借问参寥谁处是，好和清水作相供。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>横流的江水堆叠着乱石，看似嘻笑地拾取各种石头放入夹笼中。我借问那隐逸的参寥和尚现在何处，我想与清澈的江水一起供奉他。</p>
+<h3 id="题解_8">题解</h3>
+<p>玩乐与修为的融合。"横流堆叠乱波容，戏拾诸般置夹笼"用近乎游戏的语气描写了收集怪石的过程——"戏拾"表现了这一行为的非功利性与乐趣性。后两句则转向了对参寥和尚的追忆——这是一位真实的历史人物，与苏东坡等人交游。"好和清水作相供"则将整个场景升华为对修为之人的供奉——江水与石头都成为了某种精神的载体。</p>
+<hr />
+<h2 id="衢州道中二首-其一">衢州道中二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行</td>
+<td>衢州</td>
+<td>路途、障碍</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_9">原文</h3>
+<p>西流一水向东潺，夹右诸陵并道擐。
+归路惟多千嶂阻，愁来欲把众峰删。</p>
+<blockquote>
+<p>异文：第二句，康熙本作"时与征人照晓颜"。众，康熙本作"数"。</p>
+</blockquote>
+<h3 id="白话全译_9">白话全译</h3>
+<p>西方的水流向东方潺潺流淌，左右两边诸多山陵与道路相环绕。回乡的路上有千重山峦的阻隔，愁绪来临时，我几乎想要削掉所有这些山峰。</p>
+<h3 id="题解_9">题解</h3>
+<p>地理与心理的对应。"西流一水向东潺"营造了旅行的基本场景，而"夹右诸陵并道擐"则强调了地理环境的复杂性。诗人的目的地是东方的故乡，但"千嶂"的阻隔让他产生了强烈的愁绪。"欲把众峰删"则以夸张的笔法表现了这种愁绪的强度——他几乎想要改变地理格局。这首诗将物理意义上的障碍转化为心理意义上的困扰。</p>
+<hr />
+<h2 id="衢州道中二首-其二">衢州道中二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、自然</td>
+<td>衢州</td>
+<td>云峰、视觉</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_10">原文</h3>
+<p>云影相从树影亲，近峰如作远峰臣。
+奇观始信天工巧，谁把丹青挂夕晨。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>云的影子相伴相随，树的影子与其紧密相亲。近处的山峰仿佛作为了远处山峰的臣民。奇妙的景观让我相信天地自然的工巧，谁能够把这样的丹青画挂在夕阳与晨曦之间呢？</p>
+<h3 id="题解_10">题解</h3>
+<p>对自然美的赞颂。前两句以影子的游戏来暗示视觉的复杂性——云影与树影的相互关系既独立又相依。"近峰如作远峰臣"则将山峦拟人化，暗示了空间的层次关系。"奇观始信天工巧"则直接表达了诗人对自然的赞美。最后一句"谁把丹青挂夕晨"则用反问的方式强调了自然之美超越人工之美——没有人能够创作出这样的画作，这是天地自然的创作。</p>
+<hr />
+<h2 id="十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝-其一">十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、亲情</td>
+<td>峡江</td>
+<td>饮酒、兄弟</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_11">原文</h3>
+<p>沙明涛白豁天开，江远舟轻破月来。
+阮氏风流今日事，相逢急进手中杯。</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>沙地光明，涛声如白，天地豁然开朗。江水遥远，船只轻快，仿佛破开了月光而来。像阮籍、阮咸这样的魏晋名士的风流韵事今日在此重演，兄弟相逢，急急忙忙地把酒杯送到彼此的手中。</p>
+<h3 id="题解_11">题解</h3>
+<p>兄弟相逢的欢乐。"沙明涛白豁天开"营造了一个开朗的自然场景，这与兄弟相逢的欢乐心情相应。"江远舟轻破月来"则给这个场景增添了某种梦幻感——"破月"是一个优美的意象。"阮氏风流"引用了魏晋名士的典故，暗示诗人与兄弟的饮酒之乐继承了这一传统。最后的"相逢急进手中杯"则以动作的急促性表现了相逢的喜悦。</p>
+<hr />
+<h2 id="十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝-其二">十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、亲情</td>
+<td>峡江</td>
+<td>梦幻、醉乐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_12">原文</h3>
+<p>仙舟飘渺溯潺湲，访载寻稽忽可扳。
+一笑一歌江日暮，流光山色窅然閒。</p>
+<blockquote>
+<p>异文：流，康熙本作"水"。第二句，康熙本作"春草池塘梦里还"。</p>
+</blockquote>
+<h3 id="白话全译_12">白话全译</h3>
+<p>仙人的舟飘飘渺渺地溯流而上，访古寻今的思想忽然可以得着。在江日暮色中一笑一歌，流动的光影与山的色彩显得幽深而闲适。</p>
+<h3 id="题解_12">题解</h3>
+<p>醉乐中的精神超越。"仙舟飘渺"暗示诗人与兄弟的饮酒状态已经超越了现实，进入了某种梦幻的境界。"访载寻稽忽可扳"则表现了在这种梦幻状态中，历史与当下、古与今的界限变得可以跨越。"一笑一歌江日暮"则以声音与行动来表现这种超越的欢乐。最后的"流光山色窅然閒"则强调了在这种超越中，所有的事物都显得闲适与无为。这首诗充分表现了醉乐的哲学意蕴。</p>
+<hr />
+<h2 id="时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首-其一">时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>亲情、庆贺</td>
+<td>远地</td>
+<td>喜讯、慰藉</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_13">原文</h3>
+<p>万里江云收玉峡，数行家信出金川。
+为兄同慰凤毛种，不惜歌欢鹢首船。</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>万里之外的江云收束在玉峡，几行家信从金川飞出。为了做兄长的欢乐，为了凤凰羽毛般的后代而庆贺，我不吝啬地在鹢首之船上唱起欢歌。</p>
+<h3 id="题解_13">题解</h3>
+<p>远方的喜讯与本地的庆贺。诗人在远地收到了家信，得知侄儿痘疹已愈，这个喜讯穿越"万里江云""玉峡""金川"等地理障碍送到了他手中。"为兄同慰凤毛种"则表现了诗人作为叔叔的欢乐——"凤毛种"是对后代的美称。最后的"鹢首船"是一个诗意的意象，暗示诗人的欢乐已经传遍了舟中，甚至船只本身都在共鸣。</p>
+<hr />
+<h2 id="时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首-其二">时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>亲情、庆贺</td>
+<td>远地</td>
+<td>春景、醉乐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_14">原文</h3>
+<p>烟波江上恰相随，春草池塘未足奇。
+醉罢不知霜色夜，诗成已是月明时。</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>烟波在江上恰好相伴随行，春草与池塘的景象并不特别奇异。醉酒之后不觉得夜色已经变成了霜冷的样子，诗歌写成的时候已经是月明时分。</p>
+<h3 id="题解_14">题解</h3>
+<p>喜乐中的时间消散。诗人在烟波江上的旅行中获得了对春景的观察，而这种观察平凡得"未足奇"。但喜悦之情使得诗人沉溺于饮酒与作诗之中，以至于不觉得时间的流逝——"醉罢不知霜色夜"暗示从黄昏到深夜，而诗人却浑然不觉。这首诗充分表现了喜乐对时间感知的影响。</p>
+<hr />
+<h2 id="过丰城剑江二首-其一">过丰城剑江二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、吊古</td>
+<td>丰城</td>
+<td>古剑、失落</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_15">原文</h3>
+<p>剑光何德烛天河，已没平津又若何。
+神物终非人世玩，江充长与万年磨。</p>
+<h3 id="白话全译_15">白话全译</h3>
+<p>剑光有什么功德能够照亮银河，剑已经没入平津又怎样呢。神物终究不是人世间可以把玩的东西，江水会长久地把它磨圆。</p>
+<h3 id="题解_15">题解</h3>
+<p>古剑的失落与超越。诗人触景生情地思考了丰城剑的故事——这是一把著名的古剑，相传已经入江。"剑光何德烛天河"的设问暗示了对剑之神性的质疑。"已没平津又若何"则表现了某种超越——剑的沉没可能是其最终的归宿。"神物终非人世玩"则直接表达了诗人的观点——神圣之物不应该被人所拥有。最后的"江充长与万年磨"则以大自然的永恒与温和来衬托人的短暂与贪婪。</p>
+<hr />
+<h2 id="过丰城剑江二首-其二">过丰城剑江二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、吊古</td>
+<td>丰城</td>
+<td>江水、沉默</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_16">原文</h3>
+<p>江来万里独何求，剑去千年不可留。
+夜半霜华生月色，还疑精气逐舟浮。</p>
+<h3 id="白话全译_16">白话全译</h3>
+<p>江水来自万里之外，究竟追求什么呢？剑离去已经千年，已经不可能重新拥有。夜半的霜华与月光融合，我仍然怀疑那剑的精气在追逐我的舟而浮动。</p>
+<h3 id="题解_16">题解</h3>
+<p>时间与物的关系的沉思。"江来万里独何求，剑去千年不可留"形成了对比——江的来与剑的去，都是某种必然的过程。"不可留"这个词表达了诗人对时间不可逆性的认识。后两句则转向了某种诗意的想象——霜华与月色在夜半相融，诗人似乎感受到了古剑的精气仍然在。这种想象既是对物的执着，也是对精神永恒性的某种信念。</p>
+<hr />
+<h2 id="望庐山（崇祯本）">望庐山（崇祯本）</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、山水</td>
+<td>舟中</td>
+<td>庐山、观赏</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_17">原文</h3>
+<p>（序）庐山之胜，不可形该，矧于记也。而且欲诗之，不益难乎！苏子瞻入此，应接不暇，诗无多见，而游情山意，却尽于"他年故人"及"身在此中"两绝矣。余以春日湖棹舟中，隐跃望之，云峰漠漠，许神游耳，然身游亦未必多有得于斯。因依韵矢此，以语庐山，其谓我何？</p>
+<p>相对无缘认岭峰，入看祇许白云同。
+却于舟行成横侧，漠漠天屏一镜中。</p>
+<blockquote>
+<p>异文：题，康熙本作《望庐山和苏韵》。
+异文：崇祯本序与康熙本序有大量异文。康熙本首句作"庐山真面目，相识颇难"；尚有"如行山阴道上"句；"湖棹"康熙本作"溯流"；末段康熙本作"然飞光难定，一水遥涵，化迹清深，就索弥隐。神游身游，未知其所获孰多也。缘当日之苏老语，今日之春峰山灵默许，其或告予"。
+异文：许，康熙本作"与"。第三句，康熙本作"江舟竟日分横侧"。末句，康熙本作"真面遥临一水中"。</p>
+</blockquote>
+<h3 id="白话全译_17">白话全译</h3>
+<p>相对观望时无缘认清岭峰的真貌，进入观看时只能与白云相伴。却在舟行中逐渐向一侧倾斜，漠漠的天空形成了一面镜子，将所有景物映在其中。</p>
+<h3 id="题解_17">题解</h3>
+<p>不同文本间的观赏差异。这是关于庐山的另一个版本，与前面的版本在细节上有所不同。序言更强调了庐山的不可言说性与观赏的困难。诗行中的细微差异反映了诗人对同一题材的不同角度的思考。"漠漠天屏一镜中"中的"镜"意象强调了视觉的反射与倒影，暗示了观看本身的虚幻性。</p>
+<hr />
+<h2 id="既而湖山暮接清风拂月复成其一">既而湖山暮接清风拂月复成其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>游历、山水</td>
+<td>湖边</td>
+<td>云月、融合</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_18">原文</h3>
+<p>庐山如屏湖如镜，白云其容月其性。
+湖偏宜月山宜云，风以为媒初相娉。</p>
+<h3 id="白话全译_18">白话全译</h3>
+<p>庐山像一面屏风，湖水像一面镜子。白云是山的容貌，月亮是湖的本性。湖水偏宜映月，山峦偏宜云缠绕，风充当了牵线人，让云月初初相互试着靠近。</p>
+<h3 id="题解_18">题解</h3>
+<p>自然元素的配对与融合。诗人在这首诗中建立了山与屏风、湖与镜子的比喻。更进一步，他为山与湖分配了各自的属性——云与月。"湖偏宜月山宜云"则强调了这种配对的自然与必然。最后的"风以为媒初相娉"则将这种配对提升为某种爱情般的关系——风是媒人，云与月在初初相识。这首诗以优美的意象呈现了对自然和谐的诗化想象。</p>
+<hr />
+<h2 id="因念昔者寺僧乞诗子瞻留一绝……今之题庐山者益多谨依韵述之以告诸词客">因念昔者寺僧乞诗子瞻留一绝……今之题庐山者益多谨依韵述之以告诸词客</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>题咏、反思</td>
+<td>寺院</td>
+<td>庐山、诗人</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_19">原文</h3>
+<p>庐山误出此篇垂，多少徐人欲李辞。
+今日徐人才更倍，谪仙跽请主僧诗。</p>
+<h3 id="白话全译_19">白话全译</h3>
+<p>庐山由于误出了苏东坡的诗篇而传播，许多诗人想要用李白的辞句来替换。如今诗人的数量更多了，作为被贬的仙人，苏东坡只能跪下来请求主持和尚给他们作诗。</p>
+<h3 id="题解_19">题解</h3>
+<p>对诗歌传播与竞争的讽刺。诗人以巧妙的讽刺来评价庐山诗歌创作的历史——苏东坡的诗篇本来是寺僧请求而作，但随后引发了众多诗人的跟风与改写。"徐人欲李辞"暗示诗人们想要用不同的表达方式来改进前人的作品。最后的"谪仙跽请主僧诗"则以反讽的方式暗示：即使是像苏东坡这样的伟大诗人，在众多后来者面前也显得不够出众。这首诗对文学创作的竞争性与传播的复杂性有着深刻的观察。</p>
+<hr />
+<h2 id="偶占">偶占</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>情感、四时</td>
+<td>无处</td>
+<td>春愁、女性</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_20">原文</h3>
+<p>晓风飞去片花吹，暮雨低来折柳垂。
+愁绝子规声欲断，美人独立意迟迟。</p>
+<h3 id="白话全译_20">白话全译</h3>
+<p>清晨的风吹飞了片片花朵，傍晚的雨低低地来临，折弯了柳条。杜鹃的声音令人极度愁绪，几乎要断裂，美人在此独立，她的心意迟疑不决。</p>
+<h3 id="题解_20">题解</h3>
+<p>春愁中的人物刻画。"晓风飞去片花吹，暮雨低来折柳垂"营造了一个充满伤感的自然场景。"愁绝子规声欲断"则将自然现象与人的情感相融合——杜鹃的鸣声不仅是自然现象，也是诗人与美人共同的情感表达。最后的"美人独立意迟迟"则引入了人物——这位美人的心意在春愁的影响下变得犹豫与不定。这首诗以优美的自然意象来表现爱情中的复杂心理。</p>
+<hr />
+<h2 id="舟发雩都苦雨随缘成八首-其一">舟发雩都苦雨随缘成八首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、自然</td>
+<td>舟中</td>
+<td>雨势、困顿</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_21">原文</h3>
+<p>一苇何堪万点侵，无人告诉只呻吟。
+中宵料理三移枕，竟日绸缪两蔽襟。</p>
+<h3 id="白话全译_21">白话全译</h3>
+<p>一条船怎么能够承受万点般的雨水侵袭，没有人来告诉我怎样应对，只有呻吟。半夜里我频频移动枕头，整日里被雨水所缠绕，用两件衣服来遮蔽身体。</p>
+<h3 id="题解_21">题解</h3>
+<p>雨中旅行的困苦。"一苇何堪万点侵"将船比作芦苇，强调了人在自然灾难面前的渺小与无力。"无人告诉只呻吟"则表现了诗人的孤独与无奈。"中宵料理三移枕"与"竟日绸缪两蔽襟"则通过具体的行动来呈现雨中的不适——频频移动枕头暗示不能入眠，而"两蔽襟"则表现了衣物本身也无法充分保护身体。这首诗以细致的细节描写表现了旅行中的苦难。</p>
+<hr />
+<h2 id="舟发雩都苦雨随缘成八首-其二">舟发雩都苦雨随缘成八首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、自然</td>
+<td>舟中</td>
+<td>风雨、不安</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_22">原文</h3>
+<p>无端林响引风窥，多事桅声报客知。
+缘岸低来同懒困，偏帆迟去半欹危。</p>
+<h3 id="白话全译_22">白话全译</h3>
+<p>莫名其妙地树林的声响引来了风的窥视，多事的桅声来报告客人的消息。靠岸的地方低垂下来，众人同样陷入了懒散与困顿，船帆迟迟不能出发，显得半歪半危险。</p>
+<h3 id="题解_22">题解</h3>
+<p>风雨中的被动与困顿。诗人用拟人化的笔法来描写风与其他自然力的作用——"无端林响引风窥""多事桅声报客知"都赋予了自然力以某种意图。"缘岸低来同懒困"则表现了环境对人的影响——靠岸的地势低垂似乎传递了某种困顿的信息，引发了整个船上人的懒散。"偏帆迟去半欹危"则强调了这种困顿的具体表现——船帆在这样的状态下显得危险。</p>
+<hr />
+<h2 id="舟发雩都苦雨随缘成八首-其三">舟发雩都苦雨随缘成八首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、自然</td>
+<td>舟中</td>
+<td>花雨、混乱</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_23">原文</h3>
+<p>一片春深积雨吹，花开如喜落花悲。
+未知悲喜终谁得，雨却归春春亦疑。</p>
+<h3 id="白话全译_23">白话全译</h3>
+<p>春天深深，一大片积累的雨水被吹动。花开的时刻令人欢喜，花落的时刻令人伤悲。我不知道最终谁会获得这悲喜交织的结果，雨回归到春天，春天本身也显得疑惑。</p>
+<h3 id="题解_23">题解</h3>
+<p>花与雨、喜与悲的辩证。诗人在这首诗中呈现了自然现象（花开与花落）与人的情感（喜与悲）的对应关系。但"未知悲喜终谁得"则质疑了这种简单的对应——究竟是花、还是雨、还是人获得了这些情感？最后的"雨却归春春亦疑"则暗示悲喜交织的状态可能是自然的本质——即使是春天本身也对自己的意义感到疑惑。这首诗以高度的诗性和哲学深度来思考自然与人的关系。</p>
+<hr />
+<h2 id="舟发雩都苦雨随缘成八首-其四">舟发雩都苦雨随缘成八首 其四</h2>
+<table>
+<thead>
+<tr>
+<th>体裁</th>
+<th>繫年</th>
+<th>主题</th>
+<th>创作地点</th>
+<th>关键词</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>七言绝句</td>
+<td>未详</td>
+<td>旅行、自然</td>
+<td>舟中</td>
+<td>船工、动物</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_24">原文</h3>
+<p>招招舟子笠蓑蒙，踯躅溇沙湿岸中。
+惊起浴鸥飞别浦，横拖醉竹压孤篷。</p>
+<blockquote>
+<p>异文：第二句，康熙本作"竟日清沙碧水中"。</p>
+</blockquote>
+<h3 id="白话全译_24">白话全译</h3>
+<p>船夫戴着笠子与蓑衣被招呼着，踌躇满志地在湿润的溇沙之间行走。他惊起了正在沐浴的鸥鸟，使其飞向别的河浦。他横拖着醉倒般摇晃的竹子，压低了孤独的船篷。</p>
+<h3 id="题解_24">题解</h3>
+<p>劳动者与自然的互动。诗人以细致的观察来描写船夫在雨中的工作——"招招舟子笠蓑蒙"强调了这种劳动的呼唤与简陋的装备。"踯躅溇沙湿岸中"则将船夫的行走拟人化，赋予其某种犹豫与精明的特质。后两句则转向了这种劳动对自然的影响——惊起了鸥鸟，拖动了竹子。这首诗既表现了劳动的艰辛，也表现了人与自然的互动关系。</p>
+<hr />
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

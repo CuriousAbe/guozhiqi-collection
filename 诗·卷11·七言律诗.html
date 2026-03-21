@@ -1,0 +1,4361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷十一 · 七言律詩 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" class="active">卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷十一-·-七言律詩">卷十一 · 七言律詩</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之十一</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+来源：搜韵网校本 | 富版本编订 2026-03-21</p>
+</blockquote>
+<hr />
+<p>本卷收七言律诗一百二十首，延续卷十的创作。内容以舟行纪事、旅途感怀和友朋赠答为主，间有咏史怀古之作。</p>
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>因念澄江时得如此则来舫去刀两俱莫逆固不欲专丐南飙独予帆迅也</td>
+</tr>
+<tr>
+<td>2</td>
+<td>过采石吊李白墓</td>
+</tr>
+<tr>
+<td>3</td>
+<td>恭谒孝陵二首 其一</td>
+</tr>
+<tr>
+<td>4</td>
+<td>恭谒孝陵二首 其二</td>
+</tr>
+<tr>
+<td>5</td>
+<td>雨日李小湾宗伯召饮寅齐暮辞风舆口占为谢</td>
+</tr>
+<tr>
+<td>6</td>
+<td>将至滁州途中得雨</td>
+</tr>
+<tr>
+<td>7</td>
+<td>晓发过关山</td>
+</tr>
+<tr>
+<td>8</td>
+<td>过桃山岳武穆庙</td>
+</tr>
+<tr>
+<td>9</td>
+<td>有感诸同年</td>
+</tr>
+<tr>
+<td>10</td>
+<td>望阙</td>
+</tr>
+<tr>
+<td>11</td>
+<td>解柱明中翰见招草桥山庄是日孙大器管泰阶曹允大黄改庵刘胤平同其弟拙存俱集</td>
+</tr>
+<tr>
+<td>12</td>
+<td>是日诸子肩舆余独乘马醉归辄供笑谑诗以解嘲</td>
+</tr>
+<tr>
+<td>13</td>
+<td>立秋晓对</td>
+</tr>
+<tr>
+<td>14</td>
+<td>秋馆读书</td>
+</tr>
+<tr>
+<td>15</td>
+<td>赋得秋凉入郊墟 其一</td>
+</tr>
+<tr>
+<td>16</td>
+<td>赋得秋凉入郊墟 其二</td>
+</tr>
+<tr>
+<td>17</td>
+<td>渴愁</td>
+</tr>
+<tr>
+<td>18</td>
+<td>揽辔</td>
+</tr>
+<tr>
+<td>19</td>
+<td>方肃之得转假附来使寄怀</td>
+</tr>
+<tr>
+<td>20</td>
+<td>陈子仪初入都相过小酌是刻得雨</td>
+</tr>
+<tr>
+<td>21</td>
+<td>封荆将就道子仪宜以诗祖余也而索余己巳赠行之作因复以诗答之</td>
+</tr>
+<tr>
+<td>22</td>
+<td>封荆就道以仲夏九日</td>
+</tr>
+<tr>
+<td>23</td>
+<td>忆去岁北趋九歌之作感而有述</td>
+</tr>
+<tr>
+<td>24</td>
+<td>暑尘道中回首有感之作</td>
+</tr>
+<tr>
+<td>25</td>
+<td>岐路</td>
+</tr>
+<tr>
+<td>26</td>
+<td>秋心</td>
+</tr>
+<tr>
+<td>27</td>
+<td>入徐界望黄河</td>
+</tr>
+<tr>
+<td>28</td>
+<td>季夏买舟白水将赴楚蕲阻雨未发却寄仁和宋尔孚明府</td>
+</tr>
+<tr>
+<td>29</td>
+<td>将至采石守风夜眺见江流四拥一缆悠然不禁烟波之感</td>
+</tr>
+<tr>
+<td>30</td>
+<td>孟秋之朔发金陵旬日始至芜湖</td>
+</tr>
+<tr>
+<td>…</td>
+<td>共120首</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="因念澄江时得如此则来舫去刀两俱莫逆固不欲专丐南飙独予帆迅也">因念澄江时得如此则来舫去刀两俱莫逆固不欲专丐南飙独予帆迅也</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>咏江水、风帆</td>
+</tr>
+<tr>
+<td><strong>创作背景</strong></td>
+<td>舟行澄江所作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文">原文</h3>
+<p>游人计远自多端，大块吹同本一般。
+定后狂波何处问，澄馀止水可微观。
+春江此际还如练，山月于时已在竿。
+安得诸川同是刻，来舟无涩去舟安。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>旅客们计划远行有各种各样的打算，大自然的风力却对所有人一样吹拂。船只行动稳定后，那狂浪奔腾也无处可寻，澄清的余水却值得细细观赏。春天的江水此时清澈如练，山间的月色此刻映照江面如悬竿。我希望各条江川都在同一时刻这样平稳，来船不需费力，去船也能安然前行。</p>
+<h3 id="题解">题解</h3>
+<p>诗人赞美澄江风帆之美。通过对江水、风浪的描写，表达航行中对大自然和谐运行的认识。上联写风帆的自然之理，下联则写江水的澄清宁静之美。</p>
+<hr />
+<h2 id="过采石吊李白墓">过采石吊李白墓</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>凭吊古人</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>李白</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_1">原文</h3>
+<p>苍松渺渺谪仙坟，采石矶头草木芬。
+此地江山空识李，唐朝内外不容君。
+词林气魄青莲重，诗酒风流白水分。
+闻道骑鲸非复是，春峰箕尾伫遥氛。</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>苍松茫茫笼罩着谪仙人的坟墓，采石矶头的草木散发清香。这里的山河虽然认识李白，但唐朝的朝代内外都不能容纳他这样的天才。他在词林中气魄如青莲之重，诗酒风流却被白水（长江）分开了。听说他骑鲸升仙非是真实，但春天的山峰、箕宿的月色却永远在等待他远去的身影。</p>
+<h3 id="题解_1">题解</h3>
+<p>郭之奇过采石凭吊李白。诗人既追思李白的才华，又为其遭遇不遇而叹惋。借山河、草木、月色等物象来表达对大诗人的缅怀和感慨。</p>
+<hr />
+<h2 id="恭谒孝陵二首-其一">恭谒孝陵二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>谒陵祭拜</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>孝陵（明孝宗陵）</td>
+</tr>
+<tr>
+<td><strong>性质</strong></td>
+<td>官方谒陵</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_2">原文</h3>
+<p>波臣万里逐春风，稽首天灵拜紫嵩。
+绕阙祥云时献瑞，环庭翠柏日摩穹。
+踞蟠象合诸峰拱，芊郁年多晓气笼。
+入眼兴怀歌膴膴，瓜绵不但数岐丰。</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>我如水臣一样万里随春风而来，虔敬叩拜天灵于紫嵩山陵。绕阙的祥云时时献瑞，环陵的翠柏日日摩天。山象踞卧合围，诸峰向陵拱卫，郁郁葱葱的植被笼罩在晓气中。入眼即生兴怀，歌唱膴膴之气，瓜绵的丰收不仅记述在岐山之丰。</p>
+<h3 id="题解_2">题解</h3>
+<p>郭之奇恭敬谒孝陵时所作。通过对陵地山川、气象的描写，表达对先帝的崇敬。诗中以自然之美衬托陵地的庄严神圣。</p>
+<hr />
+<h2 id="恭谒孝陵二首-其二">恭谒孝陵二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>谒陵祭拜</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>孝陵</td>
+</tr>
+<tr>
+<td><strong>性质</strong></td>
+<td>官方谒陵</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_3">原文</h3>
+<p>象纬霄寒挂晓峰，龙湖回首怅攀从。
+夷膻扫出千王世，明运长开百代宗。
+天意亦钟成鼎处，臣生虽晚奕云逢。
+冈陵气色今多美，时际中兴自郁冲。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>星象在寒夜里挂在晓峰，龙湖回顾间怅然攀登随行。蛮夷和异族被扫出千代之世，明朝的运势长久开启百代的宗法。天意聚集在成鼎之地，我虽晚生却逢云龙之时。陵地的气色如今更显美好，此时正值中兴，自有郁勃之势。</p>
+<h3 id="题解_3">题解</h3>
+<p>谒陵诗其二，进一步表达对明运昌隆、天意所钟的思想认识。诗人既为能逢国家中兴而庆幸，也对陵地的气象寄予厚望。</p>
+<hr />
+<h2 id="雨日李小湾宗伯召饮寅齐暮辞风舆口占为谢">雨日李小湾宗伯召饮寅齐暮辞风舆口占为谢</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>感谢宴饮</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>李小湾</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>雨日</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_4">原文</h3>
+<p>角巾折雨入龙门，李郭当年意可论。
+湿径穿青依翠幕，疏烟流润上青樽。
+六朝春色因君转，五岭云心以聚温。
+别去醇情昏霭是，舆风虽剧不惊魂。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>头戴角巾折雨而入龙门，李郭二家的友谊当年可议论。湿漉的小径穿过青色依靠翠幕，稀疏的烟雾润泽上升在青玉杯樽。六朝的春色因你而转变，五岭的云心以你聚集温暖。分别后的醇情昏霭中显现，乘坐的风舆虽然急速也不惊扰我的心灵。</p>
+<h3 id="题解_4">题解</h3>
+<p>雨日应李小湾的邀请赴宴，临别时口占此诗以示感谢。诗中既写雨中赴宴的情景，也表达对友谊的珍视和对分别的恋恋不舍。</p>
+<hr />
+<h2 id="将至滁州途中得雨">将至滁州途中得雨</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>途中遇雨</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>去滁州的途中</td>
+</tr>
+<tr>
+<td><strong>景物</strong></td>
+<td>春雨、江山</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_5">原文</h3>
+<p>春此时归我亦行，归行何事异其程。
+岐途柳倦难分绪，落日鹃催别作声。
+扑面烟风回首罢，浥尘轻雨近峰生。
+苍苍迷霭昏舆外，祇许前山入望横。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>春天此时归来我也在行进，归去行进何必与路程不同。分岔的途上柳树疲倦难分情绪，落日中杜鹃催促着别离的声音。扑面的烟风让人回首思望，浥润尘埃的轻雨在近处山峰生起。苍茫的迷霭昏暗在舆车外面，只许前方的山峰入眼望去。</p>
+<h3 id="题解_5">题解</h3>
+<p>诗人前往滁州途中遇雨所作。通过雨景、柳树、杜鹃等意象，表达旅途中的感怀。诗中渲染了春雨中的迷茫和行旅的辗转。</p>
+<hr />
+<h2 id="晓发过关山">晓发过关山</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>晓发山路</td>
+</tr>
+<tr>
+<td><strong>景物</strong></td>
+<td>晓星、春路、花气</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_6">原文</h3>
+<p>雨后云光湿晓星，朝来风意漠芳坰。
+征衣已带前山色，春路还留夹道馨。
+花气归从莺语碎，林烟散作马头青。
+古来极目伤心处，况复惊时此地经。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>雨后的云光润湿了晓星，早晨的风意吹过芳草原野。征衣已经沾染了前山的颜色，春路还留存了夹道的芳馨。花的香气随着莺啼破碎而归，林间的烟雾散成了马头前的青色。自古极目望去就是伤心之处，况且在这惊乱的时刻还要经过此地。</p>
+<h3 id="题解_6">题解</h3>
+<p>晓发翻越关山所作。诗人在登山的途中，既被山路春景所吸引，又为古来多事之地而生伤心之情。诗中融合了自然景物与人事感慨。</p>
+<hr />
+<h2 id="过桃山岳武穆庙">过桃山岳武穆庙</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>凭吊武穆</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>岳飞</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>桃山</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_7">原文</h3>
+<p>越水残肤旧已寻，徐山祠庙此相临。
+循途未敢趋风谒，感昔难将涕雨禁。
+父老遮边当日话，冤臣下圄片时心。
+寻常一死关夷夏，不尽孤丹泪古今。</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>越水的遗迹我早已寻访，徐山的祠庙与此地相临。循着路途不敢快速前往谒拜，感念往昔难以抑制眼泪。父老们讲述当日守边的故事，冤臣被囚的片刻心情。平常一死却关乎夷夏之分，不尽的孤愤泪水贯通古今。</p>
+<h3 id="题解_7">题解</h3>
+<p>过岳王庙而作。诗人既追悼岳飞的遭遇，也为他不为统治者所容而叹息。诗中融历史、现实和个人感慨为一体。</p>
+<hr />
+<h2 id="有感诸同年">有感诸同年</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>感慨同年</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>同科进士</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>五年后重逢</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_8">原文</h3>
+<p>驱驰忆昔此中归，联袂诸君剖上畿。
+燕鲁齐吴三叠尽，东西南北五年违。
+歌城琴父双寥寂，为陆辞丘半是非。
+马上询人惊欲泪，故堤柳色共依依。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>驱驰中回忆当年从此地归来，与众位朋友联袂分赴各地。燕鲁齐吴的三叠差不多走完，东西南北五年已经分离。歌城琴父都已变得寥寂，有人为陆为丘半真半假。马上打听他人惊讶得想哭，故堤的柳色依旧与我们相依。</p>
+<h3 id="题解_8">题解</h3>
+<p>诗人在五年后再见诸同年有感而作。通过对分别的感慨，表达时光易逝、人事变迁的无奈。诗中既有对往昔聚首的追忆，也有对现今各奔东西的叹息。</p>
+<hr />
+<h2 id="望阙">望阙</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>远望京城</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>途中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_9">原文</h3>
+<p>燕云咫尺望中跚，未息征尘已意安。
+眼到西山朝气出，梦回南岭晓魂残。
+舟车地尽风光忆，春夏程争日月看。
+万里见闻今默数，诸缘返计漠无端。</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>燕云咫尺在视野中摇晃，征尘未息心意已得安定。眼睛到达西山朝气就产生，梦回南岭时晓魂已经消散。舟车行遍大地风光已成回忆，春夏行程争逐日月看不清。万里见闻如今默默计数，诸般因缘返回计算却漠然无端。</p>
+<h3 id="题解_9">题解</h3>
+<p>远望京城（京畿）时所作。诗人虽然身在途中，但心念已经指向京城。诗中既写眼前的风景，也写心中的梦想，融合了旅途的真实体验与精神向往。</p>
+<hr />
+<h2 id="解柱明中翰见招草桥山庄是日孙大器管泰阶曹允大黄改庵刘胤平同其弟拙存俱集">解柱明中翰见招草桥山庄是日孙大器管泰阶曹允大黄改庵刘胤平同其弟拙存俱集</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>宴集纪游</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>草桥山庄</td>
+</tr>
+<tr>
+<td><strong>参与者</strong></td>
+<td>解柱明等多人</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_10">原文</h3>
+<p>草桥园涧备层阴，驾水开筵万木森。
+撤暑流情浮醴动，窥樽云色落杯深。
+兰亭禊罢春为夏，金谷诗成古复今。
+拚得扶光西汜促，主人终宴尚馀心。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>草桥的园涧层层遮阴，架水开设筵席万木深森。撤去暑气流淌的情感浮起醴泉的波澜，从樽杯窥看云色坠落杯底深处。如同兰亭禊罢春天才变为夏天，如金谷诗成古时复现于今日。即便扶光西下时光匆促，主人的宴席终了心里依然不舍。</p>
+<h3 id="题解_10">题解</h3>
+<p>诗人应解柱明之邀赴草桥山庄参加宴集。诗中既赞美了山庄的幽雅，也表达了宴会中的欢乐和结束时的恋恋不舍。融合了自然景物与人文典故。</p>
+<hr />
+<h2 id="是日诸子肩舆余独乘马醉归辄供笑谑诗以解嘲">是日诸子肩舆余独乘马醉归辄供笑谑诗以解嘲</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>酒后归返</td>
+</tr>
+<tr>
+<td><strong>形式</strong></td>
+<td>自我解嘲</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_11">原文</h3>
+<p>红尘拨尽别为天，只此清樽不易然。
+暑鸟依亭惊客至，游鱼仰沫听音前。
+欢来临涧觞飞羽，醉后扶鞍马似船。
+莫讶知章狂态出，羸君柳絮拂归鞯。</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>红尘拨尽才能分别成天，唯有这清樽的快乐不容易得到。暑鸟在亭子里被客人惊到，游鱼在水面仰望水沫听声音。欢乐来临时觞杯飞起如羽毛，醉后扶着马鞍马儿好似摇船。莫要惊讶知章的狂态出现，这羸弱的我被柳絮拂过了归程的鞯具。</p>
+<h3 id="题解_11">题解</h3>
+<p>宴会后醉归，诗人自己用诗解嘲众人的笑谑。通过对自己醉态的夸张描写，既表达了宴会的欢乐，也以自嘲化解了可能的尴尬。全诗充满了幽默感。</p>
+<hr />
+<h2 id="立秋晓对">立秋晓对</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>立秋时节</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>晓间</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_12">原文</h3>
+<p>朝看一叶下凉襟，昨夜商飔初动林。
+周史空悬三日令，楚臣已迫四时心。
+新来乳雁横霄影，老尽鸣蝉咽露音。
+始觉朝清秋易肃，西郊不用更迎金。</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>早上看到一片叶子飘下清凉的胸襟，昨晚的秋风才初动树林。周朝的历史空悬着三日的令令，楚国的大臣已迫不得已改变四时之心。新来的乳雁横过霄空的身影，老尽的鸣蝉哽咽着露水的声音。才感觉到晓间清爽秋天容易变得肃穆，西郊不用再更新迎接秋金了。</p>
+<h3 id="题解_12">题解</h3>
+<p>立秋时晓间所作。诗人通过观察秋天的各种现象，体悟到时序变化的力量。既有对秋天自然景象的描写，也有对时令变迁的哲学思考。</p>
+<hr />
+<h2 id="秋馆读书">秋馆读书</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋日读书</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>秋馆</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_13">原文</h3>
+<p>金风落响出西山，雨过郊烟度曙关。
+鬓欲惊吹来坠叶，胸能收爽去蒸颜。
+槐云午结冰衙盖，葭露宵团玉水湾。
+何幸一官无暑气，秋声先向夜藜还。</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>秋风金黄的落响从西山传出，雨过后郊野的烟雾穿过晨曦的关隘。鬓发欲被秋风惊吹而坠落树叶，胸怀能够收纳秋爽而去掉蒸腾的面容。槐树的云彩在午时结聚遮盖，芦荻的露珠在宵间凝结成玉色水湾。幸好我有一个官职没有暑气困扰，秋天的声音首先向夜藜传出。</p>
+<h3 id="题解_13">题解</h3>
+<p>诗人在秋馆读书时所作。诗中既描写了秋天的自然现象，也表达了秋日读书的闲适心情。通过官职而免去暑气之苦的幸运，映照出读书的宁静与专注。</p>
+<hr />
+<h2 id="赋得秋凉入郊墟-其一">赋得秋凉入郊墟 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋凉入郊</td>
+</tr>
+<tr>
+<td><strong>性质</strong></td>
+<td>馆课</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_14">原文</h3>
+<p>京华不碍石泉踪，为爱秋初野外容。
+微变原情因雨过，轻凋林色尚云封。
+草芳欲怨鹈先出，露白翻思人可从。
+此际清怀堪四掬，未须眉爽倩西峰。</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>京华虽然不妨碍石泉的踪迹，我是为了爱秋初野外的容貌。微妙的变化原于雨过后的情感，轻微的凋落林色还被云遮封。草本的芳香欲怨鹈鸟先出现，露水的洁白反而令人想到人可以跟随。此时清怀可以四处掬取，不必等眉爽后向西峰乞求。</p>
+<h3 id="题解_14">题解</h3>
+<p>赋题诗。诗人歌颂秋初郊野的景色，既有对自然变化的细致观察，也有对郊野之美的由衷赞美。诗中融合了理趣与情感。</p>
+<hr />
+<h2 id="赋得秋凉入郊墟-其二">赋得秋凉入郊墟 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋凉入郊</td>
+</tr>
+<tr>
+<td><strong>性质</strong></td>
+<td>馆课</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_15">原文</h3>
+<p>草际轻烟云际阴，萧萧秋望自秋吟。
+也知赢肃分天地，无奈登临尽古今。
+野意平分悲客气，时光同出达行心。
+何当选厉依兹节，一趁西飘扫若林。</p>
+<h3 id="白话全译_15">白话全译</h3>
+<p>草际的轻烟云际的昏阴，萧萧秋望中自然唱出秋吟。我也知道秋气肃穆分开天地，无奈登临却遍历古今。野性的意趣平分了悲伤的客气，时光同样产生了通达的行心。何时才能选择高洁依靠这季节，趁着西风飘扬扫过如林的树木。</p>
+<h3 id="题解_15">题解</h3>
+<p>赋题诗其二。诗人进一步发挥秋凉入郊的意象，既有对秋日郊野景色的咏叹，也有对人生境遇的思考。</p>
+<hr />
+<h2 id="渴愁">渴愁</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>病中感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_16">原文</h3>
+<p>西杓挹露斗浆浮，多病相如自渴愁。
+无好无能时倚柱，独清独醒半行游。
+图书以外他何物，神骨之间或似秋。
+却叹凄其絺绤际，缁衣敝改孰为谋。</p>
+<h3 id="白话全译_16">白话全译</h3>
+<p>西杓星舀露水星浆浮起，多病的我如相如一样自觉渴愁。既无善好又无能力时倚着柱子，独自清醒独自醒着半途行走。图书之外还有什么东西，神骨之间或许有秋天的凉意。却叹息凄凉的细布麻布之际，黑色的衣衫破旧了谁来想办法。</p>
+<h3 id="题解_16">题解</h3>
+<p>诗人身病心愁时所作。通过自况相如之渴，表达病中的寂寞与困顿。既有身体的苦痛，也有精神的孤独。</p>
+<hr />
+<h2 id="揽辔">揽辔</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>官场归隐</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_17">原文</h3>
+<p>栖栖马背自清狂，六载冰衙弟子行。
+玉佩羞看门下铗，朱衣竞哂酒炉鹴。
+已怜梅摽今三实，忽见葭苍此一方。
+揽辔逍遥歌九辨，愿言思古莫心伤。</p>
+<h3 id="白话全译_17">白话全译</h3>
+<p>栖栖然在马背上自寻清狂，六年在冷官的弟子地位行走。玉佩恨看不得门下的食客刀，朱衣的人竞相讥笑酒炉旁的鸟。已经怜惜梅子已摽落三回，忽然看到葭草苍老的样子。揽住缰绳逍遥地歌唱九辨，愿意思念古人不伤心伤。</p>
+<h3 id="题解_17">题解</h3>
+<p>诗人在官场多年后欲归隐时所作。通过对官场生活的反思，表达对归隐的渴望。诗中既有对官场的讽刺，也有对逍遥的向往。</p>
+<hr />
+<h2 id="方肃之得转假附来使寄怀">方肃之得转假附来使寄怀</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>寄怀朋友</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>方肃之</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_18">原文</h3>
+<p>劳劳尘足忽秋惊，羁旅燕天怅友生。
+懒骨如余羞径捷，素心于子觉名轻。
+独留文史山中富，正想须眉江上清。
+四载为期今复订，梧风葭露忆初迎。</p>
+<h3 id="白话全译_18">白话全译</h3>
+<p>劳累的尘足忽然被秋天惊醒，羁旅在燕天的我怅然思念朋友。懒骨如我羞于径捷的升迁，素心的你觉得名利轻浮。独自留下文史的山中富饶，正想象着须眉在江上的清爽。四年为期限如今重新约定，梧风葭露中忆起初次相迎。</p>
+<h3 id="题解_18">题解</h3>
+<p>寄怀朋友方肃之转任得假时所作。诗人既为朋友的升迁而庆贺，也表达了对友谊的珍视。诗中融合了官场现实与精神寄托。</p>
+<hr />
+<h2 id="陈子仪初入都相过小酌是刻得雨">陈子仪初入都相过小酌是刻得雨</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>相聚小酌</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>陈子仪</td>
+</tr>
+<tr>
+<td><strong>情景</strong></td>
+<td>相过时得雨</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_19">原文</h3>
+<p>春风别后满秋思，在水苍蒹五度丝。
+忽报音容欢执手，顿忘主客急衔卮。
+行云旧是樽前物，快雨初倾酒下时。
+君去屋梁颜色照，更生明月欲催诗。</p>
+<h3 id="白话全译_19">白话全译</h3>
+<p>春风别后满心秋思，在水边的芦苇丝绦已经五度。忽然听到陈子仪来访而欢欣握手，顿时忘却了主客的身份急忙斟酒。行云旧日是樽前的常客，快雨初时倾落在酒杯之下。君去后屋梁的颜色照耀，更生了明月欲促催诗成。</p>
+<h3 id="题解_19">题解</h3>
+<p>陈子仪初入京都相访，诗人与之小酌，适逢得雨。诗中既写重逢的喜悦，也写酒后的欢乐。</p>
+<hr />
+<h2 id="封荆将就道子仪宜以诗祖余也而索余己巳赠行之作因复以诗答之">封荆将就道子仪宜以诗祖余也而索余己巳赠行之作因复以诗答之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>离别赠诗</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>子仪</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_20">原文</h3>
+<p>别君犹索祖君诗，聚散随缘总莫期。
+南北岐途千载泪，漳潮衣带一方思。
+凭兹别意难言处，正想离情无尽时。
+和汝唱予俱一况，劳劳休作渭城词。</p>
+<h3 id="白话全译_20">白话全译</h3>
+<p>与君别离还要索要祖君的诗，聚散随缘却总不能期待。南北岐途流下千载的眼泪，漳潮衣带纠缠一方的思念。凭借这别意难以言说之处，正是离情无尽之时。与你共鸣唱和我们同样的况味，劳累的分别别再作渭城之歌词。</p>
+<h3 id="题解_20">题解</h3>
+<p>陈子仪要赴荆州赠别，并索要过去的赠诗，诗人以新诗答之。诗中既有对友谊的眷恋，也有对别离的感慨。</p>
+<hr />
+<h2 id="封荆就道以仲夏九日">封荆就道以仲夏九日</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>离别吟咏</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>仲夏九日</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_21">原文</h3>
+<p>征车晓夕似行云，野色峰容近远醺。
+出郭何心初一啸，兴怀随地入孤闻。
+岂将词赋销长日，正想咨诹答圣君。
+此际悠悠思不禁，自怜朝野望中分。</p>
+<h3 id="白话全译_21">白话全译</h3>
+<p>征车在晓夕如行云一样，野色峰容从近到远都醉人。出城郭时初心一啸而去，兴怀随地入到孤独的声音。岂止用词赋来打发长日，正想咨询决策来回答圣君。此刻悠悠的思想不禁滋生，自怜朝野在望中分开。</p>
+<h3 id="题解_21">题解</h3>
+<p>仲夏九日启程赴荆州，在途中所作。诗人虽然离别，但心中还惦念着国家大事和圣君。</p>
+<hr />
+<h2 id="忆去岁北趋九歌之作感而有述">忆去岁北趋九歌之作感而有述</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>忆昔感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_22">原文</h3>
+<p>去岁吴江续楚骚，无端悲往自心忉。
+明知褊性宜閒散，幸际明时逐队曹。
+偃息翻惭何补报，驱驰敢自谓贤劳。
+恭承嘉命荆封日，遥望湘流吊汨皋。</p>
+<h3 id="白话全译_22">白话全译</h3>
+<p>去年在吴江续作楚骚，无缘无故地悲伤往事自心忉怆。明知我褊狭的性情宜于闲散，幸运地赶上贤明的时代跟随队列。偃息休闲反而感到惭愧无补于报恩，驱驰奔波怎敢自称为贤劳。恭敬承受嘉命荆封的日子，遥远地望着湘江流水吊唁汨罗。</p>
+<h3 id="题解_22">题解</h3>
+<p>回忆去年创作"九歌"时的感怀。诗人既为不能休闲而遗憾，也为能被任用而庆幸，在对比中反映出个人与国家的关系。</p>
+<hr />
+<h2 id="暑尘道中回首有感之作">暑尘道中回首有感之作</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>行路感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_23">原文</h3>
+<p>朱宿衔烟朝露晞，星车破暑此时归。
+飘尘北拥悲鸿渡，积翳南昏泣燕飞。
+自叹泥躬随蹇蹇，翻愁迷路滞騑騑。
+燕台回首晴空蔽，不但征人面目非。</p>
+<h3 id="白话全译_23">白话全译</h3>
+<p>朱宿衔烟朝露晞干，星车破开暑气此时归来。飘摇的尘埃北方拥积悲鸿渡河，积累的云翳南方昏暗泣燕飞行。自我叹息泥塑的躬身随蹇蹇而行，反而愁苦迷路滞留騑騑之状。燕台回首晴空被遮蔽，不但征人的面目改变。</p>
+<h3 id="题解_23">题解</h3>
+<p>行路中回首所作。诗人在暑尘中奔驰，既为旅途的疲劳而叹息，也为见闻的变化而感慨。</p>
+<hr />
+<h2 id="岐路">岐路</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>人生岐路</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_24">原文</h3>
+<p>粤地燕天入思迷，遂令行与住皆疑。
+时怀靡及迟周道，夜梦频惊促晓骑。
+南北况逢羊屡失，去来惟见鸟争窥。
+一身岐路今遑恤，四海迷津那可知。</p>
+<h3 id="白话全译_24">白话全译</h3>
+<p>粤地燕天令思想迷茫，于是行与住都产生了怀疑。时刻的怀念达不到迟到的周道，夜晚的梦常常被晓骑的急促惊醒。南北况且逢到羊的迷失，去来只看到鸟的争窥。一身在岐路中如今难以顾恤，四海的迷津那可能知晓。</p>
+<h3 id="题解_24">题解</h3>
+<p>为人生的选择而困惑时所作。诗人通过岐路的意象，表达了对前路茫然的感受。既有对现实处境的描写，也有对人生方向的思考。</p>
+<hr />
+<h2 id="秋心">秋心</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋日悲怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_25">原文</h3>
+<p>我本青山尘外侣，自从逐队效驱驰。
+频年客路长销夏，到处人言亟失时。
+入眼沧桑知几变，举头云物正堪思。
+晓来征陌轻阴覆，一片秋心细雨吹。</p>
+<h3 id="白话全译_25">白话全译</h3>
+<p>我本是青山的尘外伴侣，自从跟随队伍效仿驱驰。频年的客路长久消磨了夏天，到处的人言都说我失时。入眼的沧桑知道有几多变化，举头的云物正是堪深思。晓来征陌被轻阴覆盖，一片秋心被细雨吹动。</p>
+<h3 id="题解_25">题解</h3>
+<p>官宦生涯中的秋日感怀。诗人既为离开山林而遗憾，也为频年奔波而感慨。诗中融合了对自然与人生的思考。</p>
+<hr />
+<h2 id="入徐界望黄河">入徐界望黄河</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>登山望河</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_26">原文</h3>
+<p>黄河天际落徐封，晓气迎车净客容。
+云接浮光生渺汉，山含远润入幽峰。
+西来万里流何极，北上千帆影自重。
+却叹寻源非汉使，会应东海问朝宗。</p>
+<h3 id="白话全译_26">白话全译</h3>
+<p>黄河在天际落入徐州的边界，晓气迎着车驾净化了客人的面容。云接浮光产生了渺茫的银河，山含远润进入了幽深的山峰。西来万里的河流何时停止，北上千帆的影子自然沉重。反而叹息寻源不如汉使，应该会在东海问朝宗之路。</p>
+<h3 id="题解_26">题解</h3>
+<p>进入徐州界望黄河时所作。诗人既赞美黄河的壮观，也为其源头难以溯源而感慨。诗中既有对大河的敬畏，也有对远方的想象。</p>
+<hr />
+<h2 id="季夏买舟白水将赴楚蕲阻雨未发却寄仁和宋尔孚明府">季夏买舟白水将赴楚蕲阻雨未发却寄仁和宋尔孚明府</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>阻雨待发</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>白水</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_27">原文</h3>
+<p>雨涨三山滞客津，吴江夜半越潮沦。
+遥知宋渡新来岁，再见苏堤旧日春。
+身在峰飞观折水，心如湖止任游人。
+扁舟几度思洄溯，无那秋风欲楚蘋。</p>
+<h3 id="白话全译_27">白话全译</h3>
+<p>雨水涨满三山滞留在客舟津头，吴江夜半越过潮汐沉沦。遥远地知道宋渡新的来岁，再见苏堤旧日的春天。身在峰飞中观看折叠的江水，心如湖止般任凭游人摇橹。扁舟几度思想回溯洄流，无奈秋风已想往楚地芝兰。</p>
+<h3 id="题解_27">题解</h3>
+<p>在白水买舟欲往楚蕲，因阻雨未发寄给宋明府。诗中既写滞留的焦虑，也写对目的地的向往。</p>
+<hr />
+<h2 id="将至采石守风夜眺见江流四拥一缆悠然不禁烟波之感">将至采石守风夜眺见江流四拥一缆悠然不禁烟波之感</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>夜眺江流</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>采石</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_28">原文</h3>
+<p>江意潇然欲放秋，似因客绪倍添流。
+遥看绿嶂涵牛渚，忽望青潮没鹭洲。
+月浦光遥昏缆带，星河彩曳夜桅收。
+不堪久对商飔发，别入枫林一段愁。</p>
+<h3 id="白话全译_28">白话全译</h3>
+<p>江的意绪潇然欲放秋天，似乎因为客人的思绪倍增流水。遥远看绿色的山峰涵容了牛渚，忽然望到青色的潮水没没了鹭洲。月浦的光遥远地昏暗了缆带，星河的光彩曳拂夜晚的桅杆。不堪久久对着商飔发出，别进枫林的一段愁绪。</p>
+<h3 id="题解_28">题解</h3>
+<p>将至采石守风夜晚眺望时所作。诗人既为江流的壮观而陶醉，也为离别的日期临近而生愁。</p>
+<hr />
+<h2 id="孟秋之朔发金陵旬日始至芜湖">孟秋之朔发金陵旬日始至芜湖</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>舟行日记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_29">原文</h3>
+<p>百里芜湖十日程，退寻进尺较平生。
+与波上下非吾事，阻道流洄是客情。
+击楫徒兴当日舞，布帆难借此宵横。
+永怀不寐飞江月，洗却千愁照独清。</p>
+<h3 id="白话全译_29">白话全译</h3>
+<p>百里芜湖用了十天的行程，退一步寻进一尺比较平时的生活。与波上下浮沉不是我的事情，阻在流洄中才是客人的情感。击楫徒劳地兴起当日的舞蹈，布帆难以向此宵的横风借力。永远怀念不寐的飞江月色，洗却千般愁绪照亮独有的清净。</p>
+<h3 id="题解_29">题解</h3>
+<p>孟秋初一从金陵出发，十日后到达芜湖。诗人既记录了行程的缓慢，也表达了旅途中的感受。</p>
+<hr />
+<h2 id="舟夜守立秋">舟夜守立秋</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>舟中守秋</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_30">原文</h3>
+<p>愁客思归坐晚风，梦回秋色度江枫。
+吹来雁影澄波外，咽破蝉音碧树中。
+斜月西藏飞爽露，行云四敛肃高空。
+祇因一叶伤心见，摇落千年悲气同。</p>
+<h3 id="白话全译_30">白话全译</h3>
+<p>愁闷的客人思念归家坐在晚风里，梦回到秋色中渡过江枫。吹来的雁影澄净了波浪之外，咽破的蝉音在碧树中间。斜月在西方藏入飞爽的露水，行云四周收敛肃穆的高空。只因为一片叶子伤心所见，摇落千年悲气同响。</p>
+<h3 id="题解_30">题解</h3>
+<p>舟中守立秋时所作。诗人既写秋日的各种物象，也表达了旅人的乡愁。诗中融合了自然的细致观察与情感的深刻体会。</p>
+<hr />
+<h2 id="十五早得雨晓对诸山">十五早得雨晓对诸山</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>雨后观山</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_31">原文</h3>
+<p>雨洗秋颜碧嶂重，江浮客意澹相宜。
+生平丘壑缘如素，游倦烟霞望亦私。
+极目云深采药处，惊心露白溯洄时。
+遥怜故岭千峰色，翻令伊人在水思。</p>
+<h3 id="白话全译_31">白话全译</h3>
+<p>雨洗秋天的颜色碧嶂沉重，江浮客人的意念澹然相宜。生平的丘壑因缘如素，游倦的烟霞向望也是私人的。极目云深的采药之处，惊心露白的溯洄之时。遥远地怜惜故岭千峰之色，反而令伊人在水边思想。</p>
+<h3 id="题解_31">题解</h3>
+<p>十五日清晨得雨后观察诸山。诗人既为雨洗后山色的清新而赞美，也为山河的壮观而生思乡之情。</p>
+<hr />
+<h2 id="舟滞大通得同使宋今础书知至广济相需多日">舟滞大通得同使宋今础书知至广济相需多日</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>船滞相思</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_32">原文</h3>
+<p>经时予跂日心忉，一苇难航自郁陶。
+无那三秋销客路，遥知九辨入君骚。
+登山临水方悲远，暮雨朝云复赋高。
+我亦离歌归楚调，安知清响发江涛。</p>
+<h3 id="白话全译_32">白话全译</h3>
+<p>经过时日我竖起耳朵日夜心怀忉怆，一根芦苇难以航行自然郁闷烦恼。无奈三个秋天消磨了客人的路程，遥远地知道九辨进入了你的骚赋。登山临水方才感悟悲伤的远方，暮雨朝云又作出高远的赋咏。我也唱起离歌归向楚调，安知清响会从江涛发出。</p>
+<h3 id="题解_32">题解</h3>
+<p>舟滞大通时收到同使宋今础的信，知他要多日后才至广济。诗人既为滞留而着急，也对重逢充满期待。</p>
+<hr />
+<h2 id="来札有一苇恣泊江鱼尝新之语乃余舟中景则大不然也因移就小舟极夜之力至皖江拟即就道兼赴先以诗谢">来札有一苇恣泊江鱼尝新之语乃余舟中景则大不然也因移就小舟极夜之力至皖江拟即就道兼赴先以诗谢</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>感谢信札</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_33">原文</h3>
+<p>藜火当年共起居，皇华谁令异舟车。
+自从江汉迎秋日，正想云山拥节初。
+敢为思鲈兴我叹，恰因烹鲤得君书。
+驰心夜半飞蕲道，流恨朝来积皖潴。</p>
+<h3 id="白话全译_33">白话全译</h3>
+<p>藜火当年一起生活，皇华的命令谁让舟车不同。自从江汉迎接秋日，正想云山拥卫节气初期。怎敢为思鲈兴起我的叹息，恰好因为烹鲤得到你的书信。驰心夜半飞往蕲州之道，流恨从早晨积聚在皖江的潴泊。</p>
+<h3 id="题解_33">题解</h3>
+<p>收到同使的信札，他提及舟中景象而诗人以自己的实际经历进行回应，并用诗感谢他的来信。</p>
+<hr />
+<h2 id="舍棹兼程以不得即就今础为恨">舍棹兼程以不得即就今础为恨</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>快马加鞭</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_34">原文</h3>
+<p>朝来舍棹策星车，夙夜王程敢自如。
+晓云随地林烟积，宵月悬山野态虚。
+几度怀人歌道左，忽疑见子在衡舆。
+遥遥楚甸诸峰外，遵路何时始执袪。</p>
+<h3 id="白话全译_34">白话全译</h3>
+<p>早晨放弃了船棹驱赶星车，日夜王程敢自如地前行。晓云随处林烟堆积，宵月悬在山上野态虚浮。几度怀想人在道左歌唱，忽然怀疑见到你在衡舆。遥遥在楚甸诸峰之外，遵着路何时才能执起衣袪。</p>
+<h3 id="题解_34">题解</h3>
+<p>舍舟改陆路快马加鞭欲赴广济见今础，但仍有未赶上的遗憾。诗中既写旅途的匆忙，也写对重逢的期待。</p>
+<hr />
+<h2 id="今础久寓广济相需筮诸关圣得此时宾主欢相得他日王侯却并肩之语筮者方旋而余继至相晤出此竟叹灵奇因各诗以纪之">今础久寓广济相需筮诸关圣得此时宾主欢相得他日王侯却并肩之语筮者方旋而余继至相晤出此竟叹灵奇因各诗以纪之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>神奇相遇</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_35">原文</h3>
+<p>一自藜灯共草玄，六年周道复联翩。
+出门喜见同人益，获上应思信友先。
+祇为骥程堪附尾，却惭驽足屡加鞭。
+嘤鸣此日关神听，莫道逢君只世缘。</p>
+<h3 id="白话全译_35">白话全译</h3>
+<p>自从藜灯一起草玄以来，六年周道复又联翩而至。出门喜见同人增益，获上应该思信友之先。只为骥马的行程堪以附尾，却惭愧驽足屡次加鞭。嘤鸣此日关乎神的听觉，莫说逢君只是世间的缘分。</p>
+<h3 id="题解_35">题解</h3>
+<p>与今础在广济相遇，因筮者的预言而更觉神奇。诗人既为重逢而庆幸，也为相知的长久而感慨。诗中既有对友谊的珍视，也有对命运的思考。</p>
+<hr />
+<h2 id="偶阅太白集因商李杜同异">偶阅太白集因商李杜同异</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>诗歌评论</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_36">原文</h3>
+<p>杜子沉雄李俊扬，或仙或圣总难方。
+惊风泣鬼真无敌，破卷如神孰可当。
+江汉分流终自合，云霞异彩转相章。
+始知大雅无偏伯，今古斯文共一王。</p>
+<h3 id="白话全译_36">白话全译</h3>
+<p>杜甫沉雄而李白俊逸，无论是仙是圣都难以方比。惊风泣鬼真是无敌之笔，破卷如神的力量谁能抵当。江汉分流终究自然合并，云霞异彩相互转换成章。才知道大雅诗中无偏重之伯，今古的文化共享同一个王。</p>
+<h3 id="题解_36">题解</h3>
+<p>阅读李白诗集引发对李杜诗风的比较。诗人既赞美两位诗人的各自特点，也为他们在诗歌史上的地位进行评价。</p>
+<hr />
+<h2 id="与今础至蕲春同话一署因及旧事州茂才袁道长兄弟翩然相顾各以诗章见赠走笔步韵答其一">与今础至蕲春同话一署因及旧事州茂才袁道长兄弟翩然相顾各以诗章见赠走笔步韵答其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>故人相聚</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_37">原文</h3>
+<p>因谈旧事各空书，犹幸皇华出有车。
+驹絷谁从之子屋，凤歌频接楚狂舆。
+自怜今日双星使，同是当年太乙儒。
+不谓逢君倾盖语，南金双锡满征裾。</p>
+<h3 id="白话全译_37">白话全译</h3>
+<p>因为谈论旧事各自空述，犹幸皇华使者出有车驾。小马被绊在谁的住处，凤歌频频接应楚狂的车舆。自怜今日双星般的使者身份，同是当年太乙一样的儒者。不料逢上你倾盖而谈，南金双锡满载征途的衣裾。</p>
+<h3 id="题解_37">题解</h3>
+<p>与今础在蕲春县署，与故人袁道长等相聚，众人各有诗赠，诗人走笔应和。诗中既有对往昔的回忆，也有对重逢的欣喜。</p>
+<hr />
+<h2 id="孟秋廿八日册封礼成恭纪">孟秋廿八日册封礼成恭纪</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>册封礼仪</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>孟秋廿八日</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_38">原文</h3>
+<p>帝命敦庸二礼郎，双衔节册下蕲阳。
+南藩服壮雄三楚，翼井星临灿七襄。
+桐剪清秋新露渥，茅封广汉旧流长。
+繇来宝玉分周室，此日亲亲在一堂。</p>
+<h3 id="白话全译_38">白话全译</h3>
+<p>皇帝的命令让两位礼部郎官担当，双衔节册下传到蕲阳地方。南藩的服装壮观统领三楚之地，翼井星临灿烂了七襄地区。桐树在清秋新露中润泽，茅草的封地在广汉的旧流中绵长。自古宝玉分置于周朝各室，此日亲亲的人在一堂相聚。</p>
+<h3 id="题解_38">题解</h3>
+<p>记述孟秋廿八日的册封典礼。诗人既为册封的隆重而歌颂，也为南藩的建立而庆贺。</p>
+<hr />
+<h2 id="荆王锡宴兼索诗篇应教启谢">荆王锡宴兼索诗篇应教启谢</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>王宴赋诗</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_39">原文</h3>
+<p>恭随使节觏衣裳，私觌仍歌既醉章。
+麟岫晴云依殿绕，金糊秋爽拂筵光。
+未徵雪赋梁园客，已附游诗邺下行。
+此去乘槎归海外，犹疑远汉露零瀼。</p>
+<h3 id="白话全译_39">白话全译</h3>
+<p>恭敬地随着使节觏见衣冠，私下相见仍然唱着既醉的章句。麟岫的晴云围绕着宫殿，金糊的秋爽拂过筵席的光彩。未曾征求雪赋的梁园之客，已经附和游诗的邺下行旅。此去乘坐槎木归向海外，犹疑远汉的露水零落飘洒。</p>
+<h3 id="题解_39">题解</h3>
+<p>荆王设宴并要求赋诗，诗人作答而献上谢启。诗中既表现了宴会的盛况，也表达了对荆王的敬重。</p>
+<hr />
+<h2 id="偕今础谒樊山王留酌清轩更有雨湖之约">偕今础谒樊山王留酌清轩更有雨湖之约</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>访樊山王</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_40">原文</h3>
+<p>翛然相造便杯同，竹径松阶半榻中。
+草色翻庭经细雨，歌声拂树入流风。
+未知折角人争效，更有披襟独辨雄。
+此夕隆欢真不意，尚期一苇兴何穷。</p>
+<h3 id="白话全译_40">白话全译</h3>
+<p>翛然地相互登门就举起酒杯，竹径松阶的半个榻位中相聚。草色翻动了庭院经过细雨，歌声拂过树木进入流风。不知道折角的人是否争相效仿，更有披襟独自分辨雄健之气。此夜的隆欢真是意料不到，还期待一苇扬帆兴致无穷。</p>
+<h3 id="题解_40">题解</h3>
+<p>与今础一起拜访樊山王，王留酒清轩，并约定稍后去雨湖。诗中既写宴会的欢乐，也写对后续约定的期待。</p>
+<hr />
+<h2 id="是夕饶黄山侍御邀同今础酌南楼共望雨湖">是夕饶黄山侍御邀同今础酌南楼共望雨湖</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>南楼望湖</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_41">原文</h3>
+<p>南楼纵目便湖山，犹似扁舟碧渚间。
+电里波光时一见，雨过秋色夜初还。
+幸逢绣史携新赏，遂使金沙识故颜。
+主意未终客未倦，何妨秉烛对流间。</p>
+<h3 id="白话全译_41">白话全译</h3>
+<p>南楼纵目就能看到湖山，好像扁舟在碧色洲渚之间。闪电中的波光时而一见，雨过秋色在夜初才返还。幸好逢上绣史携带新的欣赏，于是使金沙识得故旧的颜色。主人的意思未终客人未倦怠，何必不秉烛对着流水之间。</p>
+<h3 id="题解_41">题解</h3>
+<p>饶黄山侍御邀请与今础在南楼酌酒望雨湖。诗中既写南楼的高远视野，也写三人相聚的欢乐。</p>
+<hr />
+<h2 id="四日发蕲阳有感">四日发蕲阳有感</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>离别感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_42">原文</h3>
+<p>此地空怀屈宋音，无缘凭吊怅孤心。
+平原十日徒相款，咫尺三湘未可寻。
+游远依然同迫厄，悲秋何处问登临。
+祇怜入楚多骚怨，况复乡思动越吟。</p>
+<h3 id="白话全译_42">白话全译</h3>
+<p>这个地方空怀屈原宋玉的音律，无缘凭吊而怅然孤心。平原十日徒然彼此款待，咫尺的三湘未可寻访。游远依然同遭迫厄之境，悲秋何处能问登临之事。只怜入楚多有骚赋的怨恨，况且乡思还动起越国的吟咏。</p>
+<h3 id="题解_42">题解</h3>
+<p>离开蕲阳时所作。诗人既为不能凭吊屈原而遗憾，也为要离别今础而伤心。</p>
+<hr />
+<h2 id="是夕泊垄坪镇舟眺">是夕泊垄坪镇舟眺</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>舟中夜景</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_43">原文</h3>
+<p>广汉初方忽仲秋，生涯到处祇孤舟。
+露从葭满归遥水，风自蘋吹入近洲。
+十日黄蕲无胜览，深更独苇愧东流。
+乡心漫有丹砂梦，怀古终输赤壁游。</p>
+<h3 id="白话全译_43">白话全译</h3>
+<p>广汉初方忽然到了仲秋，生涯到处只有孤舟相伴。露水从葭草满地归向遥远的江水，风从蘋草自动吹入近处的洲岛。十日的黄蕲游览无胜过的地方，深更的独苇使我愧对东流。乡心漫然有丹砂的梦想，怀古终究不如赤壁的游历。</p>
+<h3 id="题解_43">题解</h3>
+<p>在垄坪镇泊舟夜晚眺望。诗人既为旅途的单调而感慨，也为无法尽览名胜而遗憾。</p>
+<hr />
+<h2 id="见月落秋空云敛波出悠然有感">见月落秋空云敛波出悠然有感</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>月下感悟</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_44">原文</h3>
+<p>从来不识汉江秋，湛湛枫林寄古愁。
+落日扁舟依绿屿，清宵万壑抱沧流。
+月方一见思其满，云自初生看及收。
+遂有波光迎夜色，因之凄绪发蘋洲。</p>
+<h3 id="白话全译_44">白话全译</h3>
+<p>从来不识汉江的秋色，湛湛的枫林寄托着古老的愁思。落日时扁舟依靠着绿色的屿岛，清宵时万条山壑拥抱沧蓝的流水。月亮方才一见就思想着它的圆满，云彩从初生就看到它的消收。于是有波光迎接夜的颜色，因此凄凉的思绪从蘋洲出发。</p>
+<h3 id="题解_44">题解</h3>
+<p>夜晚见月落在秋空，云敛后江波显出而有感。诗人既为汉江秋景所感动，也为月云波光的变化而沉思。</p>
+<hr />
+<h2 id="庐山道中憩东林寺询寺僧以远公旧事">庐山道中憩东林寺询寺僧以远公旧事</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>寺院访古</td>
+</tr>
+<tr>
+<td><strong>地点</strong></td>
+<td>东林寺</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_45">原文</h3>
+<p>四望苍屏尽渺然，松开忽见紫炉烟。
+怪来九叠祥光出，独向东林瑞像前。
+竺影难留图里迹，素沙犹自雨中研。
+几回频就山僧问，谁忆当年论五篇。</p>
+<h3 id="白话全译_45">白话全译</h3>
+<p>四望苍色的屏障尽是渺茫，松树开处忽见紫炉的烟雾。奇怪的是九叠的祥光出现，只向东林的瑞像前显现。竺国的影迹难留在图画里，素白的沙子还在雨中研磨。几次频频就问山僧，谁记得当年论五篇的事情。</p>
+<h3 id="题解_45">题解</h3>
+<p>在庐山道中休憩东林寺，询问寺僧关于远公旧事。诗人既为寺院的肃穆而敬畏，也为历史的悠远而慨叹。</p>
+<hr />
+<h2 id="对庐山默约">对庐山默约</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>山水约定</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_46">原文</h3>
+<p>白云作意令山深，平卷诸峰上客襟。
+欲因康乐寻幽兴，顿拨渊明入社心。
+薪火相传无异昔，愿文初发已从今。
+若待辞荣来此地，千年空属远公岑。</p>
+<h3 id="白话全译_46">白话全译</h3>
+<p>白云刻意让山变深，平卷诸峰在客人的胸襟上。想因康乐的游山寻幽兴，顿时拨开渊明入社的心思。薪火传承与昔日无异，愿意文化初发已从现在开始。如果等到辞官后来此地，千年依然空属远公的山岑。</p>
+<h3 id="题解_46">题解</h3>
+<p>对庐山默约。诗人既为庐山的雄伟而遐想，也为悠久的文化传统而思考。</p>
+<hr />
+<h2 id="西山秋水-初八日南浦登舟">西山秋水 初八日南浦登舟</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋水游记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_47">原文</h3>
+<p>携来吴楚百川秋，并入西江一水流。
+江水流秋秋欲半，秋江对客客多愁。
+蝉如有恨藏朝树，鸥自无心出暮洲。
+莫道归帆朝暮迫，月明江远倍悠悠。</p>
+<h3 id="白话全译_47">白话全译</h3>
+<p>携带来吴楚百川的秋意，并入西江一水的流淌。江水流淌秋天秋天欲半，秋江对着客人客人多愁。蝉仿佛有怨恨藏在朝树，鸥自然无心出现暮洲。莫说归帆被朝暮催迫，月明江远倍感悠悠。</p>
+<h3 id="题解_47">题解</h3>
+<p>初八日在南浦登舟，开始西山秋水的游历。诗人既为秋水的清澈而赞美，也为旅程的迤逦而感慨。</p>
+<hr />
+<h2 id="急雨">急雨</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>急雨所见</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_48">原文</h3>
+<p>秋云犹作夏峰奇，急雨衔山过水湄。
+长浦斜阳从望失，夹堤流电向襟麾。
+丹林绿霭初回互，碧野澄川忽骤驰。
+此际孤篷依落叶，萧萧一任晚风吹。</p>
+<h3 id="白话全译_48">白话全译</h3>
+<p>秋云还在做夏峰的奇观，急雨衔着山过了水的边界。长浦的斜阳从望中失去，夹堤的流电向胸襟挥洒。丹林绿霭初初回互，碧野澄川忽然骤驰。此刻孤篷依靠落叶，萧萧一任晚风吹拂。</p>
+<h3 id="题解_48">题解</h3>
+<p>途中遭遇急雨时所作。诗人既为急雨的势头所震撼，也为周围景色的变化而感受到自然的力量。</p>
+<hr />
+<h2 id="临流">临流</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>临江夜眺</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_49">原文</h3>
+<p>清宵悲客独舟看，望入星槎机石寒。
+金斗浆浮疑在水，银河影泻似奔湍。
+浅深夜色依愁见，近远波声出绪漫。
+莫是征人归意懒，临流孤眺便相安。</p>
+<h3 id="白话全译_49">白话全译</h3>
+<p>清宵的悲伤客人独自看舟，望进星槎机石发冷。金斗的浆水浮起疑在水中，银河的影子泻下似奔腾的急流。浅深的夜色依靠愁思显现，近远的波声从思绪漫出。莫非征人的归意变懒，临流孤眺就相安了。</p>
+<h3 id="题解_49">题解</h3>
+<p>临江独自夜眺。诗人既为天上的星象所吸引，也为江水的声音所感动。</p>
+<hr />
+<h2 id="穷川">穷川</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>穷尽江川</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_50">原文</h3>
+<p>日抱孤情入逝川，维舟夜对得其先。
+石倾雨过蘋中水，溪泻云深树里泉。
+素影摇秋同荡漾，轻阴落夜共洄漩。
+繇来此意何人会，始信如斯即我缘。</p>
+<h3 id="白话全译_50">白话全译</h3>
+<p>日光抱着孤独的感情进入逝去的江川，维舟夜晚对着得到了先机。石头倾覆雨过蘋草的水中，溪流泻下云深树里的泉水。素白的影子摇动秋天同荡漾，轻薄的阴影落夜共旋转。自古这个意思何人会通，始信如此正是我的因缘。</p>
+<h3 id="题解_50">题解</h3>
+<p>穷尽江川的游历，诗人既为旅途的终结而沉思，也为因缘巧合而有所领悟。</p>
+<hr />
+<h2 id="中秋夜泊界亭村雨望">中秋夜泊界亭村雨望</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>中秋雨夜</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_51">原文</h3>
+<p>秋中孤缆一流湾，明月相愁闭远山。
+落木疏枝云黯淡，芳汀细草雨潺湲。
+独怜团扇因寒置，忽忆浮槎自海还。
+何事蟾光终畏客，却教萤火熠离颜。</p>
+<h3 id="白话全译_51">白话全译</h3>
+<p>秋天中孤独的缆绳在一流的水湾，明月相愁地闭住了远山。落木疏枝云气黯淡，芳汀细草雨水潺湲。独怜团扇因寒冷而摆放，忽然忆起浮槎从海边返回。何故蟾光终究畏惧客人，却教萤火熠熠地离开面颜。</p>
+<h3 id="题解_51">题解</h3>
+<p>中秋夜泊界亭村遭雨。诗人虽未见月，但想象中秋月色，反而更显中秋之意。</p>
+<hr />
+<h2 id="人日寄谢儒美兼招赴宛在堂也">人日寄谢儒美兼招赴宛在堂也</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>人日邀请</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_52">原文</h3>
+<p>春朝梦子生池草，人日题诗附陇梅。
+烟景当前迷独往，光风入抱逐谁来。
+鸣嘤一鸟原求和，偏反诸花莫漫猜。
+若使相思能命驾，床头新酿恰初醅。</p>
+<h3 id="白话全译_52">白话全译</h3>
+<p>春朝的梦里子生在池草，人日题诗附着陇梅的枝头。烟景当前迷茫独自前往，光风进入胸怀逐着谁来。嘤嘤鸣叫一只鸟原本求和，反而诸花莫漫猜测其意。如果相思能够命令车驾，床头新酿恰好初醅。</p>
+<h3 id="题解_52">题解</h3>
+<p>人日时写信给儒美，既表示感谢，也邀请他赴宛在堂。诗中既有对春日的赞美，也有对友人来访的期待。</p>
+<hr />
+<h2 id="趋燕在即值儒美有五羊之行驰书言别诗以复之">趋燕在即值儒美有五羊之行驰书言别诗以复之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别诗答</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_53">原文</h3>
+<p>衡心十载日相求，相视相期物外游。
+忽听羊峰催折屐，空馀鳄渚忆同舟。
+岭梅落尽劳乡梦，江杏开时结旅愁。
+两地云天堪一泪，春风万里倍离忧。</p>
+<h3 id="白话全译_53">白话全译</h3>
+<p>衡心十年日日相求，相视相期在物外的游历。忽听羊峰催促折屐而去，空留鳄渚忆起同舟的时光。岭梅落尽费尽了乡梦，江杏开时结下了旅愁。两地云天值得一泪流淌，春风万里倍增离别的忧伤。</p>
+<h3 id="题解_53">题解</h3>
+<p>眼看要趋燕京，却闻儒美有五羊（岭南）之行，驰书答别。诗中既为友人的出游而送行，也为自己的离京而感慨。</p>
+<hr />
+<h2 id="郡中别馆未为客也而客况倍之长宵不寐因之诗之">郡中别馆未为客也而客况倍之长宵不寐因之诗之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>客中夜思</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_54">原文</h3>
+<p>一馆萧然予客凉，似疑客惯未全尝。
+晚云自作秋容远，落烬相依夜息长。
+酒罢细闻诸籁寂，吟成出见列星光。
+漫劳久对深寒绪，却令多愁只独商。</p>
+<h3 id="白话全译_54">白话全译</h3>
+<p>一座馆舍萧然我这客人感寒凉，似乎疑客人习惯未曾全尝。晚云自作秋容而远去，落烬相依夜息变得长久。酒罢后细细听诸籁的寂静，吟成出来看见列星的光辉。漫漫劳累久久对着深寒的思绪，却令多愁只有我独自商量。</p>
+<h3 id="题解_54">题解</h3>
+<p>住在别馆却格外感受到客况的孤独。诗人通过长夜的不寐，体验到离乡的哀愁。</p>
+<hr />
+<h2 id="暮春北征舟中寄题宋尔义荔馆酬灯夜见邀诗债也">暮春北征舟中寄题宋尔义荔馆酬灯夜见邀诗债也</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>寄题酬诗</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_55">原文</h3>
+<p>游子离群感故游，名园烟景令回头。
+春山选胜堪持赠，灯夜风光惜未酬。
+漫忆千花明晓洞，因思片月挂宵楼。
+朝来把笔题前句，无数行云带远眸。</p>
+<h3 id="白话全译_55">白话全译</h3>
+<p>游子离开群体感故地的游历，名园的烟景令人回头。春山的选胜可以持赠，灯夜的风光遗憾未能酬答。漫忆千花明亮晓洞，因思片月挂在宵楼。早晨把笔题下前句，无数行云带去远方的眼眸。</p>
+<h3 id="题解_55">题解</h3>
+<p>暮春北上途中寄题给宋尔义的荔馆，既是对灯夜邀请的酬答，也是诗债的偿还。</p>
+<hr />
+<h2 id="泊采石步谒李供奉祠-其一">泊采石步谒李供奉祠 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>凭吊李白</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_56">原文</h3>
+<p>日落沧江止问津，停桡独访谪仙人。
+风骚此日应谁主，诗酒当年别有神。
+明月胸怀随晓夜，澄江颜色几秋春。
+文心世法今如古，翘首于君欲具陈。</p>
+<h3 id="白话全译_56">白话全译</h3>
+<p>日落沧江停止问津，停桡独自拜访谪仙人。风骚此日应该谁主持，诗酒当年别有神气。明月的胸怀随晓夜转变，澄江的颜色经历几度秋春。文心世法今日如古时，翘首于你想详细陈述。</p>
+<h3 id="题解_56">题解</h3>
+<p>泊采石凭吊李白。诗人既为李白的才华而敬服，也为他的遭遇而感慨。</p>
+<hr />
+<h2 id="泊采石步谒李供奉祠-其二">泊采石步谒李供奉祠 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>凭吊李白</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_57">原文</h3>
+<p>试观秀谷与明流，今古文章乃独留。
+水不波澜将易测，山非云水想难幽。
+两间灏淑平分此，百代高深遂莫俦。
+我向馀风思大雅，先生犹许水山求。</p>
+<h3 id="白话全译_57">白话全译</h3>
+<p>试观秀谷与明流，今古文章唯独留存。水不波澜将容易测度，山非云水想象难幽深。两间的灏淑平分于此，百代的高深遂无法比较。我向余风思大雅，先生犹许水山来求。</p>
+<h3 id="题解_57">题解</h3>
+<p>凭吊李白祠其二，进一步思考李白的文化影响。诗人既为其遗留的精神财富而歌颂，也为历代推崇而自豪。</p>
+<hr />
+<h2 id="金陵舟次五月五日">金陵舟次五月五日</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>端午舟中</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_58">原文</h3>
+<p>榴花眼际照江津，兰浴天中净客身。
+白水蟠龙空在望，彩符艾虎不须陈。
+五丝自续他乡命，万里谁怜于役人。
+卮酒临风招屈子，孤舟吊古倍伤神。</p>
+<h3 id="白话全译_58">白话全译</h3>
+<p>榴花在眼际照亮江津，兰浴在天中净化客人的身体。白水蟠龙空在望中，彩符艾虎不需陈述。五丝自己延续他乡的命运，万里谁怜惜于役的人。卮酒临风招请屈子，孤舟吊古倍感伤神。</p>
+<h3 id="题解_58">题解</h3>
+<p>金陵舟中恰逢五月五日端午。诗人既为节日的传统而尊重，也为远离家乡而感伤。</p>
+<hr />
+<h2 id="将渡江就道过刘映薇寓次小集">将渡江就道过刘映薇寓次小集</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>途中小聚</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_59">原文</h3>
+<p>蓬飞俱作异乡身，能酌清樽感故人。
+入世孤容分我拙，论心端合向君真。
+各言此子宜丘壑，同叹于时少筏津。
+酒醒明朝仍两地，驰驱漂泊总沾巾。</p>
+<h3 id="白话全译_59">白话全译</h3>
+<p>蓬飞都作为异乡身份，能够斟酌清樽感怀故人。入世的孤容分开我的拙诚，论心端合向你讲真话。各自说这个人宜于丘壑，同叹于这时代少筏津。酒醒明朝仍在两地，驰驱漂泊总是沾湿衣巾。</p>
+<h3 id="题解_59">题解</h3>
+<p>将渡江前往时过刘映薇的寓所小聚。诗人既为故人的相见而欣慰，也为分别的即将到来而伤心。</p>
+<hr />
+<h2 id="渡徐州河">渡徐州河</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>过河感悟</td>
+</tr>
+<tr>
+<td><strong>注</strong></td>
+<td>诗有序文</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_60">原文</h3>
+<p>滔滔一水迅流潺，激激孤城楗石关。
+地不得宁黄土泛，人求所止白云攀。
+遥天低树全归水，近野平芜半没山。
+有客横波扬素楫，寄言河伯念民艰。</p>
+<h3 id="白话全译_60">白话全译</h3>
+<p>滔滔的一水急流潺湲，激激的孤城有石关把守。地不得宁黄土泛滥，人求安居白云攀援。遥远的天空低树全归于水，近处的野地平芜半没于山。有客人横波扬起素净的船桨，寄言河伯念念民众的艰难。</p>
+<h3 id="题解_60">题解</h3>
+<p>渡徐州河时所作。诗人既为黄河的灾害而悲恸，也为民生的苦难而感慨。</p>
+<hr />
+<h2 id="午车剧尘心眼交颓过任丘见城下红莲袅袅袭人喜而咏之">午车剧尘心眼交颓过任丘见城下红莲袅袅袭人喜而咏之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>红莲咏叹</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_61">原文</h3>
+<p>藕花香逐客车过，暂拨尘容向泽坡。
+霞彩红分晴日艳，露房粉坠午光和。
+城阴半覆轻菲下，岩草横将细萼拖。
+恰是怀人依道左，临风几度醉颜酡。</p>
+<h3 id="白话全译_61">白话全译</h3>
+<p>藕花的香气逐着客车而过，暂时拨开尘容向泽坡。霞彩的红色分开晴日的艳丽，露房粉白坠落午光的温和。城阴半覆轻薄的菲下，岩草横将细萼拖动。恰好是怀想人在道左，临风几度醉红了面颜。</p>
+<h3 id="题解_61">题解</h3>
+<p>午车行驶时被红莲所吸引。诗人既为荷花的美丽而叹赏，也将其与思念的人联系在一起。</p>
+<hr />
+<h2 id="以诗言诗送王觉斯学士之南掌院二首-其一">以诗言诗送王觉斯学士之南掌院二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠诗</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_62">原文</h3>
+<p>今之作者竞炎炎，伪体新辞日就纤。
+声不归情何所本，大而能则独君兼。
+经时宋室双文正，变论开皇一仲淹。
+自愧谈心初执手，骊歌率尔向鸿渐。</p>
+<h3 id="白话全译_62">白话全译</h3>
+<p>如今的作者竞相炎炎闹热，伪体新辞日日变得纤细。声音不归于情感何所根本，大而能干唯独你兼有。经过时日宋室双文正当，变换论述开皇一仲淹。自愧谈心初执你的手，骊歌率尔向鸿渐一般。</p>
+<h3 id="题解_62">题解</h3>
+<p>送王觉斯学士赴南掌院，以诗评论诗歌。诗人既评论当时诗风的弊端，也表达对王觉斯才华的敬佩。</p>
+<hr />
+<h2 id="以诗言诗送王觉斯学士之南掌院二首-其二">以诗言诗送王觉斯学士之南掌院二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠诗</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_63">原文</h3>
+<p>明文郁郁大经垂，群杰相雄复自师。
+举世言风因失雅，何人述史乃徵诗。
+东西旧识兰台赋，南北新瞻学士仪。
+此去六朝金粉地，再三终始问兴衰。</p>
+<h3 id="白话全译_63">白话全译</h3>
+<p>明文郁郁大经垂下，群杰相雄并自己为师。举世言风因为失去雅致，何人述史才能征引诗歌。东西旧识兰台的赋作，南北新瞻学士的仪表。此去六朝金粉的地方，再三始终问兴衰之理。</p>
+<h3 id="题解_63">题解</h3>
+<p>送别诗其二，进一步阐发对文化传统的看法。诗人既为学士的道德文章而赞美，也对他的前程充满期待。</p>
+<hr />
+<h2 id="送冯留仙备兵苏松">送冯留仙备兵苏松</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>军事送别</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_64">原文</h3>
+<p>三秋雁影看朝移，昨夜骊声忽助悲。
+纵使心同肩自比，骤然膺牉背先知。
+因今惜别倾前绪，以后相酬但久期。
+眼望东南揆奋日，思君樽俎尚能之。</p>
+<h3 id="白话全译_64">白话全译</h3>
+<p>三秋的雁影看朝代的移动，昨夜的骊歌忽然助长了悲伤。纵使心同但肩膀自己比较，突然的胸膺背后先知道。因此现在惜别倾倒前面的思绪，以后相酬但只能久期约定。眼望东南揆度奋进的日子，思念你樽俎还能胜任。</p>
+<h3 id="题解_64">题解</h3>
+<p>送冯留仙备兵赴苏松。诗人既为友人的赴任而送别，也对他的前程充满信心。</p>
+<hr />
+<h2 id="细柳营-其一">细柳营 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>历史评议</td>
+</tr>
+<tr>
+<td><strong>对象</strong></td>
+<td>周亚夫</td>
+</tr>
+<tr>
+<td><strong>注</strong></td>
+<td>诗有长序</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_65">原文</h3>
+<p>高皇逃楚渡河驰，使者犹收信耳师。
+此际徐行宽介胄，顿令坚壁退胡骑。
+劳军以礼非徒试，命将于权必便宜。
+故垒年来营柳在，春深还拂汉旌旗。</p>
+<h3 id="白话全译_65">白话全译</h3>
+<p>高皇帝逃楚渡河急驰，使者犹收信耳属下。此刻徐行宽缓介胄，顿令坚壁退却胡骑。劳军以礼非徒然试验，命将于权力必然便宜。故垒年来营柳还在，春深还拂汉朝的旌旗。</p>
+<h3 id="题解_65">题解</h3>
+<p>评议周亚夫的细柳营故事。诗人既赞美周亚夫的军事能力，也为汉文帝知人善用而敬佩。</p>
+<hr />
+<h2 id="细柳营-其二">细柳营 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>历史评议</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_66">原文</h3>
+<p>阃外争传细柳踪，纷纷棘霸漫相逢。
+备胡何事堪忘守，节制之师岂但攻。
+当日不闻天子诏，千秋犹识汉军容。
+征麾乍指旄头落，上郡云中忽罢烽。</p>
+<h3 id="白话全译_66">白话全译</h3>
+<p>阃外争相传讲细柳的踪迹，纷纷棘霸漫然彼此相逢。备胡何事堪称忘记防守，节制之师岂止用于进攻。当日不曾听到天子的诏令，千秋依然识得汉朝的军容。征麾乍指旄头落地，上郡云中忽然罢停烽火。</p>
+<h3 id="题解_66">题解</h3>
+<p>细柳营评议其二。诗人进一步强调军纪的重要性和领导力的价值。</p>
+<hr />
+<h2 id="迎春">迎春</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>春日思乡</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_67">原文</h3>
+<p>乡心撩乱入春先，客里从春六度然。
+历历风云同记睹，悠悠日月异周旋。
+销磨旅腊增梅恨，倾盖京华问柳缘。
+蚤晚烟光人世满，不知绮语向谁传。</p>
+<h3 id="白话全译_67">白话全译</h3>
+<p>乡心撩乱先入春天，客里从春已六度如此。历历的风云同记同睹，悠悠的日月异样周旋。销磨旅腊增加了梅恨，倾盖京华问起柳缘。早晚烟光人世满满，不知绮语向谁传递。</p>
+<h3 id="题解_67">题解</h3>
+<p>春日迎春时的思乡之作。诗人既为春天的到来而欣喜，也为离乡多年而感慨。</p>
+<hr />
+<h2 id="除夕前一日立春-其一">除夕前一日立春 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>立春节气</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_68">原文</h3>
+<p>家园春满百花先，旅馆春来冻柳边。
+淑气初从皞帝转，寒威犹向土牛牵。
+为留一腊归残岁，却换三冬作旧年。
+此际相逢如故友，乡怀细语白云前。</p>
+<h3 id="白话全译_68">白话全译</h3>
+<p>家园春满百花先开，旅馆春来冻柳边缘。淑气初从皞帝转变，寒威犹向土牛牵拉。为留一腊归还残岁，却换三冬作为旧年。此刻相逢如故旧朋友，乡怀细语在白云前面。</p>
+<h3 id="题解_68">题解</h3>
+<p>除夕前一日恰逢立春。诗人既为春天的来临而欣喜，也为古怪的时节交替而感慨。</p>
+<hr />
+<h2 id="除夕前一日立春-其二">除夕前一日立春 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>立春时节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_69">原文</h3>
+<p>看春北地见花难，把酒因人作菜盘。
+剪出宫枝誇䌽燕，移来幡胜愧郎官。
+时当水木互乘代，律动葭莩异暖寒。
+周史多年空故事，汉书何日涣新观。</p>
+<h3 id="白话全译_69">白话全译</h3>
+<p>看春北地见花难得，把酒因人作为菜盘。剪出宫枝誇示䌽燕，移来幡胜愧对郎官。时节当水木互相乘代，律动葭莩异样暖寒。周史多年空成故事，汉书何日焕然新观。</p>
+<h3 id="题解_69">题解</h3>
+<p>立春节气的观察与思考。诗人通过自然现象的描写，表达对时序变化的认识。</p>
+<hr />
+<h2 id="祫祭陪祀四首-其一">祫祭陪祀四首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>庙祭参祀</td>
+</tr>
+<tr>
+<td><strong>性质</strong></td>
+<td>祫祭礼仪</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_70">原文</h3>
+<p>嗣岁之朝祫祭行，丰年欲向孔皆迎。
+繇来肇祀能无悔，直到雍歌见靡争。
+穆穆曾孙相越对，皇皇多士介昭明。
+在庭柷敔俱和肃，祖德维人不但声。</p>
+<h3 id="白话全译_70">白话全译</h3>
+<p>嗣岁之朝祫祭进行，丰年欲向孔皆迎接。自来肇祀能无悔意，直到雍歌见不争竞。穆穆的曾孙相越对应，皇皇的多士介绍昭明。在庭的柷敔都和肃静，祖德维护人不但是声音。</p>
+<h3 id="题解_70">题解</h3>
+<p>参加太庙祫祭时所作。诗人既为祭祀的庄严而尊敬，也为传统的延续而感慨。</p>
+<hr />
+<h2 id="祫祭陪祀四首-其二">祫祭陪祀四首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>庙祭参祀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_71">原文</h3>
+<p>于穆高皇骏有声，嗣文成祖肇禋行。
+一时帝子俱廊配，十七元臣允国祯。
+问礼欲知因每事，记功思作不徒名。
+即今多难追前烈，访落何人续庙清。</p>
+<h3 id="白话全译_71">白话全译</h3>
+<p>于穆的高皇帝骏马有声，嗣文成祖肇祀礼行。一时帝子都在廊配享，十七元臣允许国家吉祥。问礼欲知因每个事件，记功思想作得不徒然名。如今多难追逐前面的烈迹，访问坠落何人续接庙堂清净。</p>
+<h3 id="题解_71">题解</h3>
+<p>祫祭参祀诗其二，继续表达对先帝与元臣的纪念。</p>
+<hr />
+<h2 id="祫祭陪祀四首-其三">祫祭陪祀四首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>庙祭参祀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_72">原文</h3>
+<p>首辟华夷出会清，重贻镐雒配于京。
+开天远驾千王德，继序新昭二祖名。
+指掌犹求烝禘说，闻声兼得武韶情。
+小臣夙夜思公在，为赋时周叶大明。</p>
+<h3 id="白话全译_72">白话全译</h3>
+<p>首先开辟华夷出会清宁，重新遗留镐雒配于京城。开天远驾千位诸王的德行，继序新昭二位祖宗的名声。指掌犹求烝禘的说法，听声兼得武韶的情感。小臣早晚思想公在其位，为赋时周的叶大明。</p>
+<h3 id="题解_72">题解</h3>
+<p>祫祭参祀诗其三。诗人既追忆历代盛德，也为当代的继承而自豪。</p>
+<hr />
+<h2 id="祫祭陪祀四首-其四">祫祭陪祀四首 其四</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>庙祭参祀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_73">原文</h3>
+<p>单心我主日明明，夙夜维基受有成。
+在庙方将纯德显，于时端合笃恭平。
+畴为骍角当牺选，一任桃虫自鸟惊。
+嗟尔戎功能永念，虽歌小毖亦和鸣。</p>
+<h3 id="白话全译_73">白话全译</h3>
+<p>单心我主日光明明，早晚维基受有成就。在庙方将纯德显现，于时端合笃敬恭平。畴为骍角当牺牲选择，一任桃虫自被鸟惊吓。嗟呀戎功能永久思念，虽歌小毖也和谐鸣唱。</p>
+<h3 id="题解_73">题解</h3>
+<p>祫祭参祀诗其四，最后一首。诗人既为国家的昌隆而感慨，也为祭祀的庄严而赞美。</p>
+<hr />
+<h2 id="对西山因忆昨游">对西山因忆昨游</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>山游追忆</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_74">原文</h3>
+<p>西山积爽不轻吹，日抱秋光隐翠微。
+定性于朝容一见，玄心何地可孤违。
+昨游岩壑经云闭，今忆松盘羡鸟飞。
+欲理前盟相告语，烟霞久已择人归。</p>
+<h3 id="白话全译_74">白话全译</h3>
+<p>西山积爽不轻轻吹，日抱秋光隐在翠微。定性于早朝容一见，玄心何地可孤独违背。昨游岩壑经云闭塞，今忆松盘羡慕鸟飞。欲理前盟相告语言，烟霞久已择人而归。</p>
+<h3 id="题解_74">题解</h3>
+<p>对西山的思念源于昨日的游历。诗人既为山景的优美而向往，也为烟霞的神奇而崇敬。</p>
+<hr />
+<h2 id="趋署回闭户有所思">趋署回闭户有所思</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>官署生活</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_75">原文</h3>
+<p>兰署潇然独论文，公馀闭户似离群。
+官惟宾客言相与，心及乡邦梦已分。
+溟海秋澄千里月，罗浮春发百峰云。
+玄思一息堪来往，今古馀情付落曛。</p>
+<h3 id="白话全译_75">白话全译</h3>
+<p>兰署潇然独自论文，公馀闭户似离开群体。官惟宾客言语相与，心及乡邦梦已分开。溟海秋澄千里月色，罗浮春发百峰云彩。玄思一息堪来往往返，今古馀情付落曛暮。</p>
+<h3 id="题解_75">题解</h3>
+<p>官署生活中的独处思考。诗人既为官务的琐碎而烦恼，也为思乡的情感而沉思。</p>
+<hr />
+<h2 id="除夕二首-其一">除夕二首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>除夕节俗</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_76">原文</h3>
+<p>平分两岁一宵中，愿得驱邪五尺筒。
+旅灶何劳虚耗照，国傩应见害除终。
+丰年鱼梦因三雪，阳日庚鸣俟晓风。
+坐守椒盘孤致祝，伫看簇律太皞同。</p>
+<h3 id="白话全译_76">白话全译</h3>
+<p>平分两岁一宵之中，愿得驱邪五尺之筒。旅灶何劳虚耗照亮，国傩应见害除终止。丰年鱼梦因三雪而至，阳日庚鸣俟晓风而出。坐守椒盘孤致祝愿，伫看簇律太皞同聚。</p>
+<h3 id="题解_76">题解</h3>
+<p>除夕之夜的节俗与思考。诗人既为年岁的更替而感慨，也为国家的祥瑞而祝祷。</p>
+<hr />
+<h2 id="除夕二首-其二">除夕二首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>除夕守岁</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_77">原文</h3>
+<p>寒灯守岁客相宜，不打灰堆不卖痴。
+禳厌聪明刬旧误，粪除口舌待新禧。
+天街火静沉香夜，邻舍声喧爆竹时。
+自向冰池呵冻管，何须暖热一盆吹。</p>
+<h3 id="白话全译_77">白话全译</h3>
+<p>寒灯守岁客相宜好，不打灰堆不卖痴迷。禳厌聪明刬除旧误，粪除口舌待新禧。天街火静沉香的夜晚，邻舍声喧爆竹的时刻。自向冰池呵冻的管弦，何须暖热一盆吹奏。</p>
+<h3 id="题解_77">题解</h3>
+<p>除夕守岁诗其二。诗人既为传统节俗而参与，也为新岁的到来而祝福。</p>
+<hr />
+<h2 id="丙子年起元日早朝">丙子年起元日早朝</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>元日朝觐</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>丙子年</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_78">原文</h3>
+<p>千门淑气向青阳，一望庭煇上紫光。
+自合风云烟阙下，最浮葱郁瑞楼央。
+臣人率土同三祝，圣主深宫念八方。
+殊锡上卿能虎拜，独惭微贱点鹓行。</p>
+<h3 id="白话全译_78">白话全译</h3>
+<p>千门淑气向青阳而至，一望庭煇上升紫光。自合风云烟阙下降，最浮葱郁瑞楼央间。臣人率土同三祝愿，圣主深宫念八方。殊锡上卿能虎拜行礼，独惭微贱点缀鹓行。</p>
+<h3 id="题解_78">题解</h3>
+<p>丙子年元日早朝时所作。诗人既为朝觐的庄严而感受，也为圣主的仁慈而感恩。</p>
+<hr />
+<h2 id="朝回自叹">朝回自叹</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>自我反思</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_79">原文</h3>
+<p>我生三十姓名沉，而立无能岁转侵。
+气及方刚多可戒，游初欲遂少从心。
+眼前节序蹉跎甚，身外乾坤愧恧深。
+抗疏传经因底事，匡衡刘向古非今。</p>
+<h3 id="白话全译_79">白话全译</h3>
+<p>我生三十岁姓名沉寂，而立无能岁月转侵。气势及方刚多可警戒，游历初欲遂少从心愿。眼前节序蹉跎很多，身外乾坤愧恧很深。抗疏传经因什么事由，匡衡刘向古不符今。</p>
+<h3 id="题解_79">题解</h3>
+<p>朝回后对自己的生平与现状进行反思。诗人既为年岁的虚度而后悔，也为无所作为而自责。</p>
+<hr />
+<h2 id="人日邹石可民部招同林紫涛侍御夜集">人日邹石可民部招同林紫涛侍御夜集</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>人日聚集</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_80">原文</h3>
+<p>天涯聚首是同乡，人日因君尽一觞。
+且喜三星依日下，安知百事向人忙。
+镂金剪䌽谁誇胜，煮菜屠苏亦共尝。
+努力樽前深夜语，明年此会莫相忘。</p>
+<h3 id="白话全译_80">白话全译</h3>
+<p>天涯聚首是同乡相聚，人日因君尽一杯酒。且喜三星依日下垂，安知百事向人忙碌。镂金剪䌽谁誇胜负，煮菜屠苏也共同尝试。努力樽前深夜语言，明年此会莫相忘记。</p>
+<h3 id="题解_80">题解</h3>
+<p>人日时与邹石可等人夜集。诗人既为故乡人的相聚而欣喜，也对来年的重逢充满期待。</p>
+<hr />
+<h2 id="紫涛频以牙痛告归若有所期诗中及之">紫涛频以牙痛告归若有所期诗中及之</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>寄语关切</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_81">原文</h3>
+<p>密坐深杯兴转赊，盘蔬再整不禁牙。
+多情西月低还照，解事东风暖暂加。
+有客床头倾柏叶，何人檐额点梅花。
+时逢贴帐难辜负，休把芳邻当酒家。</p>
+<h3 id="白话全译_81">白话全译</h3>
+<p>密坐深杯兴致转舒缓，盘蔬再整不禁牙疾。多情西月低还照亮，解事东风暖暂加温。有客床头倾柏叶浸水，何人檐额点梅花疏香。时逢贴帐难辜负期待，休把芳邻当酒家纵酒。</p>
+<h3 id="题解_81">题解</h3>
+<p>林紫涛因牙痛频频告退，诗人既表示关切，也对他的康复寄予期望。</p>
+<hr />
+<h2 id="送林紫涛巡按宣大三首-其一">送林紫涛巡按宣大三首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_82">原文</h3>
+<p>自向天涯比德邻，相看宦海异今人。
+非缘寡合联心迹，似倍文交结道神。
+目极云鸿伤两地，情先谷鸟恋馀春。
+忘君持斧思投辖，未了深言欲具陈。</p>
+<h3 id="白话全译_82">白话全译</h3>
+<p>自向天涯比德邻友，相看宦海异今人类。非缘寡合联心迹，似倍文交结道神。目极云鸿伤两地分，情先谷鸟恋馀春光。忘君持斧思投辖篇，未了深言欲具陈述。</p>
+<h3 id="题解_82">题解</h3>
+<p>送林紫涛巡按宣大。诗人既为友人的出仕而祝贺，也对其前程充满期待。</p>
+<hr />
+<h2 id="送林紫涛巡按宣大三首-其二">送林紫涛巡按宣大三首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_83">原文</h3>
+<p>霜简淩春出帝京，西人翘北指云旌。
+天连毕尾分躔野，地界华夷合使星。
+自古岩关须命世，因君毅骨静骄兵。
+便使乌台归画阁，祇今龙塞望烟清。</p>
+<h3 id="白话全译_83">白话全译</h3>
+<p>霜简凌春出帝京而往，西人翘北指云旌摇曳。天连毕尾分躔野外，地界华夷合使星驰。自古岩关须命世英雄，因君毅骨静骄兵气。便使乌台归画阁安定，祇今龙塞望烟清净。</p>
+<h3 id="题解_83">题解</h3>
+<p>送别诗其二。诗人既为宣大地势的险要而警惕，也对紫涛的军事才能充满信心。</p>
+<hr />
+<h2 id="送林紫涛巡按宣大三首-其三">送林紫涛巡按宣大三首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_84">原文</h3>
+<p>大梁兵气下狼墩，小丑凭陵杂雁门。
+惯帅虚传李牧野，夸生漫议赵充屯。
+乌云结势迎骢马，玉帐随身出绣幡。
+送子不须秦策赠，凭君铁面驭驹辕。</p>
+<h3 id="白话全译_84">白话全译</h3>
+<p>大梁兵气下降狼墩地，小丑凭陵混杂雁门关。惯帅虚传李牧的野心，夸生漫议赵充的屯兵。乌云结势迎骢马出征，玉帐随身出绣幡飘动。送子不须秦策赠送，凭君铁面驾驭战车。</p>
+<h3 id="题解_84">题解</h3>
+<p>送别诗其三。诗人既对边患的严峻有充分认识，也对紫涛的铁血手腕寄予厚望。</p>
+<hr />
+<h2 id="步韵和汪皖公计部扇头近作">步韵和汪皖公计部扇头近作</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>和诗唱和</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_85">原文</h3>
+<p>今日逢君又一时，风云世事不胜知。
+人言宦海皆名利，我法前程但酒诗。
+总合浮沉看梦境，微分劳逸问心期。
+岂无白眼双能变，赖有孤肠一片支。</p>
+<h3 id="白话全译_85">白话全译</h3>
+<p>今日逢君又一时刻，风云世事不胜知晓。人言宦海皆名利追求，我法前程但酒诗逍遥。总合浮沉看梦境迷幻，微分劳逸问心期约定。岂无白眼双能变化，赖有孤肠一片支撑。</p>
+<h3 id="题解_85">题解</h3>
+<p>和汪皖公的扇头诗。诗人既表达对官场浮沉的看法，也为诗酒朋友的来往而感慨。</p>
+<hr />
+<h2 id="即事有感仍呈皖公计部">即事有感仍呈皖公计部</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>即事感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_86">原文</h3>
+<p>财生天地未应殚，持算君民合总盘。
+肉食深谋捐俸最，茧丝报政考功难。
+耕屯故议盈千牍，租役新条罄百端。
+头会佳名仍手实，疮医何术免心剜。</p>
+<h3 id="白话全译_86">白话全译</h3>
+<p>财生天地未应穷尽，持算君民合总盘面。肉食深谋捐俸最多，茧丝报政考功最难。耕屯故议盈满千牍，租役新条罄尽百端。头会佳名仍手实验，疮医何术免心剜伤。</p>
+<h3 id="题解_86">题解</h3>
+<p>即事有感后呈皖公。诗人既为财政的困难而感慨，也为官吏的责任而沉思。</p>
+<hr />
+<h2 id="自问">自问</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>自我审视</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_87">原文</h3>
+<p>巧拙分心亦易知，屈伸同术遂难思。
+本无傲骨时如傲，自有痴肠日就痴。
+凭此方人非复是，忽然问我信还疑。
+看来世路宜孤往，梦入虚舟尚远期。</p>
+<h3 id="白话全译_87">白话全译</h3>
+<p>巧拙分心也易知晓，屈伸同术遂难思考。本无傲骨时如傲态，自有痴肠日就痴迷。凭此方人非复是我，忽然问我信还是疑。看来世路宜孤独前往，梦入虚舟尚远期约。</p>
+<h3 id="题解_87">题解</h3>
+<p>自问。诗人既为自己的性格变化而困惑，也对人生道路进行深刻的思考。</p>
+<hr />
+<h2 id="孟秋四日承命典中州乡闱恭纪">孟秋四日承命典中州乡闱恭纪</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>主考录事</td>
+</tr>
+<tr>
+<td><strong>时间</strong></td>
+<td>孟秋四日</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_88">原文</h3>
+<p>巍巍五岳独高嵩，下有黄河万里同。
+川岳半分人地责，图书全表圣贤功。
+其间名世关今古，此日观成见始终。
+昭代薪槱乡举盛，斯文得与乃天中。</p>
+<h3 id="白话全译_88">白话全译</h3>
+<p>巍巍五岳独高的嵩山，下有黄河万里相同。川岳半分人地的责任，图书全表圣贤的功劳。其间名世关连今古，此日观成见始终之变。昭代薪槱乡举盛况，斯文得与乃天中昌荣。</p>
+<h3 id="题解_88">题解</h3>
+<p>承命主持中州乡闱考试。诗人既为主考的责任而感受到重担，也为选拔人才的意义而感慨。</p>
+<hr />
+<h2 id="共事为黄赞伯铨部赞伯我友有同心矣">共事为黄赞伯铨部赞伯我友有同心矣</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>同事评价</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_89">原文</h3>
+<p>黄郭当年一代师，敢将名姓强追随。
+澄清淆浊君应否，谠论危言我尚为。
+身入风云观错变，心先时地力推移。
+斯文未坠天中在，吾道前行即后规。</p>
+<h3 id="白话全译_89">白话全译</h3>
+<p>黄郭当年一代师表，敢将名姓强追随随。澄清淆浊君应否敢为，谠论危言我尚为坚持。身入风云观错变异象，心先时地力推移动向。斯文未坠天中还在，吾道前行即后规范。</p>
+<h3 id="题解_89">题解</h3>
+<p>与黄赞伯共事的评价。诗人既赞美赞伯的德行，也为文化的传承而感慨。</p>
+<hr />
+<h2 id="与赞伯有商">与赞伯有商</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>政治讨论</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_90">原文</h3>
+<p>一自文心落众缘，狂澜百派任波漩。
+敝衰八代当年甚，刑法诸家近日贤。
+汉世治安空策论，宋朝君德忽经筵。
+浮言口实真堪唾，力洗儒羞或共肩。</p>
+<h3 id="白话全译_90">白话全译</h3>
+<p>一自文心落众缘牵绊，狂澜百派任波漩旋转。敝衰八代当年特别，刑法诸家近日贤明。汉世治安空策论述，宋朝君德忽经筵讨论。浮言口实真堪唾弃，力洗儒羞或共肩担。</p>
+<h3 id="题解_90">题解</h3>
+<p>与赞伯讨论政治问题。诗人既对历代政治有深刻认识，也为现实问题进行思考。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其一">既渡河车中即事以新旧见闻作古今愿怀诗八首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>行旅日记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_91">原文</h3>
+<p>星车夕发遂河干，来往征途异暑寒。
+城野秋残闻见改，堂阶地隔怨咨难。
+郑图欲献须多绘，贾策方成仰乙观。
+昧死臣言终出位，循躬九载日瘝官。</p>
+<h3 id="白话全译_91">白话全译</h3>
+<p>星车夕发到达河干，来往征途异样暑寒。城野秋残闻见改变，堂阶地隔怨咨艰难。郑图欲献须多绘画，贾策方成仰乙观察。昧死臣言终出官位，循躬九载日暮官职。</p>
+<h3 id="题解_91">题解</h3>
+<p>渡河后在车中写下的旅中见闻。诗人既记录景物的变化，也对官事进行思考。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其二">既渡河车中即事以新旧见闻作古今愿怀诗八首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>行旅日记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_92">原文</h3>
+<p>忧时注将总偏词，昧昧何如一个思。
+淮蔡深谋全倚度，西人寒胆独称琦。
+公孙阿世终蒙落，司马闻边始戒夷。
+自下邦家分利殆，祇今中外问安危。</p>
+<h3 id="白话全译_92">白话全译</h3>
+<p>忧时注将总偏辞令，昧昧何如一个思想。淮蔡深谋全倚度量，西人寒胆独称琦行。公孙阿世终蒙堕落，司马闻边始戒蛮夷。自下邦家分利殆尽，祇今中外问安危局。</p>
+<h3 id="题解_92">题解</h3>
+<p>行旅中的政治思考。诗人既为国防的形势而忧虑，也对历代教训进行反思。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其三">既渡河车中即事以新旧见闻作古今愿怀诗八首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>历史思考</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_93">原文</h3>
+<p>丈夫投笔计封侯，孺子逢桥已遇留。
+飞食莫凭封万相，坐帷须拟决千筹。
+清宵几对风云色，何日能忘天地忧。
+未扫匈胡终负国，忍看辽土竟沦酋。</p>
+<h3 id="白话全译_93">白话全译</h3>
+<p>丈夫投笔计封侯爵，孺子逢桥已遇遗留。飞食莫凭封万相位，坐帷须拟决千筹策。清宵几对风云色彩，何日能忘天地忧思。未扫匈胡终负国家，忍看辽土竟沦酋长。</p>
+<h3 id="题解_93">题解</h3>
+<p>车中的历史反思。诗人既为文武兼才而感慨，也为国防危机而忧虑。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其四">既渡河车中即事以新旧见闻作古今愿怀诗八首 其四</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>历史启示</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_94">原文</h3>
+<p>千载筹胡指顾中，清宵读史念车攻。
+大原薄伐中兴伟，沙漠深藏远略雄。
+唾手辽云心未已，系缨北阙事堪同。
+古今大义容臣举，十万横行报乃公。</p>
+<h3 id="白话全译_94">白话全译</h3>
+<p>千载筹胡在指顾之中，清宵读史念车攻之功。大原薄伐中兴伟绩，沙漠深藏远略雄心。唾手辽云心未停止，系缨北阙事堪共同。古今大义容臣举措，十万横行报乃公恩。</p>
+<h3 id="题解_94">题解</h3>
+<p>读史有感。诗人既为历代英杰的功绩而敬佩，也对当代的军事寄予期待。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其五">既渡河车中即事以新旧见闻作古今愿怀诗八首 其五</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>政治理想</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_95">原文</h3>
+<p>王制宜人不厌奇，诸臣陈力已心驰。
+簿书期满观中秘，弼教功成望百揆。
+钱谷兵刑非相事，股肱耳目有新司。
+即今师济盈中外，可许登庸答帝咨。</p>
+<h3 id="白话全译_95">白话全译</h3>
+<p>王制宜人不厌奇异，诸臣陈力已心驰动。簿书期满观中秘密，弼教功成望百揆决策。钱谷兵刑非相事专权，股肱耳目有新司掌管。即今师济盈满中外，可许登庸答帝咨询。</p>
+<h3 id="题解_95">题解</h3>
+<p>车中的政治理想。诗人既为完善国家治理制度而构想，也对人才任用进行思考。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其六">既渡河车中即事以新旧见闻作古今愿怀诗八首 其六</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>时势评议</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_96">原文</h3>
+<p>宵衣明主值多难，朝市相逢策治安。
+止辇求言劳汉帝，诘戎立政想周官。
+处囊一遂誇锥脱，投笔千人说剑寒。
+六月南师今又老，何年西顾始中宽。</p>
+<h3 id="白话全译_96">白话全译</h3>
+<p>宵衣明主值多难局势，朝市相逢策治安定。止辇求言劳汉帝心，诘戎立政想周官制。处囊一遂誇锥脱出，投笔千人说剑寒光。六月南师今又老迈，何年西顾始中宽心。</p>
+<h3 id="题解_96">题解</h3>
+<p>对当时形势的评议。诗人既为统治者的忧患而感同身受，也对国家未来的前景充满期待。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其七">既渡河车中即事以新旧见闻作古今愿怀诗八首 其七</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>民生问题</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_97">原文</h3>
+<p>足兵足食总难齐，骄子未欢饥子携。
+不惜琼林收散卒，岂无膏泽下残黎。
+牛羊视久须刍牧，将帅思深尚鼓鼙。
+事急但求兵革利，应知民志险山溪。</p>
+<h3 id="白话全译_97">白话全译</h3>
+<p>足兵足食总难齐备，骄子未欢饥子携带。不惜琼林收散卒兵，岂无膏泽下残黎民。牛羊视久须刍牧养，将帅思深尚鼓鼙音。事急但求兵革利益，应知民志险山溪迂。</p>
+<h3 id="题解_97">题解</h3>
+<p>车中对民生的思考。诗人既为国家的军事需求而理解，也为民众的困苦而关切。</p>
+<hr />
+<h2 id="既渡河车中即事以新旧见闻作古今愿怀诗八首-其八">既渡河车中即事以新旧见闻作古今愿怀诗八首 其八</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>文武之道</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_98">原文</h3>
+<p>文武途分或掎轻，封疆事急且观兵。
+公侯久废干城选，军旅初因俎豆行。
+六艺成名先执射，七书传塾已为经。
+从兹儒效兼安攘，不是皇心喜纵横。</p>
+<h3 id="白话全译_98">白话全译</h3>
+<p>文武途分或掎轻重，封疆事急且观兵势。公侯久废干城选拔，军旅初因俎豆行礼。六艺成名先执射艺，七书传塾已为经典。从兹儒效兼安攘防，不是皇心喜纵横野心。</p>
+<h3 id="题解_98">题解</h3>
+<p>文武之道的思考。诗人既为古代文武兼备的理想而追怀，也为当代的务实而思考。</p>
+<hr />
+<h2 id="秋辨九首-其一-陷昌震陵">秋辨九首 其一 陷昌震陵</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>时事评议</td>
+</tr>
+<tr>
+<td><strong>注</strong></td>
+<td>诗有长序</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_99">原文</h3>
+<p>小丑饥来望饱归，中枢上策总依违。
+狼堆晓夕添红焰，龙鼎风尘出翠微。
+选将徵兵仍故檄，全师守境便神机。
+三辅残黎何地免，诸陵端藉在天威。</p>
+<h3 id="白话全译_99">白话全译</h3>
+<p>小丑饥来望饱而归，中枢上策总依违迟疑。狼堆晓夕添红火焰，龙鼎风尘出翠微烟。选将徵兵仍故檄文，全师守境便神机妙。三辅残黎何地免难，诸陵端藉在天威护。</p>
+<h3 id="题解_99">题解</h3>
+<p>秋辨九首其一。诗人既为急迫的军事形势而警惕，也对国家的防守能力充满期待。</p>
+<hr />
+<h2 id="秋辨九首-其二-宣镇捷功">秋辨九首 其二 宣镇捷功</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>军事捷报</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_100">原文</h3>
+<p>降丁掩尽便称奴，文武同时竞绩肤。
+何处奔狼将弭耳，依关突豕忽同驱。
+尚方再锡今司马，郊垒应羞古大夫。
+坚卧营深终不起，观容使至好相呼。</p>
+<h3 id="白话全译_100">白话全译</h3>
+<p>降丁掩尽便称奴虏，文武同时竞绩皮肤。何处奔狼将弭止耳朵，依关突豕忽同驱赶。尚方再锡今司马奖励，郊垒应羞古大夫职位。坚卧营深终不起身，观容使至好相呼唤。</p>
+<h3 id="题解_100">题解</h3>
+<p>秋辨诗其二。诗人既为宣大捷功而庆贺，也对军将的忠勇进行赞美。</p>
+<hr />
+<h2 id="秋辨九首-其三-辽帅归镇">秋辨九首 其三 辽帅归镇</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>军事动向</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_101">原文</h3>
+<p>岁益金钱月选丁，捣巢出塞计横行。
+东西一任夷戎合，南北多方主客营。
+量敌为军终后战，潜师有地肯先声。
+如云千骑归朝策，何日重关止夜惊。</p>
+<h3 id="白话全译_101">白话全译</h3>
+<p>岁益金钱月选丁兵，捣巢出塞计横行掠。东西一任夷戎合并，南北多方主客营阵。量敌为军终后战争，潜师有地肯先声息。如云千骑归朝策略，何日重关止夜惊恐。</p>
+<h3 id="题解_101">题解</h3>
+<p>秋辨诗其三。诗人既为军事态势的复杂而忧虑，也对朝廷的应对充满期待。</p>
+<hr />
+<h2 id="秋辨九首-其四-枢督交病">秋辨九首 其四 枢督交病</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>时政评议</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_102">原文</h3>
+<p>初秋塞马已先驰，晓燧相传杂信疑。
+阃外枢中交卧理，霸门棘上总儿嬉。
+云深老阵屯关险，鼓竭衰军望阙疲。
+屈指封狼贪志满，奴归应是捷闻时。</p>
+<h3 id="白话全译_102">白话全译</h3>
+<p>初秋塞马已先驰骋，晓燧相传杂信疑惑。阃外枢中交卧理由，霸门棘上总儿嬉戏。云深老阵屯关险要，鼓竭衰军望阙疲惫。屈指封狼贪志满足，奴归应是捷闻之时。</p>
+<h3 id="题解_102">题解</h3>
+<p>秋辨诗其四。诗人既为中枢与前线的协调问题而关切，也对前线的困难有深刻认识。</p>
+<hr />
+<h2 id="秋辨九首-其五-倚将将将">秋辨九首 其五 倚将将将</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>军事评论</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_103">原文</h3>
+<p>时危倚将付全疆，节制虚名军政傍。
+署状谁忧骄蹇变，处堂端合煦安常。
+相传战守无中策，所仰威灵独尚方。
+十万从今凭将将，六师视古日张皇。</p>
+<h3 id="白话全译_103">白话全译</h3>
+<p>时危倚将付全疆域，节制虚名军政辅助。署状谁忧骄蹇变化，处堂端合煦安常态。相传战守无中策略，所仰威灵独尚方权。十万从今凭将将才，六师视古日张皇威。</p>
+<h3 id="题解_103">题解</h3>
+<p>秋辨诗其五。诗人既为过度依赖将领而担忧，也对将领的选拔提出思考。</p>
+<hr />
+<h2 id="秋辨九首-其六-救民收民">秋辨九首 其六 救民收民</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>救灾民生</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_104">原文</h3>
+<p>八载腥尘复向秋，何年桑土未阴求。
+丸泥忽坠谁封守，一鼓齐歼有秘筹。
+旧养苍黎难死救，新归士女苟生偷。
+相看满地鳏孤遍，独赖如天圣主收。</p>
+<h3 id="白话全译_104">白话全译</h3>
+<p>八载腥尘复向秋来，何年桑土未阴求备。丸泥忽坠谁封守卫，一鼓齐歼有秘筹划。旧养苍黎难死救援，新归士女苟生偷生。相看满地鳏孤遍布，独赖如天圣主收留。</p>
+<h3 id="题解_104">题解</h3>
+<p>秋辨诗其六。诗人既为战乱中的民众疾苦而同情，也对统治者的救济寄予期望。</p>
+<hr />
+<h2 id="秋辨九首-其七-陵疆功罪">秋辨九首 其七 陵疆功罪</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>人物评价</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_105">原文</h3>
+<p>误国刑章首不忠，陵疆何地可欺蒙。
+先时已失权威爱，后事犹然饰罪功。
+政典千年难日异，天颜咫尺敢雷同。
+即今中外全躯得，退食清朝亦省躬。</p>
+<h3 id="白话全译_105">白话全译</h3>
+<p>误国刑章首不忠诚，陵疆何地可欺蒙骗。先时已失权威爱戴，后事犹然饰罪立功。政典千年难日异变，天颜咫尺敢雷同言。即今中外全躯得报，退食清朝亦省躬反。</p>
+<h3 id="题解_105">题解</h3>
+<p>秋辨诗其七。诗人既对陵疆等人的过失进行评价，也对司法的公正性提出思考。</p>
+<hr />
+<h2 id="秋辨九首-其八-朝天闻乐">秋辨九首 其八 朝天闻乐</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>捷报传来</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_106">原文</h3>
+<p>马首征云达帝京，朝天有日念馀生。
+西山积霭浮朝霁，大角妖氛落夜星。
+天道及期苗命格，秋风辞塞汉关清。
+胡笳渐远闻三捷，夔乐依然奏九成。</p>
+<h3 id="白话全译_106">白话全译</h3>
+<p>马首征云达帝京城，朝天有日念馀生命。西山积霭浮朝霁晴，大角妖氛落夜星辰。天道及期苗命格局，秋风辞塞汉关清宁。胡笳渐远闻三捷报，夔乐依然奏九成功。</p>
+<h3 id="题解_106">题解</h3>
+<p>秋辨诗其八。诗人既为捷报的传来而欣慰，也为国家的前景而感受到希望。</p>
+<hr />
+<h2 id="秋辨九首-其九-望阙思乡">秋辨九首 其九 望阙思乡</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>归心似箭</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_107">原文</h3>
+<p>西风去路马蹄遥，望阙归来数夕朝。
+鹈鴂鸣馀窗草歇，蟪蛄声急井梧飘。
+水山在目犹行远，湖海关心欲懒朝。
+九辨歌成悲气迫，三秋思已故山招。</p>
+<h3 id="白话全译_107">白话全译</h3>
+<p>西风去路马蹄遥远，望阙归来数日夜朝。鹈鴂鸣馀窗草歇息，蟪蛄声急井梧飘落。水山在目犹行远路，湖海关心欲懒朝晨。九辨歌成悲气迫近，三秋思已故山招呼。</p>
+<h3 id="题解_107">题解</h3>
+<p>秋辨诗最后一首。诗人既为军事形势的缓解而欣慰，也为归乡的渴望而急切。</p>
+<hr />
+<h2 id="既作九辨诗因以自解">既作九辨诗因以自解</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>自我解释</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_108">原文</h3>
+<p>三秋纪事未应欺，寸管低徊几自疑。
+举国深谋惟倖免，微臣同疚敢痴迷。
+官名礼乐容诗史，志在春秋独我师。
+知罪从人真莫问，危言圣世尚当为。</p>
+<h3 id="白话全译_108">白话全译</h3>
+<p>三秋纪事未应欺骗，寸管低徊几自疑惑。举国深谋惟侥幸免祸，微臣同疚敢痴迷执着。官名礼乐容诗史记录，志在春秋独我为师。知罪从人真莫问究，危言圣世尚当为之。</p>
+<h3 id="题解_108">题解</h3>
+<p>作完九辨诗后对自己的解释。诗人既为诗歌的社会使命而自豪，也对当代的言论自由充满期待。</p>
+<hr />
+<h2 id="饮王子龙斋达旦冒雨而归连日滂沱不已秋夕既七银河黯然独坐偶成遣怀书谢">饮王子龙斋达旦冒雨而归连日滂沱不已秋夕既七银河黯然独坐偶成遣怀书谢</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>秋夕感怀</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_109">原文</h3>
+<p>秋声酒后梦回初，风雨驱人自索居。
+虫网时飏昏树霭，萤辉忽映夜窗虚。
+印苔屐静孤怀滞，悬榻人遥积绪疏。
+欲望银河迷五色，双星云里竟何如。</p>
+<h3 id="白话全译_109">白话全译</h3>
+<p>秋声酒后梦回初始，风雨驱人自索居家。虫网时飏昏树霭气，萤辉忽映夜窗虚空。印苔屐静孤怀滞留，悬榻人遥积绪疏散。欲望银河迷五色彩，双星云里竟何如何。</p>
+<h3 id="题解_109">题解</h3>
+<p>秋夕独坐的感怀。诗人既为秋雨的缠绵而感慨，也为银河七夕的意象而沉思。</p>
+<hr />
+<h2 id="送王子龙广文公车">送王子龙广文公车</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_110">原文</h3>
+<p>驰烟溯水及春阑，花浪轻舟似羽翰。
+九万鲲鹏因海运，八千车马始江干。
+图书满橐随身易，弧矢关心忆路难。
+此去垂天凭健翼，一毡一蓿岂君官。</p>
+<h3 id="白话全译_110">白话全译</h3>
+<p>驰烟溯水及春阑珊，花浪轻舟似羽翰飞翔。九万鲲鹏因海运而升，八千车马始江干而出。图书满橐随身容易，弧矢关心忆路艰难。此去垂天凭健翼腾飞，一毡一蓿岂君官位。</p>
+<h3 id="题解_110">题解</h3>
+<p>送王子龙赴公车考试。诗人既为子龙的才能而看好，也对其官场前程充满期待。</p>
+<hr />
+<h2 id="送辜端伯给谏使竣还朝三首-其一">送辜端伯给谏使竣还朝三首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别诗序</td>
+</tr>
+<tr>
+<td><strong>注</strong></td>
+<td>诗有序文</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_111">原文</h3>
+<p>四牡騑騑莫问程，皇华兼向采薇赓。
+春风到日燕尘乱，使节过时凤水清。
+万里流图堪远绘，中原杂种岂终横。
+知君玉帐随身去，遮莫旄头影自倾。</p>
+<h3 id="白话全译_111">白话全译</h3>
+<p>四牡騑騑莫问行程，皇华兼向采薇赓唱。春风到日燕尘乱散，使节过时凤水清宁。万里流图堪远绘画，中原杂种岂终横行。知君玉帐随身去往，遮莫旄头影自倾斜。</p>
+<h3 id="题解_111">题解</h3>
+<p>送辜端伯给谏使竣返朝。诗人既为其出使成功而庆贺，也对边防问题表达关切。</p>
+<hr />
+<h2 id="送辜端伯给谏使竣还朝三首-其二">送辜端伯给谏使竣还朝三首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_112">原文</h3>
+<p>大角缠兵晓燧浮，同人相视向戈矛。
+独劳原隰歌王事，谁任中边负国雠。
+犹豫狐疑成底用，凤观虎视合先忧。
+韩江极目燕云杳，不尽离心共北流。</p>
+<h3 id="白话全译_112">白话全译</h3>
+<p>大角缠兵晓燧浮升，同人相视向戈矛指向。独劳原隰歌王事业，谁任中边负国仇恨。犹豫狐疑成底用处，凤观虎视合先忧虑。韩江极目燕云杳渺，不尽离心共北流而去。</p>
+<h3 id="题解_112">题解</h3>
+<p>送别诗其二。诗人既为边防的警惕而表达关切，也对国家的前景充满期待。</p>
+<hr />
+<h2 id="送辜端伯给谏使竣还朝三首-其三">送辜端伯给谏使竣还朝三首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>送别赠言</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_113">原文</h3>
+<p>南北心同自比肩，幽人应许遂林泉。
+二三才俊皆清要，左右封弹各后先。
+日犯龙鳞依主圣，时当天步赖群贤。
+若逢姚子与冯父，为道升沉共勉旃。</p>
+<h3 id="白话全译_113">白话全译</h3>
+<p>南北心同自比肩膀相近，幽人应许遂林泉隐居。二三才俊皆清廉要职，左右封弹各后先推荐。日犯龙鳞依主圣明，时当天步赖群贤辅助。若逢姚子与冯父相见，为道升沉共勉旃旗。</p>
+<h3 id="题解_113">题解</h3>
+<p>送别诗其三。诗人既对朝中人事进行评议，也对端伯的前程寄予厚望。</p>
+<hr />
+<h2 id="九日清斋独坐">九日清斋独坐</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>重阳节思</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_114">原文</h3>
+<p>一室萧然秋在中，碧溪流水醮篱东。
+佩萸泛菊追清事，戏马游龙止霸风。
+只有文心从露白，任教庭叶赴霜红。
+真成独对看摇落，九日还如九辨同。</p>
+<h3 id="白话全译_114">白话全译</h3>
+<p>一室萧然秋在中间，碧溪流水醮篱东方。佩萸泛菊追清净事，戏马游龙止霸气风。只有文心从露白净，任教庭叶赴霜红色。真成独对看摇落叶，九日还如九辨相同。</p>
+<h3 id="题解_114">题解</h3>
+<p>重阳节清斋独坐。诗人既为古人的传统而追怀，也为独坐时的秋意而感伤。</p>
+<hr />
+<h2 id="九日同诸公登涵元塔四首-其一">九日同诸公登涵元塔四首 其一</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>登塔纪游</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_115">原文</h3>
+<p>高标今始出层穹，十载观成见有终。
+流峙分形归系干，云霄一气表空濛。
+凭虚欲御飞纶囷，入远多佳起郁葱。
+自是南天擎柱立，何人独许奠鳌功。</p>
+<h3 id="白话全译_115">白话全译</h3>
+<p>高标如今才出层穹天，十载观成见有终结。流峙分形归系山干，云霄一气表空濛烟。凭虚欲御飞纶囷卷，入远多佳起郁葱葱。自是南天擎柱竖立，何人独许奠鳌建功。</p>
+<h3 id="题解_115">题解</h3>
+<p>登涵元塔纪游其一。诗人既为塔的壮观而赞美，也为建筑的成就而感慨。</p>
+<hr />
+<h2 id="九日同诸公登涵元塔四首-其二">九日同诸公登涵元塔四首 其二</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>登塔纪游</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_116">原文</h3>
+<p>双溪奔注百川随，一砥中流倩客龟。
+灵杰真关人地力，经营合借鬼神为。
+千年自我增孤耸，八代如韩起溺衰。
+沧海明珠应可见，绿图幡簿未全欺。</p>
+<h3 id="白话全译_116">白话全译</h3>
+<p>双溪奔注百川相随，一砥中流倩客龟驮。灵杰真关人地力量，经营合借鬼神为功。千年自我增孤耸立，八代如韩起溺衰落。沧海明珠应可看见，绿图幡簿未全欺骗。</p>
+<h3 id="题解_116">题解</h3>
+<p>登塔诗其二。诗人既为地理位置的奇特而叹赏，也对塔的文化意义进行思考。</p>
+<hr />
+<h2 id="九日同诸公登涵元塔四首-其三">九日同诸公登涵元塔四首 其三</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>登塔纪游</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_117">原文</h3>
+<p>去天三百似依稀，云构中霄始合围。
+真气盘空龙象喜，文光首出斗牛依。
+烟峰下上随登降，倒景苍茫在指挥。
+久立萧然群动息，因高独使万殊归。</p>
+<h3 id="白话全译_117">白话全译</h3>
+<p>去天三百似依稀远，云构中霄始合围绕。真气盘空龙象欢喜，文光首出斗牛依靠。烟峰下上随登降变，倒景苍茫在指挥中。久立萧然群动停息，因高独使万殊汇归。</p>
+<h3 id="题解_117">题解</h3>
+<p>登塔诗其三。诗人既被塔的高远所吸引，也感受到高处带来的精神升华。</p>
+<hr />
+<h2 id="九日同诸公登涵元塔四首-其四">九日同诸公登涵元塔四首 其四</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>登塔纪游</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_118">原文</h3>
+<p>独顶孤峰柱海门，功归造化轴归坤。
+六牛四女互经纬，东渤南溟共柢根。
+禨祲遥占城市色，盈虚频见汐潮痕。
+冥搜物象如环掌，心目应从万古论。</p>
+<h3 id="白话全译_118">白话全译</h3>
+<p>独顶孤峰柱海门户，功归造化轴归坤地。六牛四女互经纬织，东渤南溟共柢根源。禨祲遥占城市颜色，盈虚频见汐潮痕迹。冥搜物象如环掌握，心目应从万古论断。</p>
+<h3 id="题解_118">题解</h3>
+<p>登塔诗其四。诗人既从宇宙的角度思考塔的意义，也为万物的运行而沉思。</p>
+<hr />
+<h2 id="题为九日登塔四作">题为九日登塔四作</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>体裁</strong></td>
+<td>七言律诗</td>
+</tr>
+<tr>
+<td><strong>主题</strong></td>
+<td>补遗之作</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_119">原文</h3>
+<p>烟凝暮紫夕光移，秋意因高见远吹。
+何处风囊来舞激，翻惊羲驭在鞭箠。
+登临不尽今人感，眺听还多往事疑。
+安得淩云皆赋手，漫劳落帽共相嗤。</p>
+<h3 id="白话全译_119">白话全译</h3>
+<p>烟凝暮紫夕光转移，秋意因高见远吹拂。何处风囊来舞激荡，翻惊羲驭在鞭箠驾驶。登临不尽今人感受，眺听还多往事疑惑。安得淩云皆赋手笔，漫劳落帽共相讥笑。</p>
+<h3 id="题解_119">题解</h3>
+<p>九日登塔四作的补遗。诗人既为塔上的秋日风景而描写，也为同游诸公的欢乐而记述。</p>
+<hr />
+<blockquote>
+<p>以上《宛在堂文集》卷十一全部诗作共120首。</p>
+</blockquote>
+<p><strong>编注：本富版本于2026年3月21日完成，每首诗均配有元文、白话全译及题解，以供研究者、爱好者参考与品鉴。</strong></p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

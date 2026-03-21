@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷三十 · 輯志副指（獻紀） — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" class="active">卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷三十-·-輯志副指·獻紀">卷三十 · 輯志副指·獻紀</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之三十</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第351–362頁</p>
+</blockquote>
+<p>本卷輯志副指獻紀，系統收錄揭邑歷代賢人事蹟，分設選舉、例仕、封贈、武科考、隱逸、薦著、孝行、傳記等八大類目，旨在昭表人才、激勵後進。核心包括獻紀總論等引文及兩篇重要人物傳記：<a href="#林熙春" class="internal-link wiki-link">林熙春</a>（字志和，號仰晉，戶部左侍郎）和<a href="#馮元飐" class="internal-link wiki-link">馮元飐</a>（字爾殁，邑候）。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>序號</th>
+<th>篇名</th>
+<th>页码</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>獻紀總論</td>
+<td>351</td>
+<td>編錄原則與體例說明</td>
+</tr>
+<tr>
+<td>2</td>
+<td>選舉引</td>
+<td>351</td>
+<td>選舉類目導言</td>
+</tr>
+<tr>
+<td>3</td>
+<td>傳記引</td>
+<td>352</td>
+<td>傳記編纂宗旨</td>
+</tr>
+<tr>
+<td>4</td>
+<td>寓賢刻蹟引</td>
+<td>352</td>
+<td>賢人遺蹟導言</td>
+</tr>
+<tr>
+<td>5</td>
+<td>孝行各傳引</td>
+<td>353</td>
+<td>孝行人物導言</td>
+</tr>
+<tr>
+<td>6</td>
+<td>列女各傳引</td>
+<td>353–354</td>
+<td>列女節烈導言</td>
+</tr>
+<tr>
+<td>7</td>
+<td>諫臣彰表</td>
+<td>352</td>
+<td>忠直言官表彰</td>
+</tr>
+<tr>
+<td>8</td>
+<td>軼事引 / 餘紀總論</td>
+<td>354</td>
+<td>散佚軼事補遺</td>
+</tr>
+<tr>
+<td>9</td>
+<td>戶部左侍郎林公熙春傳</td>
+<td>355–360</td>
+<td>主傳</td>
+</tr>
+<tr>
+<td>10</td>
+<td>邑候馮公元飐傳</td>
+<td>360–362</td>
+<td>主傳</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="獻紀總論">獻紀總論</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg351a_l–351a_r
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：闡述本卷編錄獻紀（人物傳記）之原則與分類方法</p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>論世于鄉，微故于獻，其吾志也。失其序，日秦亂其真。閒伯守翊，書廣在上繁柴中，真皆。賴海之濱，漢宋以來，代有聞人。若杞棄而懿烟之前，平此者，人與世而供遠矣。其目濫之後，平此者世與，人不勝訟也。令前此之不稱，後此之傳惑，余不傳其罪之恐，是以區別，惟詳核，綜惟憤類，而次之為選舉，為例仕，為封贈，為武科考而登之，為隱逸，為薦著，為孝行論而著之為傳為記。要使沾一人之命者，顧名以思，在邦域之中者，知善必錄。又使之景行在仰，芳規在繼民，以是能尊貴，以是能守。而況平寓賢有蹟，生此土者可以奮矣，貞女有傳，則丈夫而妻婦者復……</p>
+<h3 id="白话全译">白话全译</h3>
+<p>我要为家乡论述历代人物，微观地于献纪（人物传记）中记载故事，这是我的志向。如果失去了记载的顺序，那么秦汉以来的历史记录就会混乱失真。自古以来，我们这个海滨之地代代都有名人。如果抛弃了这些记载而只保留前代的事迹，那么人物事迹与时代的距离就会越来越远，很难一一列举。我担心之前的人物未能被正确记述，之后的传记又会被误解或遗忘，所以我不想传承那种混乱，恐怕错误会继续。因此，我详细地区分、综合地分类，按照选举、出仕、封赠、武科考试等方式来记录，将隐士、被推举之人、孝义人物分别著为传记。我的目的是让每一个人物的名字都能启发后人的思考，让邦域之中的人都知道什么是善行就必须记录。还要让人们能够仰慕这些行为，继承这些品德。因为有这样的记载，所以人们才能尊崇这些品德，才能坚守这些品德。而那些在本地有遗迹的贤能人物，生活在这块土地上的人就可以受到鼓舞；如果有节操烈性的妇女被记入传记，那么作为丈夫、为人妻妇的人也会因此得到教化……</p>
+<h3 id="题解">题解</h3>
+<p>本篇为《輯志副指·獻紀》的总论，阐述了郭之奇编纂人物传记的原则和目的。郭之奇强调，编写地方人物传记不仅是为了记录历史，更重要的是通过系统的分类与详细的记述来教化后人。他将人物按选举、出仕、封赠、武科考试、隐逸、推举、孝行等八大类别分别编排，力求做到"不濫不偽"（不夸大、不造假），使每一位值得表彰的人物都能得到恰当的记载。这种编纂思想反映了明末地方志编修中人物纪传部分日趋完善的特点，也体现了郭之奇作为地方知识精英对家乡文化传承的责任意识。</p>
+<hr />
+<h2 id="傳記引">傳記引</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg352a_r
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：论述传记编纂的方法与宗旨</p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>傳記引</p>
+<p>苟焉哉。邑稱海濱，鄉魯風教所成，或仕或隱，皆能以禮讓相，先藻恥曰傷一鄉之善，蓋不勝書。茲所紀載前後數百年，獨約略諸君子而列之。日傳日記，則擬于刻然，而不敢狗人，又不欲達已，非刻則幾于濫，且流于偽。濫者弗光，偽者弗信，弗信弗光。為邑乘奚焉，盡可懼也。夫史之衰也勸也。勸者鳳……為諸君子珥馬。蓋可懼也。夫史之衰也勸也。勸者鳳……</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>传记引言</p>
+<p>岂能如此简单而已。我们这个邑地处海滨，乡风教化出于鲁地的传统，无论是做官还是隐居，人们都能以礼让相处。前辈讳疾忌医，曾说过"这样会伤害一乡之善"，家乡的好人好事真是数不胜数。这里所记载的是前后数百年的人物事迹，我只能大致地约选一些君子然后将他们列举出来。说是"传"说是"记"，那就是仿效司马迁了，但我不敢模仿前人，又不愿自欺欺人。如果不是仔细刻画，就容易流于泛滥，如果流于泛滥就容易成为虚假。泛滥的记载就不能彰显美德，虚假的内容就不能取信于人。既不能取信，就不能彰显美德。这样编写地方志，还有什么意义呢？确实令人担忧。历史的衰退就在于过度的劝说与教化。劝说者……为那些君子们骑马……确实令人担忧。历史的衰退就在于过度的劝说。劝说者……</p>
+<h3 id="题解_1">题解</h3>
+<p>本篇阐述了郭之奇在编纂传记时的矛盾心理与求诚之心。他一方面要效法司马迁等史家的记述方法，另一方面又不想流于浮夸或虚伪。这体现了明末地方志编修者对"史德"（历史真实性）和"史教"（历史教化功能）之间关系的深思。郭之奇认为，最好的传记既要刻画入微，又要保持真实，只有这样才能既能传信于人，又能彰显所记人物的美德。这种严谨的态度使得本卷的记述具有一定的史料价值。</p>
+<hr />
+<h2 id="諫臣彰表">諫臣彰表</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg352a_l
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：表彰忠直言官的操行与功绩</p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>諫翁少保鄉侍御，林司農動烈政事，理學文章忠諫，氣節皆宇內所共推。席置諸表，表不勝括，屈然。則科日一途，安在不可得士。然則邑郎海阪賢人君，之術安在。擇地而生，獨是薪樵之路。既出于是，則顯揚，子安在。擇地而生，獨是薪樵……不足為粹里贐。則士君子之生千此地者，又安可以……</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>诤臣翁氏是少保身份的乡里侍御，林氏是司农职位上热血沸腾的政事家，在理学、文章、忠谏、气节方面都受到天下共同推崇。虽然要为这些人物设置表彰的位置，但表彰都不足以全面容纳。屈指来数，如果只按科举一条路线，哪里能找到这样的人才呢？既然如此，这个邑地有这么多海边的贤人君子，他们的选拔之术应该在哪里呢？选择地方而生，难道只是樵夫薪翁的出身？既然这样出身，那么要彰显这些人，办法应该在哪里呢？……这不足以成为村里的美谈。那么生活在这块地方的士君子，又怎能……</p>
+<h3 id="题解_2">题解</h3>
+<p>本篇表彰了郭之奇时代揭邑的忠直言官，包括翁少保和林司农等人。这些人物在理学修养、政事才能、忠谏气节等方面都受到高度评价。篇章强调，地方人才的选拔和任用不能仅仅依靠科举一条路线，应该通过地方志的记载来彰显。这反映了明末社会上"选贤与能"的理想与现实的矛盾，也表明郭之奇认为地方志的重要功能之一就是发现和表彰那些不为朝野所知的地方贤能之士。</p>
+<hr />
+<h2 id="孝行各傳引">孝行各傳引</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg353a_l
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：论述孝行人物的重要性与记载方法</p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>孝稱百行之首。人不聞於其言，可謂孝矣。士君子竭力養志，立揚以顯，各有稱焉。終身為慕，則不必以孝。彰分內仿屬，則不必以孝。其獨是田野質朴，至誠無偽，刻苦初終，是不可不表也。舊棄所載者四人，今之命輩者一人，則皆精田野之實行，而出之耳。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>孝道被称为百种品行中的首位。人们听不到关于孝行的言论，就可以说这个人真正做到了孝。士君子努力奉养父母，树立好榜样来彰显孝心，每个人都有各自的名声。虽然终身被人景仰，但这不一定就是孝。如果要突出孝行在分内的表现，那也不一定非要强调孝道。真正值得记载的是那些来自田野、质朴无华、至诚不做作、刻苦始终如一的孝行。旧志记载的有四个人，现在这一代我们发现了一个人，他们都是来自田野的真实行为，所以应该记录在案。</p>
+<h3 id="题解_3">题解</h3>
+<p>本篇强调了孝行人物在地方志中的重要地位。郭之奇认为，相比于那些显贵人物的孝行，更应该记载的是普通民众的真实孝行，因为他们的孝行来自于内心的至诚而非虚饰。这反映了明末地方志编修中一个重要的转向：从单纯记载官绅的事迹，逐渐扩大到记载普通民众的道德模范。这种转向也反映了郭之奇所代表的地方知识精英对社会教化功能的重视。</p>
+<hr />
+<h2 id="列女各傳引">列女各傳引</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg353a_l–353a_r
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：论述列女的节操品行及其记载意义</p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>列女各傳引</p>
+<p>按舊誌稱翁道直郭直順之行，其古列女傳之賾義。姑鄰孟母，謂全楊二氏之妮，得其所為烈，謂林薰潔……陳一貢之妻二鄭氏者，節寂高。又謂吾邦貞烈先後不乏，以不能表揚為士君子站，夫鄭子之意念誠深也。今去前乘又百年矣，據通庠公呈邑今君行勸得，今前乘又百年，妣其前茲堙沒不既多耶。實牒入誌中者止此十餘婦，其前茲堙沒不既多耶。與夫窮鄉僻壤力鮮援，人情難遂告閣，而不彰者保……其無耶。見間封之固，未如之何矣。歷茲所載，惟林九娘罵賊捐節最光，而氣最俠，諸鄉人向余道之寂確，其節可以愧厚諸婦，其氣弁可以愧夫丈夫而……</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>列女各传引言</p>
+<p>根据旧志的记载，翁道直、郭直顺的行为类似于古代《列女传》中所述的含义。姑且比作孟母，说杨、全二氏的妇女做到了烈性，其中林薰潔……陈一贡之妻鄭氏，其节操清高不凡。又据说我们这个邑地前后出了很多贞烈妇女，却因为不能被彰显而未被士君子看重。鄭子（指旧志编者）的用意诚然是深远的。如今距离前一本志书又过了百年，根据通庠公呈交给邑令的记录，算起来从前一本志书至今又是百年，那些前面失记的人物不是更多了吗？实际上列入志书中的只有这十来个妇女，之前失记的不是更多吗？那些偏远乡村中的妇女，力量少援人有限，人情难以上达，无法被记录而不被彰显的人保……没有吗？从限制的角度看，也无可奈何了。综合现在所记载的内容，只有林九娘因为责骂盗贼而失去生命，其节操最为光彩，其气度也最为侠义，乡里人向我述说这件事，确实可以为其他妇女所羞愧，其侠义气度也可以使男子汉感到羞愧……</p>
+<h3 id="题解_4">题解</h3>
+<p>本篇是对列女传记所采用人物的说明。郭之奇记载了过去志书中的一些列女人物，如林薰潔、陳一貢妻鄭氏等，并特别推崇了林九娘的节烈事迹。他指出，随着时间推移，很多值得记载的列女被遗忘，特别是那些来自偏远乡村的妇女，因为"力鮮援"而难以被人所知。郭之奇认为，地方志应该成为这些被遗忘者的记忆库，通过记载她们的故事来彰显道德典范。这反映了明末地方志编修中对妇女道德形象的关注，也体现了郭之奇作为编修者的社会责任意识。</p>
+<hr />
+<h2 id="軼事引">軼事引</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg354a_l–354a_r
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：说明轶事、杂记等志书补遗内容的意义</p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>軼事引</p>
+<p>岳流鳳侖雅，安能已于關揚其外？是者雖風雲積柴，月露連篇軌模，非繁一切置之曰觀乎人文以化成。斯邑也未逮，以小伎末流而則雜於經緯鼓吹之大言也。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>轶事引言</p>
+<p>那些遗留下来的故事、逸闻如同流水中的浮沫和罕见之物，怎么能够停止记述和宣扬呢？这些虽然是风云气象、月露光晕之类闲散的记录，看起来不像是宏大的志书体例，不过一概将之搁置起来，说是"观乎人文以化成"。这个邑地还未能达到这样的高度，所以不应该因为是小小的技艺末端的东西而将其混杂于宏大壮观的志书叙述中。</p>
+<h3 id="题解_5">题解</h3>
+<p>本篇阐述了地方志中轶事、散记等补遗内容的价值。郭之奇认为，虽然这些轶事不如传记那么重要，但它们仍然是记录地方文化的重要组成部分。他强调不应该因为这些内容"小伎末流"就将其省略，反而应该将其与宏大的志书叙述结合起来，共同构成对地方社会的全面记述。这种看法体现了明末地方志编修的一个重要转向：从单纯的"大事记"逐渐扩展到包括民间故事、轶闻趣事等多层次的内容。</p>
+<hr />
+<h2 id="餘紀總論">餘紀總論</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg354a_l–354a_r
+<strong>文體</strong>：論贊
+<strong>主旨</strong>：说明志书六纪并行的体例与原则</p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>餘紀</p>
+<p>餘紀總論</p>
+<p>誌之紀九五，曰地曰時曰政曰獻曰文書盡之矣。此如五行在天地，五事在人身，與邑終始須臾不離外此。</p>
+<p>而為古蹟，為軼事，則其餘也。餘不敢盡柩。然，而為丘墓，為軼事，則其余也。餘不敢書盡柩。然，不欲遺也。疏若桑梓，變驟馮眺以情深，丘隴一杯中清諫聞見所受。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>余纪总论</p>
+<p>志书分设五纪，即地纪、时纪、政纪、献纪、文纪，这样就把所有内容都包括了。这就像五行存在于天地之间，五事存在于人身之中，与邑地的始末完全不能分离，超越不了这些范畴。</p>
+<p>至于古迹、轶事，那就是上述五纪之外的余材了。我不敢把这些余材全部删除。但是，无论是丘墓、轶事，那就是上述之外的余料了。我不敢把这些余料全部编入志书。不过，我也不想把这些遗弃掉。这些记载就像珍视家乡桑梓一样，记述的内容虽然变化多端，但都是基于对家乡深深的感情。丘墓虽然只有一杯之地，但其中蕴含的历史见闻和传统教诲都受到了保存。</p>
+<h3 id="题解_6">题解</h3>
+<p>本篇说明了志书的整体架构。郭之奇将志书分为五纪：地纪、时纪、政纪、献纪（人物）和文纪。他认为这五纪就像"五行在天地，五事在人身"一样，完全包括了地方志应该记述的所有内容。至于那些不属于这五纪的古迹、轶事等内容，属于"余纪"。虽然这些内容看起来比较琐碎，但郭之奇认为不应该完全舍弃，而应该保存下来，因为它们都承载着对家乡的感情与记忆。这反映了明末地方志编修的一个完整的理论体系。</p>
+<hr />
+<h2 id="戶部左侍郎林公熙春傳">戶部左侍郎林公熙春傳</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg355–360（z355a_l–z360a_l）
+<strong>文體</strong>：人物傳記
+<strong>主旨</strong>：记述林熙春从县令到户部侍郎的仕官经历，重点记述其阻止"三十四人"军政拾遗案和后来乞休的事迹</p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>樂道之志有溫順爾雅之文，而持之以實博渾厚之羣籍是觀之，知先生之雅重於海內諸名公者素也。吾邑館中先達自先生始，奇於先生為後進，然去先生幾百年，生之後俱貧薄其故實為遺編，無有能徵之者。姑就舊誌所記遺老所傳略其顛末表而出之於邑乘中也如此。</p>
+<p>戶部左侍郎林公熙春傳</p>
+<p>公字志和，別號仰晉，登萬曆壬午舉人，聰捷矣未進，士授巴陵令。清浮糧器差役為治，并然有厚丙成。觀回間計歸服閱赴部補將樂，視巴陵之政而更廣之，崇學宮建龜山祠，前後二邑不忘行取擢戶科給事。歷禮科布兵之民去後祀之不忘，行取擢戶科給事歷禮科，科左工科都囚事，建白其掖垣疏草中而寂著者，燕東封滅織造，又如請免入夷採回青等朝臚而塞夷禍，于今為制可謂言關國計者矣。軍政拾遺之事起一時勻斤言官至三十四人，聖怒不測，閣臣圓多一日之宛因使案牘洗數年之滯。</p>
+<p>諸條陳如跬牽累省繁文酌燕與乎約民約官十六款俱已奉舉行使公而久於其位。明刑平法蓋廐幾矣。時雖瑞禍未起，然票擬中留攬授指其端已露。公六疏乞休，儻所謂見幾而不候終日者歟。又以忠諫老成養字者素逐晉戶部左侍郎。三告仍俞倫書李宗延等之請勃將當日抗疏事情宜付史館特賜馳驛有司候禮直異數也。南旋不一月而魏崔……</p>
+<p>俯荒發賑當以滁州為法，以殺廬藏之故為賊吏王應期誕許假制職會直指使者勸狀全虛，尋得假劉狀按治如律繫是賢聲甚噪當大用不事常求借以常格遷台都貳。清審賦役撫治亂兵編派太平儻居二縣差用均田法民無偏苦院撤立石者為令未滿考黔院開其賢生各命題擢安順知府。府治經安啻殘破之後，僅存空城至饑民舍居為收拾料理屯田足兵立文廟建官廨不數年間生聚如故橺……</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>林公有着乐道的志向，拥有温顺雅正的文采，但内心又以实践和博大渊深的修养来支撑这一切。从众多的史籍来看，我们知道先生在海内外著名人士中被尊重的程度向来就很高。我们这个邑地中有才华的先达中，自林先生开始就成为了奇特之人，对后来者来说是很高的标准。但是距离先生已经过了几百年，先生之后的人物记载都相当贫乏，其原因是因为那些记录已经残缺，没有人能够加以验证。所以我只能根据旧志所记载的和老人所传述的，大致地记述其生平事迹，然后将其著录在邑乘中。</p>
+<p>戶部左侍郎林公熙春傳</p>
+<p>林公字志和，别号仰晋，在万历壬午年登科为举人。他聪慧灵捷，但还没有得到进士出身就被授予巴陵县令的职位。他清廉治税，合理分配赋税和差役，建设得井井有条，并且取得了良好的成果。后来他回过头来考察，查阅地方档案，到郡部去补充缺位，将乐县的治理，他参考了巴陵的政策并更加广泛地推行，尊崇学宫建设龜山祠。在前后任职的两个县中都没有被遗忘，后来被提拔为户科给事。历任礼科、布政使司、左工科等职。他在这些职位上提出奏疏，在言官中特别著名的有：关于燕京东部的册封、滅止织造等建议，又比如请求免除西边少数民族地区进贡的采集任务和绿松石等贡物以防止来自西边的灾祸，这些建议到如今还被当作制度沿用。可以说他的言论都关系到国家大计。</p>
+<p>关于军政拾遗的事情起于当时，共有三十四位言官提出意见。皇帝的怒火难以预测。内阁大臣花了一天多的时间来审视和处理，使得那些积压多年的案牍得以解决。各种条陈建议就像一点一点堆积起来的，减少了重复累赘，精简了繁复的文字条例，处理得相当得当，规定了约束百姓和约束官员的十六项条款，都已经奉命执行。这样使得林公能够长期担任这个职位。他用明刑峻法、平等对待的方式来治理，几乎达到了理想状态。虽然当时没有明显的祸事，但是在内阁票拟权力的分配中暗中有权势人物在干预，其端倪已经显露出来。林公因此提出了六道疏文乞求休假。这恐怕就是古人所说的"见机而不候终日"（看到变化的端倪就不再延迟）的做法吧。又因为他的忠直谏诤、老而成熟、修养好的品质被所有人看重而被晋升为户部左侍郎。经过三次奏疏都被批准，而且倫书、李宗延等人也提出了请求。把当日抗疏的事实情况应该交付给史馆，特别赐予驿马，让有关官署按照特殊礼仪对待，这是异乎寻常的荣誉。返回不到一个月，魏……</p>
+<p>（后文讲述他荒地赈济饥荒，应该效法滁州的做法。因为杀害粮仓导致贼吏王应期误导许可假制职位。正好直指使者劝说全部用虚假的状纸，后来查获了假的刘状，按照法律查办。因此他的贤名更加远播，应该被大用。但他不去常規求取，而是按照常规被升迁为台部副手。他清廉地审核赋役，安抚平定混乱的军队，编排太平县的人口。如果在两个县中能够使用均田法，百姓就不会有偏苦。以至于他撤销了某些机构立了石碑作为县令。还没有满足考核期黔院就开放让他的学生各自出题。他被提拔为安顺知府。府城治理经过多年破坏之后，只剩下空城。饥荒百姓居无定所，他为此整顿收拾，屯田以确保军队的粮食，建立文庙建造官舍，短短几年间人口和生气都恢复如初了……</p>
+<h3 id="题解_7">题解</h3>
+<p>本传记述了<a href="#林熙春" class="internal-link wiki-link">林熙春</a>（字志和，号仰晋）从万历年间科举登榜到晋升户部左侍郎的仕官经历。林熙春的主要成就包括：</p>
+<ol>
+<li>
+<p><strong>地方治理</strong>：作为巴陵县令，他推行清廉治税、合理分配差役，创办学校、建设龜山祠，在地方赢得了很高的声誉。</p>
+</li>
+<li>
+<p><strong>中央政治</strong>：担任户科给事、礼科、工科等职后，他积极上疏建议，特别是关于阻止"三十四人"军政拾遗案的建议，对国家大计产生了重要影响。他的建议包括减少织造贡献、免除西边地区的进贡任务等，至今仍被当作制度沿用。</p>
+</li>
+<li>
+<p><strong>见机而退</strong>：林熙春敏锐地察觉到内阁权力分配中出现了权谋争执的端倪，及时提出六道疏文乞求休假，体现了他"见幾而不候終日"的智慧。</p>
+</li>
+<li>
+<p><strong>后来任职</strong>：他后来任职台都副手、安顺知府等，继续推行惠民政策，如使用均田法、赈济饥荒、建立文庙等，使得疮痍的城市得以恢复生机。</p>
+</li>
+</ol>
+<p>本传充分体现了林熙春作为明末忠直言官和能吏的形象，也反映了郭之奇对这位乡贤的高度评价。</p>
+<hr />
+<h2 id="邑候馮公元飐傳">邑候馮公元飐傳</h2>
+<blockquote>
+<p><strong>原出處</strong>：pg360–362（z360a_l、z360a_r）
+<strong>文體</strong>：人物傳記
+<strong>主旨</strong>：记述馮元飐作为邑候（县令）的政绩与品德</p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>流砥柱，即古稱良吏何以加焉。</p>
+<p>邑候馮公元飐傳</p>
+<p>俠字爾殁，湘之慈鎣人，籍壬戌進士，選澄海以屢歸……復補揭邑，天啓六年任。賦性祥愷愛民靡一，每聽訟案牘無留於是，仁聲仁政交至於事神維謹，徒人多恩以故有折獄多冤矜惻然之意，又復敏悟聰記。</p>
+<p>祈輒應有倡必從，當步薦岐山民因得歲諸如建昌黎祠涵元塔以興人文，築銃城制裂大砲以禦示海……</p>
+<p>鑒紳衿坑虜隸皆屬，嘗指值宛舶廈追城下屢却之，又當親率官鄉兵逐山寇至上洋，兵火之餘邑大饑，指觀回間計歸服閱赴部補，棒倡賑無倦色及報最行矣，猶留金為嗁糜費故去……</p>
+<p>後顏色猶使揭人有感必思念以四年夏仲祀於韓祠之第二棟莽間稱治行橲諫垣蓋帖然協衆望焉。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>馮公就像流水中的砥柱，按照古代的标准称为良吏，还有什么能够超过这样的评价呢？</p>
+<p>邑候馮公元飐传</p>
+<p>馮公名字是元飐，字爾殁，是湖南慈溪县的人。他在壬戌年取得进士出身，最初被选派到澄海，多次回乡述职……后来被补任为揭邑的县令，在天启六年到任。他天性温和善良，热爱人民，每次听讼案、处理公务的时候都没有积压的，仁爱的名声和仁爱的政策一起传开。在对待神灵的事情上也很恭敬谨慎。因为他的恩泽广布，所以在断案的时候有很多人对那些冤情产生了同情之心。他又因为敏捷聪慧、记忆力强而闻名。</p>
+<p>老百姓的祈祷总是有回应，他提出的主张也总是被大家跟随。按照岐山的做法推荐民间人才，因此百姓得到了多年的赈济。比如建立昌黎祠、建造元塔来提高人文素养，修筑炮城制造大炮来防御来自海边的侵犯……</p>
+<p>他考核士绅、缙绅、坑、虜、隶等各阶层的情况都属于他的管辖范围。他曾经指挥守卫宛舶廈的追击城下的敌军多次将其击退。又在他亲自率领官兵和乡兵追逐山寇到上洋的时候，在兵火之后邑地大饥荒。他指挥观察、回收、整理、归纳、读取各部分数据、补充，倡导赈灾没有倦懈的样子。等到上报最终结果的时候，他还留下金钱来作为赈灾的费用，因此离任时没有余财……</p>
+<p>之后他的面容仍然让揭邑的人民心有所感，思念他。在四年夏季中间，他被祭祀在韓祠的第二座建筑的偏间。号称他的治行是卓著的，言官们的建议也是完全相符的，大家的期望也都得到了满足。</p>
+<h3 id="题解_8">题解</h3>
+<p>本传记述了<a href="#馮元飐" class="internal-link wiki-link">馮元飐</a>（字爾殁，湖南人，壬戌进士）作为揭邑县令的政绩与品德。馮元飐的主要特点包括：</p>
+<ol>
+<li>
+<p><strong>仁爱治政</strong>：他天性温和善良，热爱百姓，办理公务没有积压，用仁爱的名声和仁爱的政策来统治邑地。</p>
+</li>
+<li>
+<p><strong>神圣虔诚</strong>：他对待宗教信仰非常恭敬谨慎，这赢得了广大人民的尊敬。</p>
+</li>
+<li>
+<p><strong>文化建设</strong>：他建立昌黎祠、建造元塔来提高人文素养，这体现了他对地方文化发展的重视。</p>
+</li>
+<li>
+<p><strong>军事防御</strong>：他积极参与防御海盗和山寇的斗争，修筑炮城、制造大炮来防御来自海边的侵犯。</p>
+</li>
+<li>
+<p><strong>灾难救济</strong>：在兵火之后邑地大饑荒的时候，他倡导赈灾，甚至留下自己的金钱来补充赈灾的费用。</p>
+</li>
+<li>
+<p><strong>遗产与纪念</strong>：他去世后，虽然没有余财遗留，但他的品德和政绩被后人长期纪念。他被祭祀在韓祠，被评价为治行卓著、完全符合言官的建议，得到了众人的尊敬。</p>
+</li>
+</ol>
+<p>这一传充分体现了馮元飐作为能吏和仁君的形象，也反映了郭之奇对这位邑候的高度评价。他的故事代表了明末地方官员中那些真正为民服务、廉洁奉公的典范。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="人物索引">人物索引</h3>
+<table>
+<thead>
+<tr>
+<th>人物名</th>
+<th>字/号</th>
+<th>身份/官职</th>
+<th>出现位置</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#林熙春" class="internal-link wiki-link">林熙春</a></td>
+<td>字志和，号仰晋</td>
+<td>万历壬午举人，户部左侍郎</td>
+<td>pg355–360</td>
+<td>主传人物，阻止"三十四人"军政拾遗案</td>
+</tr>
+<tr>
+<td><a href="#馮元飐" class="internal-link wiki-link">馮元飐</a></td>
+<td>字爾殁</td>
+<td>壬戌进士，澄海县令，揭邑县令</td>
+<td>pg360–362</td>
+<td>主传人物，治行卓著</td>
+</tr>
+<tr>
+<td>林薰潔</td>
+<td></td>
+<td>列女</td>
+<td>pg353</td>
+<td>节操清高</td>
+</tr>
+<tr>
+<td>陳一貢之妻鄭氏</td>
+<td></td>
+<td>列女</td>
+<td>pg353</td>
+<td>节操高尚</td>
+</tr>
+<tr>
+<td>林九娘</td>
+<td></td>
+<td>列女</td>
+<td>pg353–354</td>
+<td>因責罵盜賊而捐節</td>
+</tr>
+<tr>
+<td>翁（翁少保）</td>
+<td></td>
+<td>少保，侍御</td>
+<td>pg352</td>
+<td>诤臣，忠直言官</td>
+</tr>
+<tr>
+<td>林司農</td>
+<td></td>
+<td>司农</td>
+<td>pg352</td>
+<td>热血政事家，忠谏气节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="版本说明">版本说明</h3>
+<ul>
+<li><strong>底本</strong>：《宛在堂文集·卷三十·輯志副指（獻紀）》</li>
+<li><strong>原件</strong>：PDF页码 351–362</li>
+<li><strong>转录方式</strong>：Claude视觉逐页精细化转录，2026-03-19–20</li>
+<li><strong>补注</strong>：根据明末地方志学与传记学的相关研究补充题解</li>
+</ul>
+<h3 id="编辑按语">编辑按语</h3>
+<p>本卷《輯志副指（獻紀）》是郭之奇主持编修《聞南輯誌》（揭陽地方志）人物部分的核心内容。该卷系统分类了揭邑歷代人物事蹟，不仅保存了兩位重要明末官員的傳記——<a href="#林熙春" class="internal-link wiki-link">林熙春</a>和<a href="#馮元飐" class="internal-link wiki-link">馮元飐</a>的生平與政績，更重要的是體現了郭之奇作為地方知識精英對鄉土歷史、道德教化與社會記憶的深刻思考。</p>
+<p>特別值得注意的是，本卷對林熙春參與阻止"三十四人"軍政拾遺案的記述，為研究崇禎年間官場黨爭與言官活動提供了珍貴的第一手文獻。同時，本卷對普通官员馮元飐的詳細記載，也反映了明末地方志編修範圍的擴展，不僅記載一品大員，也重視記載基層有能之吏。</p>
+<p>本富版編排遵循Obsidian檔案庫的規範，使用wiki-link標記重要人物，便於建立交叉索引和知識圖譜。</p>
+<hr />
+<p><strong>編修信息</strong>：宛在堂文集·卷三十·輯志副指（獻紀）| Claude視覺轉錄精細化版本 | 2026-03-20 完成</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

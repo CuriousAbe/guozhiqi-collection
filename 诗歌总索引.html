@@ -1,0 +1,2464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诗歌总索引 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" class="active">诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="郭之奇诗歌全集总索引">郭之奇诗歌全集总索引</h1>
+<p>共1892首（含4篇赋），按卷编组。据搜韵网校本及四库未收书辑刊影印本。</p>
+<h2 id="快速导航">快速导航</h2>
+<ul>
+<li><a href="#诗-卷01-赋" class="internal-link wiki-link">诗·卷01·赋</a></li>
+<li><a href="#诗-卷02-骚" class="internal-link wiki-link">诗·卷02·骚</a></li>
+<li><a href="#诗-卷03-古乐府" class="internal-link wiki-link">诗·卷03·古乐府</a></li>
+<li><a href="#诗-卷04-五言古体" class="internal-link wiki-link">诗·卷04·五言古体</a></li>
+<li><a href="#诗-卷05-五言古体" class="internal-link wiki-link">诗·卷05·五言古体</a></li>
+<li><a href="#诗-卷06-五言律诗" class="internal-link wiki-link">诗·卷06·五言律诗</a></li>
+<li><a href="#诗-卷07-七言古体" class="internal-link wiki-link">诗·卷07·七言古体</a></li>
+<li><a href="#诗-卷08-五言律诗" class="internal-link wiki-link">诗·卷08·五言律诗</a></li>
+<li><a href="#诗-卷09-五言律诗" class="internal-link wiki-link">诗·卷09·五言律诗</a></li>
+<li><a href="#诗-卷10-七言律诗" class="internal-link wiki-link">诗·卷10·七言律诗</a></li>
+<li><a href="#诗-卷11-七言律诗" class="internal-link wiki-link">诗·卷11·七言律诗</a></li>
+<li><a href="#诗-卷12-七言律诗" class="internal-link wiki-link">诗·卷12·七言律诗</a></li>
+<li><a href="#诗-卷13-五言排律" class="internal-link wiki-link">诗·卷13·五言排律</a></li>
+<li><a href="#诗-卷14-七言排律" class="internal-link wiki-link">诗·卷14·七言排律</a></li>
+<li><a href="#诗-卷15-五言绝句" class="internal-link wiki-link">诗·卷15·五言绝句</a></li>
+<li><a href="#诗-卷16-六言绝句" class="internal-link wiki-link">诗·卷16·六言绝句</a></li>
+<li><a href="#诗-卷17-七言绝句" class="internal-link wiki-link">诗·卷17·七言绝句</a></li>
+<li><a href="#诗-卷18-七言绝句" class="internal-link wiki-link">诗·卷18·七言绝句</a></li>
+<li><a href="#诗-卷19-诗余（词）" class="internal-link wiki-link">诗·卷19·诗余（词）</a></li>
+<li><a href="#诗-卷20-四言诗" class="internal-link wiki-link">诗·卷20·四言诗</a></li>
+<li><a href="#诗-卷21-赞文" class="internal-link wiki-link">诗·卷21·赞文</a></li>
+</ul>
+<h2 id="诗歌总览">诗歌总览</h2>
+<h3 id="卷一-·-赋-(4-篇)">卷一 · 赋 (4 篇)</h3>
+<ul>
+<li><a href="#诗-卷01-赋#七夕賦　館課" class="internal-link wiki-link">七夕賦（館課）</a></li>
+<li><a href="#诗-卷01-赋#商霖賦　閣試" class="internal-link wiki-link">商霖賦（閣試）</a></li>
+<li><a href="#诗-卷01-赋#螢之集賦" class="internal-link wiki-link">螢之集賦</a></li>
+<li><a href="#诗-卷01-赋#賦楊子所賦紅鸚鵡賦（有序）" class="internal-link wiki-link">賦楊子所賦紅鸚鵡賦（有序）</a></li>
+</ul>
+<h3 id="卷二-·-骚-(12-首)">卷二 · 骚 (12 首)</h3>
+<ul>
+<li><a href="#诗-卷02-骚.md#骚九歌-其一-出门" class="internal-link wiki-link">骚九歌 其一 出门</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其二-惜别" class="internal-link wiki-link">骚九歌 其二 惜别</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其三-回首" class="internal-link wiki-link">骚九歌 其三 回首</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其四-下滩" class="internal-link wiki-link">骚九歌 其四 下滩</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其五-感昔" class="internal-link wiki-link">骚九歌 其五 感昔</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其六-泛望" class="internal-link wiki-link">骚九歌 其六 泛望</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其七-雨江" class="internal-link wiki-link">骚九歌 其七 雨江</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其八-烟缆" class="internal-link wiki-link">骚九歌 其八 烟缆</a></li>
+<li><a href="#诗-卷02-骚.md#骚九歌-其九-远目" class="internal-link wiki-link">骚九歌 其九 远目</a></li>
+<li><a href="#诗-卷02-骚.md#愁三水" class="internal-link wiki-link">愁三水</a></li>
+<li><a href="#诗-卷02-骚.md#望三山" class="internal-link wiki-link">望三山</a></li>
+</ul>
+<h3 id="卷三-·-古乐府-(347-首)">卷三 · 古乐府 (347 首)</h3>
+<ul>
+<li><a href="#诗-卷03-古乐府.md#飓风行" class="internal-link wiki-link">飓风行</a></li>
+<li><a href="#诗-卷03-古乐府.md#五月十三□□去廉因作廉□逃一篇且愿有事于廉者瞻前顾后相留意于斯言" class="internal-link wiki-link">五月十三□□去廉因作廉□逃一篇且愿有事于廉者瞻前顾后相留意于斯言</a></li>
+<li><a href="#诗-卷03-古乐府.md#前有樽酒行二首-其一" class="internal-link wiki-link">前有樽酒行二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#前有樽酒行二首-其二" class="internal-link wiki-link">前有樽酒行二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#邯郸才人嫁为厮养卒妇二首-其一" class="internal-link wiki-link">邯郸才人嫁为厮养卒妇二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#邯郸才人嫁为厮养卒妇二首-其二" class="internal-link wiki-link">邯郸才人嫁为厮养卒妇二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#战城南（丙子秋于役天中作）" class="internal-link wiki-link">战城南（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#代淮南王（丙子秋于役天中作）" class="internal-link wiki-link">代淮南王（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#西门行（丙子秋于役天中作）" class="internal-link wiki-link">西门行（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#东门行（丙子秋于役天中作）" class="internal-link wiki-link">东门行（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟行路难三首-其一（丙子秋于役天中作）" class="internal-link wiki-link">拟行路难三首 其一（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟行路难三首-其二（丙子秋于役天中作）" class="internal-link wiki-link">拟行路难三首 其二（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟行路难三首-其三（丙子秋于役天中作）" class="internal-link wiki-link">拟行路难三首 其三（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#有所思（丙子秋于役天中作）" class="internal-link wiki-link">有所思（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#上邪（丙子秋于役天中作）" class="internal-link wiki-link">上邪（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷03-古乐府.md#续晋白纻舞歌诗" class="internal-link wiki-link">续晋白纻舞歌诗</a></li>
+<li><a href="#诗-卷03-古乐府.md#邯郸才人嫁为厮养卒妇" class="internal-link wiki-link">邯郸才人嫁为厮养卒妇</a></li>
+<li><a href="#诗-卷03-古乐府.md#胡无人四首-其一-念汉武雄才及卫霍远略" class="internal-link wiki-link">胡无人四首 其一 念汉武雄才及卫霍远略</a></li>
+<li><a href="#诗-卷03-古乐府.md#胡无人四首-其二-念唐宗壮志及英卫殊猷" class="internal-link wiki-link">胡无人四首 其二 念唐宗壮志及英卫殊猷</a></li>
+<li><a href="#诗-卷03-古乐府.md#胡无人四首-其三-念宗韩岳刘忠勇无二岳不幸而诸酋酌酒宋高视前有恧矣" class="internal-link wiki-link">胡无人四首 其三 念宗韩岳刘忠勇无二岳不幸而诸酋酌酒宋高视前有恧矣</a></li>
+<li><a href="#诗-卷03-古乐府.md#胡无人四首-其四-念今日中兴德威当跨宋而方唐及汉" class="internal-link wiki-link">胡无人四首 其四 念今日中兴德威当跨宋而方唐及汉</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其一" class="internal-link wiki-link">重葺山居十绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其二" class="internal-link wiki-link">重葺山居十绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其三" class="internal-link wiki-link">重葺山居十绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其四" class="internal-link wiki-link">重葺山居十绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其五" class="internal-link wiki-link">重葺山居十绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其六" class="internal-link wiki-link">重葺山居十绝 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其七" class="internal-link wiki-link">重葺山居十绝 其七</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其八" class="internal-link wiki-link">重葺山居十绝 其八</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其九" class="internal-link wiki-link">重葺山居十绝 其九</a></li>
+<li><a href="#诗-卷03-古乐府.md#重葺山居十绝-其十" class="internal-link wiki-link">重葺山居十绝 其十</a></li>
+<li><a href="#诗-卷03-古乐府.md#天涯" class="internal-link wiki-link">天涯</a></li>
+<li><a href="#诗-卷03-古乐府.md#心远" class="internal-link wiki-link">心远</a></li>
+<li><a href="#诗-卷03-古乐府.md#不厌" class="internal-link wiki-link">不厌</a></li>
+<li><a href="#诗-卷03-古乐府.md#望海" class="internal-link wiki-link">望海</a></li>
+<li><a href="#诗-卷03-古乐府.md#忽忆" class="internal-link wiki-link">忽忆</a></li>
+<li><a href="#诗-卷03-古乐府.md#除草" class="internal-link wiki-link">除草</a></li>
+<li><a href="#诗-卷03-古乐府.md#季夏朔天大雷电以雨" class="internal-link wiki-link">季夏朔天大雷电以雨</a></li>
+<li><a href="#诗-卷03-古乐府.md#连雨未息即见漫成" class="internal-link wiki-link">连雨未息即见漫成</a></li>
+<li><a href="#诗-卷03-古乐府.md#山居" class="internal-link wiki-link">山居</a></li>
+<li><a href="#诗-卷03-古乐府.md#雨馀望初月" class="internal-link wiki-link">雨馀望初月</a></li>
+<li><a href="#诗-卷03-古乐府.md#步屧" class="internal-link wiki-link">步屧</a></li>
+<li><a href="#诗-卷03-古乐府.md#荒圃" class="internal-link wiki-link">荒圃</a></li>
+<li><a href="#诗-卷03-古乐府.md#新霁" class="internal-link wiki-link">新霁</a></li>
+<li><a href="#诗-卷03-古乐府.md#朝思" class="internal-link wiki-link">朝思</a></li>
+<li><a href="#诗-卷03-古乐府.md#蓬栖" class="internal-link wiki-link">蓬栖</a></li>
+<li><a href="#诗-卷03-古乐府.md#山水之閒" class="internal-link wiki-link">山水之閒</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其一-山有云" class="internal-link wiki-link">空山十首 其一 山有云</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其二-山有松" class="internal-link wiki-link">空山十首 其二 山有松</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其三-山有泉" class="internal-link wiki-link">空山十首 其三 山有泉</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其四-山有鸟" class="internal-link wiki-link">空山十首 其四 山有鸟</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其五-山有花" class="internal-link wiki-link">空山十首 其五 山有花</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其六-山有草" class="internal-link wiki-link">空山十首 其六 山有草</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其七-山有樵" class="internal-link wiki-link">空山十首 其七 山有樵</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其八-山有牧" class="internal-link wiki-link">空山十首 其八 山有牧</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其九-山有蝉" class="internal-link wiki-link">空山十首 其九 山有蝉</a></li>
+<li><a href="#诗-卷03-古乐府.md#空山十首-其十-山有客" class="internal-link wiki-link">空山十首 其十 山有客</a></li>
+<li><a href="#诗-卷03-古乐府.md#七月十四立秋雨后望月二首-其一" class="internal-link wiki-link">七月十四立秋雨后望月二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#七月十四立秋雨后望月二首-其二" class="internal-link wiki-link">七月十四立秋雨后望月二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#村人日以道士作佛事感叹有作" class="internal-link wiki-link">村人日以道士作佛事感叹有作</a></li>
+<li><a href="#诗-卷03-古乐府.md#湛露" class="internal-link wiki-link">湛露</a></li>
+<li><a href="#诗-卷03-古乐府.md#斜晖" class="internal-link wiki-link">斜晖</a></li>
+<li><a href="#诗-卷03-古乐府.md#敕谕再至改督为视漫赋二章-其一" class="internal-link wiki-link">敕谕再至改督为视漫赋二章 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#敕谕再至改督为视漫赋二章-其二" class="internal-link wiki-link">敕谕再至改督为视漫赋二章 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#天汉篇" class="internal-link wiki-link">天汉篇</a></li>
+<li><a href="#诗-卷03-古乐府.md#释愁五章-其一" class="internal-link wiki-link">释愁五章 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#释愁五章-其二" class="internal-link wiki-link">释愁五章 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#释愁五章-其三" class="internal-link wiki-link">释愁五章 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#释愁五章-其四" class="internal-link wiki-link">释愁五章 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#释愁五章-其五" class="internal-link wiki-link">释愁五章 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#九日晓对" class="internal-link wiki-link">九日晓对</a></li>
+<li><a href="#诗-卷03-古乐府.md#是午同德阳殿下张腾夫宫詹治登高之酌" class="internal-link wiki-link">是午同德阳殿下张腾夫宫詹治登高之酌</a></li>
+<li><a href="#诗-卷03-古乐府.md#初冬十二至防水见黄花喜吟" class="internal-link wiki-link">初冬十二至防水见黄花喜吟</a></li>
+<li><a href="#诗-卷03-古乐府.md#为张将子画新眉致词（姬与将子俱吴人，尚未垂髫）" class="internal-link wiki-link">为张将子画新眉致词（姬与将子俱吴人，尚未垂髫）</a></li>
+<li><a href="#诗-卷03-古乐府.md#十八日立春小酌" class="internal-link wiki-link">十八日立春小酌</a></li>
+<li><a href="#诗-卷03-古乐府.md#除夕晚眺二首-其一" class="internal-link wiki-link">除夕晚眺二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#除夕晚眺二首-其二" class="internal-link wiki-link">除夕晚眺二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#甲午元日书怀二首-其一" class="internal-link wiki-link">甲午元日书怀二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#甲午元日书怀二首-其二" class="internal-link wiki-link">甲午元日书怀二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#防筑初成即事有感" class="internal-link wiki-link">防筑初成即事有感</a></li>
+<li><a href="#诗-卷03-古乐府.md#添怀" class="internal-link wiki-link">添怀</a></li>
+<li><a href="#诗-卷03-古乐府.md#拭恨" class="internal-link wiki-link">拭恨</a></li>
+<li><a href="#诗-卷03-古乐府.md#花朝独对二首-其一" class="internal-link wiki-link">花朝独对二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#花朝独对二首-其二" class="internal-link wiki-link">花朝独对二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#将子中丞寄寓邕除夕诗兼传捷报用韵答之" class="internal-link wiki-link">将子中丞寄寓邕除夕诗兼传捷报用韵答之</a></li>
+<li><a href="#诗-卷03-古乐府.md#再和人日同潘宫詹共酌之韵" class="internal-link wiki-link">再和人日同潘宫詹共酌之韵</a></li>
+<li><a href="#诗-卷03-古乐府.md#偕伴往安乐窝诸洲散步二首-其一" class="internal-link wiki-link">偕伴往安乐窝诸洲散步二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#偕伴往安乐窝诸洲散步二首-其二" class="internal-link wiki-link">偕伴往安乐窝诸洲散步二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#感桃李花落尽戏为新句" class="internal-link wiki-link">感桃李花落尽戏为新句</a></li>
+<li><a href="#诗-卷03-古乐府.md#喜橘柚花盛开再成" class="internal-link wiki-link">喜橘柚花盛开再成</a></li>
+<li><a href="#诗-卷03-古乐府.md#落花行二首-其一" class="internal-link wiki-link">落花行二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#落花行二首-其二" class="internal-link wiki-link">落花行二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其一" class="internal-link wiki-link">暮春即事十二绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其二" class="internal-link wiki-link">暮春即事十二绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其三" class="internal-link wiki-link">暮春即事十二绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其四" class="internal-link wiki-link">暮春即事十二绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其五" class="internal-link wiki-link">暮春即事十二绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其六" class="internal-link wiki-link">暮春即事十二绝 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其七" class="internal-link wiki-link">暮春即事十二绝 其七</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其八" class="internal-link wiki-link">暮春即事十二绝 其八</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其九" class="internal-link wiki-link">暮春即事十二绝 其九</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其十" class="internal-link wiki-link">暮春即事十二绝 其十</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其十一" class="internal-link wiki-link">暮春即事十二绝 其十一</a></li>
+<li><a href="#诗-卷03-古乐府.md#暮春即事十二绝-其十二" class="internal-link wiki-link">暮春即事十二绝 其十二</a></li>
+<li><a href="#诗-卷03-古乐府.md#无题三绝-其一" class="internal-link wiki-link">无题三绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#无题三绝-其二" class="internal-link wiki-link">无题三绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#无题三绝-其三" class="internal-link wiki-link">无题三绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#三月三日龙门舟次" class="internal-link wiki-link">三月三日龙门舟次</a></li>
+<li><a href="#诗-卷03-古乐府.md#晋文渊阁及太子太保愧感有述三首-其一" class="internal-link wiki-link">晋文渊阁及太子太保愧感有述三首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#晋文渊阁及太子太保愧感有述三首-其二" class="internal-link wiki-link">晋文渊阁及太子太保愧感有述三首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#晋文渊阁及太子太保愧感有述三首-其三" class="internal-link wiki-link">晋文渊阁及太子太保愧感有述三首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#季春十三繇牙山之雷海闻西师已下高凉" class="internal-link wiki-link">季春十三繇牙山之雷海闻西师已下高凉</a></li>
+<li><a href="#诗-卷03-古乐府.md#十七晚抵乐民是夜宿所内旧栖凄然有述" class="internal-link wiki-link">十七晚抵乐民是夜宿所内旧栖凄然有述</a></li>
+<li><a href="#诗-卷03-古乐府.md#二十一立夏" class="internal-link wiki-link">二十一立夏</a></li>
+<li><a href="#诗-卷03-古乐府.md#十八忠节吟三首-其一" class="internal-link wiki-link">十八忠节吟三首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#十八忠节吟三首-其二" class="internal-link wiki-link">十八忠节吟三首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#十八忠节吟三首-其三" class="internal-link wiki-link">十八忠节吟三首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#六贤祠成诗以志之（六贤者寇苏苏李赵胡）" class="internal-link wiki-link">六贤祠成诗以志之（六贤者寇苏苏李赵胡）</a></li>
+<li><a href="#诗-卷03-古乐府.md#寇公准" class="internal-link wiki-link">寇公准</a></li>
+<li><a href="#诗-卷03-古乐府.md#苏公轼" class="internal-link wiki-link">苏公轼</a></li>
+<li><a href="#诗-卷03-古乐府.md#苏公辙" class="internal-link wiki-link">苏公辙</a></li>
+<li><a href="#诗-卷03-古乐府.md#李公纲" class="internal-link wiki-link">李公纲</a></li>
+<li><a href="#诗-卷03-古乐府.md#赵公鼎" class="internal-link wiki-link">赵公鼎</a></li>
+<li><a href="#诗-卷03-古乐府.md#胡公铨" class="internal-link wiki-link">胡公铨</a></li>
+<li><a href="#诗-卷03-古乐府.md#东征颂百韵" class="internal-link wiki-link">东征颂百韵</a></li>
+<li><a href="#诗-卷03-古乐府.md#立秋前三日繇乐民之高凉" class="internal-link wiki-link">立秋前三日繇乐民之高凉</a></li>
+<li><a href="#诗-卷03-古乐府.md#萤火二首-其一" class="internal-link wiki-link">萤火二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#萤火二首-其二" class="internal-link wiki-link">萤火二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#初秋朔抵高凉秋郊旷望" class="internal-link wiki-link">初秋朔抵高凉秋郊旷望</a></li>
+<li><a href="#诗-卷03-古乐府.md#中秋雨宿古月流新独对有感作秋月篇" class="internal-link wiki-link">中秋雨宿古月流新独对有感作秋月篇</a></li>
+<li><a href="#诗-卷03-古乐府.md#高凉秋意" class="internal-link wiki-link">高凉秋意</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟灭胡歌三绝-其一" class="internal-link wiki-link">拟灭胡歌三绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟灭胡歌三绝-其二" class="internal-link wiki-link">拟灭胡歌三绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#拟灭胡歌三绝-其三" class="internal-link wiki-link">拟灭胡歌三绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲秋二十八大墟道中念五节再期感吟二律-其一" class="internal-link wiki-link">仲秋二十八大墟道中念五节再期感吟二律 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲秋二十八大墟道中念五节再期感吟二律-其二" class="internal-link wiki-link">仲秋二十八大墟道中念五节再期感吟二律 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#阳江重阳九日之会九人暮雨催秋作九秋篇" class="internal-link wiki-link">阳江重阳九日之会九人暮雨催秋作九秋篇</a></li>
+<li><a href="#诗-卷03-古乐府.md#霜降晚眺" class="internal-link wiki-link">霜降晚眺</a></li>
+<li><a href="#诗-卷03-古乐府.md#十五发鼍江之百宜喜诸山不染腥尘而有作" class="internal-link wiki-link">十五发鼍江之百宜喜诸山不染腥尘而有作</a></li>
+<li><a href="#诗-卷03-古乐府.md#将至百宜晚眺有述" class="internal-link wiki-link">将至百宜晚眺有述</a></li>
+<li><a href="#诗-卷03-古乐府.md#见莲塘书寄连近城枢督" class="internal-link wiki-link">见莲塘书寄连近城枢督</a></li>
+<li><a href="#诗-卷03-古乐府.md#念八立冬作秋怀诗三首-其一" class="internal-link wiki-link">念八立冬作秋怀诗三首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#念八立冬作秋怀诗三首-其二" class="internal-link wiki-link">念八立冬作秋怀诗三首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#念八立冬作秋怀诗三首-其三" class="internal-link wiki-link">念八立冬作秋怀诗三首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#季秋晦日暂厝五节百宜山中作秋招诗五首-其一" class="internal-link wiki-link">季秋晦日暂厝五节百宜山中作秋招诗五首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#季秋晦日暂厝五节百宜山中作秋招诗五首-其二" class="internal-link wiki-link">季秋晦日暂厝五节百宜山中作秋招诗五首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#季秋晦日暂厝五节百宜山中作秋招诗五首-其三" class="internal-link wiki-link">季秋晦日暂厝五节百宜山中作秋招诗五首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#季秋晦日暂厝五节百宜山中作秋招诗五首-其四" class="internal-link wiki-link">季秋晦日暂厝五节百宜山中作秋招诗五首 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#季秋晦日暂厝五节百宜山中作秋招诗五首-其五" class="internal-link wiki-link">季秋晦日暂厝五节百宜山中作秋招诗五首 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#补葺残编有感而作" class="internal-link wiki-link">补葺残编有感而作</a></li>
+<li><a href="#诗-卷03-古乐府.md#冬夜山砦闻读书声喜而开卷" class="internal-link wiki-link">冬夜山砦闻读书声喜而开卷</a></li>
+<li><a href="#诗-卷03-古乐府.md#日往山中独寻幽意迫暮乃还马背有述" class="internal-link wiki-link">日往山中独寻幽意迫暮乃还马背有述</a></li>
+<li><a href="#诗-卷03-古乐府.md#再往" class="internal-link wiki-link">再往</a></li>
+<li><a href="#诗-卷03-古乐府.md#五羊秋" class="internal-link wiki-link">五羊秋</a></li>
+<li><a href="#诗-卷03-古乐府.md#五羊冬" class="internal-link wiki-link">五羊冬</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其一" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其二" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其三" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其四" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其五" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其六" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其七" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其七</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其八" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其八</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其九" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其九</a></li>
+<li><a href="#诗-卷03-古乐府.md#王师以季秋晦拔高明冀露布遂达行畿十绝-其十" class="internal-link wiki-link">王师以季秋晦拔高明冀露布遂达行畿十绝 其十</a></li>
+<li><a href="#诗-卷03-古乐府.md#微病不寐口占四十韵" class="internal-link wiki-link">微病不寐口占四十韵</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其一" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其二" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其三" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其四" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其五" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#搆秋思亭于百宜山中作诗六绝-其六" class="internal-link wiki-link">搆秋思亭于百宜山中作诗六绝 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#或曰秋何思以厝五节而结是亭也又成五绝-其一" class="internal-link wiki-link">或曰秋何思以厝五节而结是亭也又成五绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#或曰秋何思以厝五节而结是亭也又成五绝-其二" class="internal-link wiki-link">或曰秋何思以厝五节而结是亭也又成五绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#或曰秋何思以厝五节而结是亭也又成五绝-其三" class="internal-link wiki-link">或曰秋何思以厝五节而结是亭也又成五绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#或曰秋何思以厝五节而结是亭也又成五绝-其四" class="internal-link wiki-link">或曰秋何思以厝五节而结是亭也又成五绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#或曰秋何思以厝五节而结是亭也又成五绝-其五" class="internal-link wiki-link">或曰秋何思以厝五节而结是亭也又成五绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#思亭已就游焉息焉开芜植援漫成二律-其一" class="internal-link wiki-link">思亭已就游焉息焉开芜植援漫成二律 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#思亭已就游焉息焉开芜植援漫成二律-其二" class="internal-link wiki-link">思亭已就游焉息焉开芜植援漫成二律 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#亭之东四章章二十句-其一" class="internal-link wiki-link">亭之东四章章二十句 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#亭之东四章章二十句-其二" class="internal-link wiki-link">亭之东四章章二十句 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#亭之东四章章二十句-其三" class="internal-link wiki-link">亭之东四章章二十句 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#亭之东四章章二十句-其四" class="internal-link wiki-link">亭之东四章章二十句 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#我思四章章八句-其一" class="internal-link wiki-link">我思四章章八句 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#我思四章章八句-其二" class="internal-link wiki-link">我思四章章八句 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#我思四章章八句-其三" class="internal-link wiki-link">我思四章章八句 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#我思四章章八句-其四" class="internal-link wiki-link">我思四章章八句 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#秋思不已作思玄歌一篇以自广" class="internal-link wiki-link">秋思不已作思玄歌一篇以自广</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲冬六日发百宜二首-其一" class="internal-link wiki-link">仲冬六日发百宜二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲冬六日发百宜二首-其二" class="internal-link wiki-link">仲冬六日发百宜二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#开平马上" class="internal-link wiki-link">开平马上</a></li>
+<li><a href="#诗-卷03-古乐府.md#十一日抵会邑南关同王师攻围" class="internal-link wiki-link">十一日抵会邑南关同王师攻围</a></li>
+<li><a href="#诗-卷03-古乐府.md#十三长至西宁藩臣恭设龙位行五拜三叩礼臣同胡卫国率诸文武行十二拜恭纪" class="internal-link wiki-link">十三长至西宁藩臣恭设龙位行五拜三叩礼臣同胡卫国率诸文武行十二拜恭纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#攻围日久" class="internal-link wiki-link">攻围日久</a></li>
+<li><a href="#诗-卷03-古乐府.md#斗洞见梅花四首-其一" class="internal-link wiki-link">斗洞见梅花四首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#斗洞见梅花四首-其二" class="internal-link wiki-link">斗洞见梅花四首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#斗洞见梅花四首-其三" class="internal-link wiki-link">斗洞见梅花四首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#斗洞见梅花四首-其四" class="internal-link wiki-link">斗洞见梅花四首 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#致败-其一" class="internal-link wiki-link">致败 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#致败-其二" class="internal-link wiki-link">致败 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#闻闽师数百艘至澳门喜其来而悲其晚" class="internal-link wiki-link">闻闽师数百艘至澳门喜其来而悲其晚</a></li>
+<li><a href="#诗-卷03-古乐府.md#念七日繇百宜移居石井" class="internal-link wiki-link">念七日繇百宜移居石井</a></li>
+<li><a href="#诗-卷03-古乐府.md#除日立春" class="internal-link wiki-link">除日立春</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未元日赋得东望望春春可怜二首-其一" class="internal-link wiki-link">乙未元日赋得东望望春春可怜二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未元日赋得东望望春春可怜二首-其二" class="internal-link wiki-link">乙未元日赋得东望望春春可怜二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#人日读高达夫杜子美寄酬之什" class="internal-link wiki-link">人日读高达夫杜子美寄酬之什</a></li>
+<li><a href="#诗-卷03-古乐府.md#作稽古篇诸论断五绝-其一" class="internal-link wiki-link">作稽古篇诸论断五绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#作稽古篇诸论断五绝-其二" class="internal-link wiki-link">作稽古篇诸论断五绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#作稽古篇诸论断五绝-其三" class="internal-link wiki-link">作稽古篇诸论断五绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#作稽古篇诸论断五绝-其四" class="internal-link wiki-link">作稽古篇诸论断五绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#作稽古篇诸论断五绝-其五" class="internal-link wiki-link">作稽古篇诸论断五绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#七夕产一男弗育内子抱疴予亦伏枕成三绝-其一" class="internal-link wiki-link">七夕产一男弗育内子抱疴予亦伏枕成三绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#七夕产一男弗育内子抱疴予亦伏枕成三绝-其二" class="internal-link wiki-link">七夕产一男弗育内子抱疴予亦伏枕成三绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#七夕产一男弗育内子抱疴予亦伏枕成三绝-其三" class="internal-link wiki-link">七夕产一男弗育内子抱疴予亦伏枕成三绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#折池中菡萏置几上净瓶二绝-其一" class="internal-link wiki-link">折池中菡萏置几上净瓶二绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#折池中菡萏置几上净瓶二绝-其二" class="internal-link wiki-link">折池中菡萏置几上净瓶二绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#悼内四绝-其一" class="internal-link wiki-link">悼内四绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#悼内四绝-其二" class="internal-link wiki-link">悼内四绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#悼内四绝-其三" class="internal-link wiki-link">悼内四绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#悼内四绝-其四" class="internal-link wiki-link">悼内四绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#孟冬二十八迅雷雨雹自朝及午歌以纪之" class="internal-link wiki-link">孟冬二十八迅雷雨雹自朝及午歌以纪之</a></li>
+<li><a href="#诗-卷03-古乐府.md#病起小步感新栽柳竹而有作" class="internal-link wiki-link">病起小步感新栽柳竹而有作</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未除夕为稽古诸传未竣漫吟五律-其一" class="internal-link wiki-link">乙未除夕为稽古诸传未竣漫吟五律 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未除夕为稽古诸传未竣漫吟五律-其二" class="internal-link wiki-link">乙未除夕为稽古诸传未竣漫吟五律 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未除夕为稽古诸传未竣漫吟五律-其三" class="internal-link wiki-link">乙未除夕为稽古诸传未竣漫吟五律 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未除夕为稽古诸传未竣漫吟五律-其四" class="internal-link wiki-link">乙未除夕为稽古诸传未竣漫吟五律 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#乙未除夕为稽古诸传未竣漫吟五律-其五" class="internal-link wiki-link">乙未除夕为稽古诸传未竣漫吟五律 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#赋得元日到人日未有不阴时二首-其一" class="internal-link wiki-link">赋得元日到人日未有不阴时二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#赋得元日到人日未有不阴时二首-其二" class="internal-link wiki-link">赋得元日到人日未有不阴时二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#初十立春此日光华四满弥增就日之思" class="internal-link wiki-link">初十立春此日光华四满弥增就日之思</a></li>
+<li><a href="#诗-卷03-古乐府.md#润玉圃" class="internal-link wiki-link">润玉圃</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲夏六日之下川三首-其一" class="internal-link wiki-link">仲夏六日之下川三首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲夏六日之下川三首-其二" class="internal-link wiki-link">仲夏六日之下川三首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#仲夏六日之下川三首-其三" class="internal-link wiki-link">仲夏六日之下川三首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#自闰月五日作潮热联五日未已奋笔驱之" class="internal-link wiki-link">自闰月五日作潮热联五日未已奋笔驱之</a></li>
+<li><a href="#诗-卷03-古乐府.md#眺海外诸峰悠然有述二首-其一" class="internal-link wiki-link">眺海外诸峰悠然有述二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#眺海外诸峰悠然有述二首-其二" class="internal-link wiki-link">眺海外诸峰悠然有述二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其一-许由" class="internal-link wiki-link">集雅诗二十首 其一 许由</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其二-伯夷" class="internal-link wiki-link">集雅诗二十首 其二 伯夷</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其三-箕子" class="internal-link wiki-link">集雅诗二十首 其三 箕子</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其四-庄周" class="internal-link wiki-link">集雅诗二十首 其四 庄周</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其五-屈原" class="internal-link wiki-link">集雅诗二十首 其五 屈原</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其六-贾谊" class="internal-link wiki-link">集雅诗二十首 其六 贾谊</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其七-东方朔" class="internal-link wiki-link">集雅诗二十首 其七 东方朔</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其八-苏武" class="internal-link wiki-link">集雅诗二十首 其八 苏武</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其九-孔融" class="internal-link wiki-link">集雅诗二十首 其九 孔融</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十-诸葛亮" class="internal-link wiki-link">集雅诗二十首 其十 诸葛亮</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十一-陶潜" class="internal-link wiki-link">集雅诗二十首 其十一 陶潜</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十二-魏徵" class="internal-link wiki-link">集雅诗二十首 其十二 魏徵</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十三-宋璟" class="internal-link wiki-link">集雅诗二十首 其十三 宋璟</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十四-苏颋" class="internal-link wiki-link">集雅诗二十首 其十四 苏颋</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十五-张九龄" class="internal-link wiki-link">集雅诗二十首 其十五 张九龄</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十六-韩愈" class="internal-link wiki-link">集雅诗二十首 其十六 韩愈</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十七-魏野林逋" class="internal-link wiki-link">集雅诗二十首 其十七 魏野林逋</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十八-范仲淹" class="internal-link wiki-link">集雅诗二十首 其十八 范仲淹</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其十九-邵雍" class="internal-link wiki-link">集雅诗二十首 其十九 邵雍</a></li>
+<li><a href="#诗-卷03-古乐府.md#集雅诗二十首-其二十-范镇" class="internal-link wiki-link">集雅诗二十首 其二十 范镇</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其一-荆轲入秦" class="internal-link wiki-link">阅战国策有感而言十首 其一 荆轲入秦</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其二-荆轲二" class="internal-link wiki-link">阅战国策有感而言十首 其二 荆轲二</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其三-荆轲三" class="internal-link wiki-link">阅战国策有感而言十首 其三 荆轲三</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其四-苏代喻赵" class="internal-link wiki-link">阅战国策有感而言十首 其四 苏代喻赵</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其五-墨子往楚" class="internal-link wiki-link">阅战国策有感而言十首 其五 墨子往楚</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其六-宋偃生鹯" class="internal-link wiki-link">阅战国策有感而言十首 其六 宋偃生鹯</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其七-南文子忧马璧" class="internal-link wiki-link">阅战国策有感而言十首 其七 南文子忧马璧</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其八-司马子期怒羊羹" class="internal-link wiki-link">阅战国策有感而言十首 其八 司马子期怒羊羹</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其九-李疵雠贤" class="internal-link wiki-link">阅战国策有感而言十首 其九 李疵雠贤</a></li>
+<li><a href="#诗-卷03-古乐府.md#阅战国策有感而言十首-其十-缩高为子" class="internal-link wiki-link">阅战国策有感而言十首 其十 缩高为子</a></li>
+<li><a href="#诗-卷03-古乐府.md#盘古氏" class="internal-link wiki-link">盘古氏</a></li>
+<li><a href="#诗-卷03-古乐府.md#天皇氏地皇氏" class="internal-link wiki-link">天皇氏地皇氏</a></li>
+<li><a href="#诗-卷03-古乐府.md#九头纪五龙纪" class="internal-link wiki-link">九头纪五龙纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#摄提纪合雒纪" class="internal-link wiki-link">摄提纪合雒纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#连通纪叙命纪" class="internal-link wiki-link">连通纪叙命纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#循蜚纪" class="internal-link wiki-link">循蜚纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#因提纪" class="internal-link wiki-link">因提纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#禅通纪" class="internal-link wiki-link">禅通纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#疏仡纪" class="internal-link wiki-link">疏仡纪</a></li>
+<li><a href="#诗-卷03-古乐府.md#历代正闰篇" class="internal-link wiki-link">历代正闰篇</a></li>
+<li><a href="#诗-卷03-古乐府.md#秦及六国" class="internal-link wiki-link">秦及六国</a></li>
+<li><a href="#诗-卷03-古乐府.md#附陈楚西楚-陈王胜" class="internal-link wiki-link">附陈楚西楚·陈王胜</a></li>
+<li><a href="#诗-卷03-古乐府.md#楚义帝怀王孙心" class="internal-link wiki-link">楚义帝怀王孙心</a></li>
+<li><a href="#诗-卷03-古乐府.md#西楚霸王项籍" class="internal-link wiki-link">西楚霸王项籍</a></li>
+<li><a href="#诗-卷03-古乐府.md#附南越五主二首-其一" class="internal-link wiki-link">附南越五主二首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#附南越五主二首-其二" class="internal-link wiki-link">附南越五主二首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#西汉十二帝" class="internal-link wiki-link">西汉十二帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#惠帝" class="internal-link wiki-link">惠帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#吕后" class="internal-link wiki-link">吕后</a></li>
+<li><a href="#诗-卷03-古乐府.md#文帝" class="internal-link wiki-link">文帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#景帝" class="internal-link wiki-link">景帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#武帝" class="internal-link wiki-link">武帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#武帝二" class="internal-link wiki-link">武帝二</a></li>
+<li><a href="#诗-卷03-古乐府.md#昭帝" class="internal-link wiki-link">昭帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#宣帝" class="internal-link wiki-link">宣帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#元帝" class="internal-link wiki-link">元帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#成帝" class="internal-link wiki-link">成帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#哀帝" class="internal-link wiki-link">哀帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#新莽之篡孔光逢之诗以诛首恶非以责贤者" class="internal-link wiki-link">新莽之篡孔光逢之诗以诛首恶非以责贤者</a></li>
+<li><a href="#诗-卷03-古乐府.md#附更始盆子" class="internal-link wiki-link">附更始盆子</a></li>
+<li><a href="#诗-卷03-古乐府.md#附隗嚣公孙述" class="internal-link wiki-link">附隗嚣公孙述</a></li>
+<li><a href="#诗-卷03-古乐府.md#东汉十二帝后汉二帝" class="internal-link wiki-link">东汉十二帝后汉二帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#世祖光武" class="internal-link wiki-link">世祖光武</a></li>
+<li><a href="#诗-卷03-古乐府.md#明帝" class="internal-link wiki-link">明帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#章帝" class="internal-link wiki-link">章帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#灵帝" class="internal-link wiki-link">灵帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#后汉昭烈帝" class="internal-link wiki-link">后汉昭烈帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#魏五主" class="internal-link wiki-link">魏五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#吴四主" class="internal-link wiki-link">吴四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#西东晋十五帝" class="internal-link wiki-link">西东晋十五帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#附成三主汉二主" class="internal-link wiki-link">附成三主汉二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附汉四主赵一主后赵六主魏冉闵" class="internal-link wiki-link">附汉四主赵一主后赵六主魏冉闵</a></li>
+<li><a href="#诗-卷03-古乐府.md#秦六主后秦三主" class="internal-link wiki-link">秦六主后秦三主</a></li>
+<li><a href="#诗-卷03-古乐府.md#前燕二主后燕二主西燕二主北燕二主南燕二主附冯跋冯弘" class="internal-link wiki-link">前燕二主后燕二主西燕二主北燕二主南燕二主附冯跋冯弘</a></li>
+<li><a href="#诗-卷03-古乐府.md#附前凉九主后凉四主" class="internal-link wiki-link">附前凉九主后凉四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附西凉三主南凉三主北凉二主附段业" class="internal-link wiki-link">附西凉三主南凉三主北凉二主附段业</a></li>
+<li><a href="#诗-卷03-古乐府.md#西秦四主夏三主" class="internal-link wiki-link">西秦四主夏三主</a></li>
+<li><a href="#诗-卷03-古乐府.md#魏十四主东魏一主" class="internal-link wiki-link">魏十四主东魏一主</a></li>
+<li><a href="#诗-卷03-古乐府.md#宋八王" class="internal-link wiki-link">宋八王</a></li>
+<li><a href="#诗-卷03-古乐府.md#齐六主" class="internal-link wiki-link">齐六主</a></li>
+<li><a href="#诗-卷03-古乐府.md#梁四主" class="internal-link wiki-link">梁四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#陈五主" class="internal-link wiki-link">陈五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附北齐五主" class="internal-link wiki-link">附北齐五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#周五主" class="internal-link wiki-link">周五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#隋四主" class="internal-link wiki-link">隋四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#唐二十帝" class="internal-link wiki-link">唐二十帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#太宗" class="internal-link wiki-link">太宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#武后" class="internal-link wiki-link">武后</a></li>
+<li><a href="#诗-卷03-古乐府.md#玄宗" class="internal-link wiki-link">玄宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#肃宗" class="internal-link wiki-link">肃宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#昭宗" class="internal-link wiki-link">昭宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#后梁二主" class="internal-link wiki-link">后梁二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#后唐四主" class="internal-link wiki-link">后唐四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#后晋二主" class="internal-link wiki-link">后晋二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#后汉二主北汉四主" class="internal-link wiki-link">后汉二主北汉四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#后周三主" class="internal-link wiki-link">后周三主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附蜀二主" class="internal-link wiki-link">附蜀二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附后蜀二主" class="internal-link wiki-link">附后蜀二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附吴四主" class="internal-link wiki-link">附吴四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附南唐三主" class="internal-link wiki-link">附南唐三主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附闽五主殷一主" class="internal-link wiki-link">附闽五主殷一主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附南汉五主" class="internal-link wiki-link">附南汉五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附吴越五主" class="internal-link wiki-link">附吴越五主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附岐二主" class="internal-link wiki-link">附岐二主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附楚六主" class="internal-link wiki-link">附楚六主</a></li>
+<li><a href="#诗-卷03-古乐府.md#北宋九帝" class="internal-link wiki-link">北宋九帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#仁宗" class="internal-link wiki-link">仁宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#南宋九帝" class="internal-link wiki-link">南宋九帝</a></li>
+<li><a href="#诗-卷03-古乐府.md#孝宗" class="internal-link wiki-link">孝宗</a></li>
+<li><a href="#诗-卷03-古乐府.md#附辽九主" class="internal-link wiki-link">附辽九主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附金十主" class="internal-link wiki-link">附金十主</a></li>
+<li><a href="#诗-卷03-古乐府.md#附西夏十主" class="internal-link wiki-link">附西夏十主</a></li>
+<li><a href="#诗-卷03-古乐府.md#元十四主" class="internal-link wiki-link">元十四主</a></li>
+<li><a href="#诗-卷03-古乐府.md#皇明一统篇" class="internal-link wiki-link">皇明一统篇</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其一" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其二" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其三" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其四" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其五" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇止于秦汉唐以下先以诗述其概六首-其六" class="internal-link wiki-link">稽古篇止于秦汉唐以下先以诗述其概六首 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其一" class="internal-link wiki-link">稽古篇竣事十绝 其一</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其二" class="internal-link wiki-link">稽古篇竣事十绝 其二</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其三" class="internal-link wiki-link">稽古篇竣事十绝 其三</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其四" class="internal-link wiki-link">稽古篇竣事十绝 其四</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其五" class="internal-link wiki-link">稽古篇竣事十绝 其五</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其六" class="internal-link wiki-link">稽古篇竣事十绝 其六</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其七" class="internal-link wiki-link">稽古篇竣事十绝 其七</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其八" class="internal-link wiki-link">稽古篇竣事十绝 其八</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其九" class="internal-link wiki-link">稽古篇竣事十绝 其九</a></li>
+<li><a href="#诗-卷03-古乐府.md#稽古篇竣事十绝-其十" class="internal-link wiki-link">稽古篇竣事十绝 其十</a></li>
+</ul>
+<h3 id="卷四-·-五言古体-(22-首)">卷四 · 五言古体 (22 首)</h3>
+<ul>
+<li><a href="#诗-卷04-五言古体.md#野泊观烧" class="internal-link wiki-link">野泊观烧</a></li>
+<li><a href="#诗-卷04-五言古体.md#鸬鹚行" class="internal-link wiki-link">鸬鹚行</a></li>
+<li><a href="#诗-卷04-五言古体.md#西粤石峰篇" class="internal-link wiki-link">西粤石峰篇</a></li>
+<li><a href="#诗-卷04-五言古体.md#念六晚过南亭再成" class="internal-link wiki-link">念六晚过南亭再成</a></li>
+<li><a href="#诗-卷04-五言古体.md#念七早望烟景全收奇峰亦渐豁矣" class="internal-link wiki-link">念七早望烟景全收奇峰亦渐豁矣</a></li>
+<li><a href="#诗-卷04-五言古体.md#老虎山踞桂城西北诗以壮之" class="internal-link wiki-link">老虎山踞桂城西北诗以壮之</a></li>
+<li><a href="#诗-卷04-五言古体.md#看山行" class="internal-link wiki-link">看山行</a></li>
+<li><a href="#诗-卷04-五言古体.md#忆山行" class="internal-link wiki-link">忆山行</a></li>
+<li><a href="#诗-卷04-五言古体.md#梅花落" class="internal-link wiki-link">梅花落</a></li>
+<li><a href="#诗-卷04-五言古体.md#冬日何短短" class="internal-link wiki-link">冬日何短短</a></li>
+<li><a href="#诗-卷04-五言古体.md#冬宵何漫漫" class="internal-link wiki-link">冬宵何漫漫</a></li>
+<li><a href="#诗-卷04-五言古体.md#十七日立春寒山寂对微阳未舒诗以俟之" class="internal-link wiki-link">十七日立春寒山寂对微阳未舒诗以俟之</a></li>
+<li><a href="#诗-卷04-五言古体.md#连日风雨诗以散之" class="internal-link wiki-link">连日风雨诗以散之</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其一-十九夜初闻雪" class="internal-link wiki-link">雪诗六首义取六出 其一 十九夜初闻雪</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其二-二十早初见雪" class="internal-link wiki-link">雪诗六首义取六出 其二 二十早初见雪</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其三-忆金台" class="internal-link wiki-link">雪诗六首义取六出 其三 忆金台</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其四-忆烟舟" class="internal-link wiki-link">雪诗六首义取六出 其四 忆烟舟</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其五-天花" class="internal-link wiki-link">雪诗六首义取六出 其五 天花</a></li>
+<li><a href="#诗-卷04-五言古体.md#雪诗六首义取六出-其六-春光贳" class="internal-link wiki-link">雪诗六首义取六出 其六 春光贳</a></li>
+<li><a href="#诗-卷04-五言古体.md#念二早喜见旭旦" class="internal-link wiki-link">念二早喜见旭旦</a></li>
+<li><a href="#诗-卷04-五言古体.md#读白玉蟾修仙辨惑诸论漫述四篇-其一" class="internal-link wiki-link">读白玉蟾修仙辨惑诸论漫述四篇 其一</a></li>
+<li><a href="#诗-卷04-五言古体.md#读白玉蟾修仙辨惑诸论漫述四篇-其二" class="internal-link wiki-link">读白玉蟾修仙辨惑诸论漫述四篇 其二</a></li>
+<li><a href="#诗-卷04-五言古体.md#读白玉蟾修仙辨惑诸论漫述四篇-其三" class="internal-link wiki-link">读白玉蟾修仙辨惑诸论漫述四篇 其三</a></li>
+<li><a href="#诗-卷04-五言古体.md#读白玉蟾修仙辨惑诸论漫述四篇-其四" class="internal-link wiki-link">读白玉蟾修仙辨惑诸论漫述四篇 其四</a></li>
+<li><a href="#诗-卷04-五言古体.md#筮邵子数得雷山小过五爻" class="internal-link wiki-link">筮邵子数得雷山小过五爻</a></li>
+<li><a href="#诗-卷04-五言古体.md#雨次遥望彼秾削色诗以叹之" class="internal-link wiki-link">雨次遥望彼秾削色诗以叹之</a></li>
+<li><a href="#诗-卷04-五言古体.md#初八夜微雨初九晨夕丝丝不断" class="internal-link wiki-link">初八夜微雨初九晨夕丝丝不断</a></li>
+<li><a href="#诗-卷04-五言古体.md#初十日丝雨有加" class="internal-link wiki-link">初十日丝雨有加</a></li>
+<li><a href="#诗-卷04-五言古体.md#元夕遭雨忆昔有怀" class="internal-link wiki-link">元夕遭雨忆昔有怀</a></li>
+<li><a href="#诗-卷04-五言古体.md#十二夜中宵风雨如晦梦回口占" class="internal-link wiki-link">十二夜中宵风雨如晦梦回口占</a></li>
+<li><a href="#诗-卷04-五言古体.md#十五早半雨半雪及暮阴寒特甚" class="internal-link wiki-link">十五早半雨半雪及暮阴寒特甚</a></li>
+<li><a href="#诗-卷04-五言古体.md#元夕三五非雨即风天上人间应同寂寂" class="internal-link wiki-link">元夕三五非雨即风天上人间应同寂寂</a></li>
+<li><a href="#诗-卷04-五言古体.md#取桃花一枝插瓶酬以二十韵" class="internal-link wiki-link">取桃花一枝插瓶酬以二十韵</a></li>
+<li><a href="#诗-卷04-五言古体.md#煦日微昭青春奋遽见乎前山" class="internal-link wiki-link">煦日微昭青春奋遽见乎前山</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其一" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其一</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其二" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其二</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其三" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其三</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其四" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其四</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其五" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其五</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其六" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其六</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其七" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其七</a></li>
+<li><a href="#诗-卷04-五言古体.md#定道德经为六十四章漫书所得八首-其八" class="internal-link wiki-link">定道德经为六十四章漫书所得八首 其八</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其一-庚桑楚" class="internal-link wiki-link">读南华杂篇述以五言十一章 其一 庚桑楚</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其二-徐无鬼" class="internal-link wiki-link">读南华杂篇述以五言十一章 其二 徐无鬼</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其三-则阳" class="internal-link wiki-link">读南华杂篇述以五言十一章 其三 则阳</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其四-外物" class="internal-link wiki-link">读南华杂篇述以五言十一章 其四 外物</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其五-寓言" class="internal-link wiki-link">读南华杂篇述以五言十一章 其五 寓言</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其六-让王" class="internal-link wiki-link">读南华杂篇述以五言十一章 其六 让王</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其七-盗蹠" class="internal-link wiki-link">读南华杂篇述以五言十一章 其七 盗蹠</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其八-说剑" class="internal-link wiki-link">读南华杂篇述以五言十一章 其八 说剑</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其九-渔父" class="internal-link wiki-link">读南华杂篇述以五言十一章 其九 渔父</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其十-列御寇" class="internal-link wiki-link">读南华杂篇述以五言十一章 其十 列御寇</a></li>
+<li><a href="#诗-卷04-五言古体.md#读南华杂篇述以五言十一章-其十一-天下" class="internal-link wiki-link">读南华杂篇述以五言十一章 其十一 天下</a></li>
+</ul>
+<h3 id="卷五-·-五言古体-(54-首)">卷五 · 五言古体 (54 首)</h3>
+<ul>
+<li><a href="#诗-卷05-五言古体.md#庄称古人其备备列六经祖宪之思尊孔至矣" class="internal-link wiki-link">庄称古人其备备列六经祖宪之思尊孔至矣</a></li>
+<li><a href="#诗-卷05-五言古体.md#庄列道术谓墨才士老真人感其言而定宗" class="internal-link wiki-link">庄列道术谓墨才士老真人感其言而定宗</a></li>
+<li><a href="#诗-卷05-五言古体.md#老告庄" class="internal-link wiki-link">老告庄</a></li>
+<li><a href="#诗-卷05-五言古体.md#周答老" class="internal-link wiki-link">周答老</a></li>
+<li><a href="#诗-卷05-五言古体.md#长穷" class="internal-link wiki-link">长穷</a></li>
+<li><a href="#诗-卷05-五言古体.md#遇坎" class="internal-link wiki-link">遇坎</a></li>
+<li><a href="#诗-卷05-五言古体.md#阖户" class="internal-link wiki-link">阖户</a></li>
+<li><a href="#诗-卷05-五言古体.md#目云" class="internal-link wiki-link">目云</a></li>
+<li><a href="#诗-卷05-五言古体.md#介石" class="internal-link wiki-link">介石</a></li>
+<li><a href="#诗-卷05-五言古体.md#分晖" class="internal-link wiki-link">分晖</a></li>
+<li><a href="#诗-卷05-五言古体.md#涤燥" class="internal-link wiki-link">涤燥</a></li>
+<li><a href="#诗-卷05-五言古体.md#乘凉" class="internal-link wiki-link">乘凉</a></li>
+<li><a href="#诗-卷05-五言古体.md#可畏" class="internal-link wiki-link">可畏</a></li>
+<li><a href="#诗-卷05-五言古体.md#庭树" class="internal-link wiki-link">庭树</a></li>
+<li><a href="#诗-卷05-五言古体.md#无用" class="internal-link wiki-link">无用</a></li>
+<li><a href="#诗-卷05-五言古体.md#五月一日" class="internal-link wiki-link">五月一日</a></li>
+<li><a href="#诗-卷05-五言古体.md#五日" class="internal-link wiki-link">五日</a></li>
+<li><a href="#诗-卷05-五言古体.md#旱虐如焚靡瞻有述" class="internal-link wiki-link">旱虐如焚靡瞻有述</a></li>
+<li><a href="#诗-卷05-五言古体.md#黄卧庵新守苍梧因羽寄怀兼示谢子星源" class="internal-link wiki-link">黄卧庵新守苍梧因羽寄怀兼示谢子星源</a></li>
+<li><a href="#诗-卷05-五言古体.md#来往禽" class="internal-link wiki-link">来往禽</a></li>
+<li><a href="#诗-卷05-五言古体.md#夏至日喜雨漫吟" class="internal-link wiki-link">夏至日喜雨漫吟</a></li>
+<li><a href="#诗-卷05-五言古体.md#感张平子四愁诗而有作" class="internal-link wiki-link">感张平子四愁诗而有作</a></li>
+<li><a href="#诗-卷05-五言古体.md#观生" class="internal-link wiki-link">观生</a></li>
+<li><a href="#诗-卷05-五言古体.md#迎薰有所思" class="internal-link wiki-link">迎薰有所思</a></li>
+<li><a href="#诗-卷05-五言古体.md#瓶莲数朵朝开暮落然馀芳则依依一室矣" class="internal-link wiki-link">瓶莲数朵朝开暮落然馀芳则依依一室矣</a></li>
+<li><a href="#诗-卷05-五言古体.md#望白云在天忽然有感而赋此" class="internal-link wiki-link">望白云在天忽然有感而赋此</a></li>
+<li><a href="#诗-卷05-五言古体.md#夏月困于炎烟情含而光郁也感而赋之" class="internal-link wiki-link">夏月困于炎烟情含而光郁也感而赋之</a></li>
+<li><a href="#诗-卷05-五言古体.md#闻人言某池荷花之盛虽不能至心窃往之" class="internal-link wiki-link">闻人言某池荷花之盛虽不能至心窃往之</a></li>
+<li><a href="#诗-卷05-五言古体.md#广温飞卿莲浦谣" class="internal-link wiki-link">广温飞卿莲浦谣</a></li>
+<li><a href="#诗-卷05-五言古体.md#伏夜苦暑神游四景意可清凉-其一-夕庭梧云" class="internal-link wiki-link">伏夜苦暑神游四景意可清凉 其一 夕庭梧云</a></li>
+<li><a href="#诗-卷05-五言古体.md#伏夜苦暑神游四景意可清凉-其二-宵槛蕙风" class="internal-link wiki-link">伏夜苦暑神游四景意可清凉 其二 宵槛蕙风</a></li>
+<li><a href="#诗-卷05-五言古体.md#伏夜苦暑神游四景意可清凉-其三-夜池花月" class="internal-link wiki-link">伏夜苦暑神游四景意可清凉 其三 夜池花月</a></li>
+<li><a href="#诗-卷05-五言古体.md#伏夜苦暑神游四景意可清凉-其四-晓径竹露" class="internal-link wiki-link">伏夜苦暑神游四景意可清凉 其四 晓径竹露</a></li>
+<li><a href="#诗-卷05-五言古体.md#白云歌" class="internal-link wiki-link">白云歌</a></li>
+<li><a href="#诗-卷05-五言古体.md#十不怜" class="internal-link wiki-link">十不怜</a></li>
+<li><a href="#诗-卷05-五言古体.md#十可畏" class="internal-link wiki-link">十可畏</a></li>
+<li><a href="#诗-卷05-五言古体.md#古柏数株蕴荣拂翠感而赋之" class="internal-link wiki-link">古柏数株蕴荣拂翠感而赋之</a></li>
+<li><a href="#诗-卷05-五言古体.md#创雁穷猿" class="internal-link wiki-link">创雁穷猿</a></li>
+<li><a href="#诗-卷05-五言古体.md#谓麟言凤" class="internal-link wiki-link">谓麟言凤</a></li>
+<li><a href="#诗-卷05-五言古体.md#古今人多作留春诗而莫有留夏者感而赋之" class="internal-link wiki-link">古今人多作留春诗而莫有留夏者感而赋之</a></li>
+<li><a href="#诗-卷05-五言古体.md#人静秋相倚" class="internal-link wiki-link">人静秋相倚</a></li>
+<li><a href="#诗-卷05-五言古体.md#忽疑中有人" class="internal-link wiki-link">忽疑中有人</a></li>
+<li><a href="#诗-卷05-五言古体.md#云白青山外" class="internal-link wiki-link">云白青山外</a></li>
+<li><a href="#诗-卷05-五言古体.md#悲哉此气生" class="internal-link wiki-link">悲哉此气生</a></li>
+<li><a href="#诗-卷05-五言古体.md#羁馆七夕" class="internal-link wiki-link">羁馆七夕</a></li>
+<li><a href="#诗-卷05-五言古体.md#十四午烈日方中忽下小雹既乃继以阴雨" class="internal-link wiki-link">十四午烈日方中忽下小雹既乃继以阴雨</a></li>
+<li><a href="#诗-卷05-五言古体.md#中元节有感" class="internal-link wiki-link">中元节有感</a></li>
+<li><a href="#诗-卷05-五言古体.md#秋风叹一章感庭中古木也" class="internal-link wiki-link">秋风叹一章感庭中古木也</a></li>
+<li><a href="#诗-卷05-五言古体.md#白露晓对" class="internal-link wiki-link">白露晓对</a></li>
+<li><a href="#诗-卷05-五言古体.md#擘山行" class="internal-link wiki-link">擘山行</a></li>
+<li><a href="#诗-卷05-五言古体.md#中秋夜羁窗望月" class="internal-link wiki-link">中秋夜羁窗望月</a></li>
+<li><a href="#诗-卷05-五言古体.md#娟影临榻五夜披衣寤歌待旦得五言二十韵" class="internal-link wiki-link">娟影临榻五夜披衣寤歌待旦得五言二十韵</a></li>
+<li><a href="#诗-卷05-五言古体.md#郑扶烟见访" class="internal-link wiki-link">郑扶烟见访</a></li>
+<li><a href="#诗-卷05-五言古体.md#泊攸镇" class="internal-link wiki-link">泊攸镇</a></li>
+</ul>
+<h3 id="卷六-·-五言律诗-(84-首)">卷六 · 五言律诗 (84 首)</h3>
+<ul>
+<li><a href="#诗-卷06-五言律诗.md#送许钦翼公车" class="internal-link wiki-link">送许钦翼公车</a></li>
+<li><a href="#诗-卷06-五言律诗.md#秋日送冯尔韬明府报最（题，康熙本作《再赠尔韬》。）" class="internal-link wiki-link">秋日送冯尔韬明府报最（题，康熙本作《再赠尔韬》。）</a></li>
+<li><a href="#诗-卷06-五言律诗.md#夜坐" class="internal-link wiki-link">夜坐</a></li>
+<li><a href="#诗-卷06-五言律诗.md#孙蜚莪邹石可过集" class="internal-link wiki-link">孙蜚莪邹石可过集</a></li>
+<li><a href="#诗-卷06-五言律诗.md#西园清事①清韵" class="internal-link wiki-link">西园清事①清韵</a></li>
+<li><a href="#诗-卷06-五言律诗.md#家别慈闱-庚午冬北征作" class="internal-link wiki-link">家别慈闱 庚午冬北征作</a></li>
+<li><a href="#诗-卷06-五言律诗.md#过隘岭" class="internal-link wiki-link">过隘岭</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雩都登舟" class="internal-link wiki-link">雩都登舟</a></li>
+<li><a href="#诗-卷06-五言律诗.md#庐陵阻风晚泊" class="internal-link wiki-link">庐陵阻风晚泊</a></li>
+<li><a href="#诗-卷06-五言律诗.md#梦徐九一邀游虎丘坐千人石上待月联吟觉来枕上偶记数联似五言律也" class="internal-link wiki-link">梦徐九一邀游虎丘坐千人石上待月联吟觉来枕上偶记数联似五言律也</a></li>
+<li><a href="#诗-卷06-五言律诗.md#然不忆何语出何人矣残灯馀几雨雪霏雱有怀耿然依韵追足" class="internal-link wiki-link">然不忆何语出何人矣残灯馀几雨雪霏雱有怀耿然依韵追足</a></li>
+<li><a href="#诗-卷06-五言律诗.md#读肃之诗" class="internal-link wiki-link">读肃之诗</a></li>
+<li><a href="#诗-卷06-五言律诗.md#病腕" class="internal-link wiki-link">病腕</a></li>
+<li><a href="#诗-卷06-五言律诗.md#晚泊所见" class="internal-link wiki-link">晚泊所见</a></li>
+<li><a href="#诗-卷06-五言律诗.md#挂席过南浦" class="internal-link wiki-link">挂席过南浦</a></li>
+<li><a href="#诗-卷06-五言律诗.md#阴暮" class="internal-link wiki-link">阴暮</a></li>
+<li><a href="#诗-卷06-五言律诗.md#农圃" class="internal-link wiki-link">农圃</a></li>
+<li><a href="#诗-卷06-五言律诗.md#晚望" class="internal-link wiki-link">晚望</a></li>
+<li><a href="#诗-卷06-五言律诗.md#春汀" class="internal-link wiki-link">春汀</a></li>
+<li><a href="#诗-卷06-五言律诗.md#泊攸镇" class="internal-link wiki-link">泊攸镇</a></li>
+<li><a href="#诗-卷06-五言律诗.md#上滩" class="internal-link wiki-link">上滩</a></li>
+<li><a href="#诗-卷06-五言律诗.md#燕" class="internal-link wiki-link">燕</a></li>
+<li><a href="#诗-卷06-五言律诗.md#瑞金寇警" class="internal-link wiki-link">瑞金寇警</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨过隘岭口占" class="internal-link wiki-link">雨过隘岭口占</a></li>
+<li><a href="#诗-卷06-五言律诗.md#泊上杭界" class="internal-link wiki-link">泊上杭界</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨泊鲟鱼村隔舟讯杨承之-癸酉北征舟中作" class="internal-link wiki-link">雨泊鲟鱼村隔舟讯杨承之 癸酉北征舟中作</a></li>
+<li><a href="#诗-卷06-五言律诗.md#晚望雷发" class="internal-link wiki-link">晚望雷发</a></li>
+<li><a href="#诗-卷06-五言律诗.md#清明日雨望计春" class="internal-link wiki-link">清明日雨望计春</a></li>
+<li><a href="#诗-卷06-五言律诗.md#泊皖江走笔讯方肃之" class="internal-link wiki-link">泊皖江走笔讯方肃之</a></li>
+<li><a href="#诗-卷06-五言律诗.md#有怀陆山甫" class="internal-link wiki-link">有怀陆山甫</a></li>
+<li><a href="#诗-卷06-五言律诗.md#幽斋偶成" class="internal-link wiki-link">幽斋偶成</a></li>
+<li><a href="#诗-卷06-五言律诗.md#客路" class="internal-link wiki-link">客路</a></li>
+<li><a href="#诗-卷06-五言律诗.md#新暑" class="internal-link wiki-link">新暑</a></li>
+<li><a href="#诗-卷06-五言律诗.md#午车" class="internal-link wiki-link">午车</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨意" class="internal-link wiki-link">雨意</a></li>
+<li><a href="#诗-卷06-五言律诗.md#邹滕道中喜连日密云细雨" class="internal-link wiki-link">邹滕道中喜连日密云细雨</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨后晓发夹沟驿" class="internal-link wiki-link">雨后晓发夹沟驿</a></li>
+<li><a href="#诗-卷06-五言律诗.md#过桃山岳武穆祠愤感再成" class="internal-link wiki-link">过桃山岳武穆祠愤感再成</a></li>
+<li><a href="#诗-卷06-五言律诗.md#自徐州渡河途中寻春即见有感" class="internal-link wiki-link">自徐州渡河途中寻春即见有感</a></li>
+<li><a href="#诗-卷06-五言律诗.md#所思" class="internal-link wiki-link">所思</a></li>
+<li><a href="#诗-卷06-五言律诗.md#见孟尝养士及叔孙演礼故碑" class="internal-link wiki-link">见孟尝养士及叔孙演礼故碑</a></li>
+<li><a href="#诗-卷06-五言律诗.md#日暮迷途赖初月得至新嘉" class="internal-link wiki-link">日暮迷途赖初月得至新嘉</a></li>
+<li><a href="#诗-卷06-五言律诗.md#东平晓望" class="internal-link wiki-link">东平晓望</a></li>
+<li><a href="#诗-卷06-五言律诗.md#东阿晓望见雨后春色心目为之一开" class="internal-link wiki-link">东阿晓望见雨后春色心目为之一开</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨宿" class="internal-link wiki-link">雨宿</a></li>
+<li><a href="#诗-卷06-五言律诗.md#将至荏平见雷风大作" class="internal-link wiki-link">将至荏平见雷风大作</a></li>
+<li><a href="#诗-卷06-五言律诗.md#暮轺见归鸟有感" class="internal-link wiki-link">暮轺见归鸟有感</a></li>
+<li><a href="#诗-卷06-五言律诗.md#哀东人三首-其一" class="internal-link wiki-link">哀东人三首 其一</a></li>
+<li><a href="#诗-卷06-五言律诗.md#哀东人三首-其二" class="internal-link wiki-link">哀东人三首 其二</a></li>
+<li><a href="#诗-卷06-五言律诗.md#哀东人三首-其三" class="internal-link wiki-link">哀东人三首 其三</a></li>
+<li><a href="#诗-卷06-五言律诗.md#见诸邑遍立粥厂高旗旗书抚院明文饥者之口果及粥乎否也" class="internal-link wiki-link">见诸邑遍立粥厂高旗旗书抚院明文饥者之口果及粥乎否也</a></li>
+<li><a href="#诗-卷06-五言律诗.md#饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首-其一" class="internal-link wiki-link">饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首 其一</a></li>
+<li><a href="#诗-卷06-五言律诗.md#饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首-其二" class="internal-link wiki-link">饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首 其二</a></li>
+<li><a href="#诗-卷06-五言律诗.md#寂寂" class="internal-link wiki-link">寂寂</a></li>
+<li><a href="#诗-卷06-五言律诗.md#野色" class="internal-link wiki-link">野色</a></li>
+<li><a href="#诗-卷06-五言律诗.md#四月二日再补客司二首-其一" class="internal-link wiki-link">四月二日再补客司二首 其一</a></li>
+<li><a href="#诗-卷06-五言律诗.md#四月二日再补客司二首-其二" class="internal-link wiki-link">四月二日再补客司二首 其二</a></li>
+<li><a href="#诗-卷06-五言律诗.md#中秋前一日有七闽督学之命" class="internal-link wiki-link">中秋前一日有七闽督学之命</a></li>
+<li><a href="#诗-卷06-五言律诗.md#有感" class="internal-link wiki-link">有感</a></li>
+<li><a href="#诗-卷06-五言律诗.md#坚坐" class="internal-link wiki-link">坚坐</a></li>
+<li><a href="#诗-卷06-五言律诗.md#爽色" class="internal-link wiki-link">爽色</a></li>
+<li><a href="#诗-卷06-五言律诗.md#散馆得春曹未补" class="internal-link wiki-link">散馆得春曹未补</a></li>
+<li><a href="#诗-卷06-五言律诗.md#解嘲" class="internal-link wiki-link">解嘲</a></li>
+<li><a href="#诗-卷06-五言律诗.md#长叹" class="internal-link wiki-link">长叹</a></li>
+<li><a href="#诗-卷06-五言律诗.md#补主客司有提督二馆之差" class="internal-link wiki-link">补主客司有提督二馆之差</a></li>
+<li><a href="#诗-卷06-五言律诗.md#贡使杂沓至馆" class="internal-link wiki-link">贡使杂沓至馆</a></li>
+<li><a href="#诗-卷06-五言律诗.md#西番诸夷方物多恶薄及乌思藏入贡违期诗以示之" class="internal-link wiki-link">西番诸夷方物多恶薄及乌思藏入贡违期诗以示之</a></li>
+<li><a href="#诗-卷06-五言律诗.md#与朝鲜贡使" class="internal-link wiki-link">与朝鲜贡使</a></li>
+<li><a href="#诗-卷06-五言律诗.md#鲜使以皇华石洲二集求序兼乞余诗文稿书以答之" class="internal-link wiki-link">鲜使以皇华石洲二集求序兼乞余诗文稿书以答之</a></li>
+<li><a href="#诗-卷06-五言律诗.md#汶上阻雨-甲戌册荆藩道中作" class="internal-link wiki-link">汶上阻雨 甲戌册荆藩道中作</a></li>
+<li><a href="#诗-卷06-五言律诗.md#邹邑道中雨过晓望" class="internal-link wiki-link">邹邑道中雨过晓望</a></li>
+<li><a href="#诗-卷06-五言律诗.md#晚眺" class="internal-link wiki-link">晚眺</a></li>
+<li><a href="#诗-卷06-五言律诗.md#七夕江月-距立秋前有六日" class="internal-link wiki-link">七夕江月 距立秋前有六日</a></li>
+<li><a href="#诗-卷06-五言律诗.md#十四夜泊繁昌旧县镇" class="internal-link wiki-link">十四夜泊繁昌旧县镇</a></li>
+<li><a href="#诗-卷06-五言律诗.md#汉川秋怀" class="internal-link wiki-link">汉川秋怀</a></li>
+<li><a href="#诗-卷06-五言律诗.md#十七早晓发虚江" class="internal-link wiki-link">十七早晓发虚江</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雩都山行" class="internal-link wiki-link">雩都山行</a></li>
+<li><a href="#诗-卷06-五言律诗.md#大宁晓发" class="internal-link wiki-link">大宁晓发</a></li>
+<li><a href="#诗-卷06-五言律诗.md#春雨晓对" class="internal-link wiki-link">春雨晓对</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨宿-其一" class="internal-link wiki-link">雨宿 其一</a></li>
+<li><a href="#诗-卷06-五言律诗.md#雨宿-其二" class="internal-link wiki-link">雨宿 其二</a></li>
+<li><a href="#诗-卷06-五言律诗.md#乙亥北征至分关却望" class="internal-link wiki-link">乙亥北征至分关却望</a></li>
+<li><a href="#诗-卷06-五言律诗.md#过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰-其一" class="internal-link wiki-link">过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰 其一</a></li>
+<li><a href="#诗-卷06-五言律诗.md#过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰-其二" class="internal-link wiki-link">过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰 其二</a></li>
+</ul>
+<h3 id="卷七-·-七言古体-(274-首)">卷七 · 七言古体 (274 首)</h3>
+<ul>
+<li><a href="#诗-卷07-七言古体.md#春日行" class="internal-link wiki-link">春日行</a></li>
+<li><a href="#诗-卷07-七言古体.md#夜坐吟（元夕）" class="internal-link wiki-link">夜坐吟（元夕）</a></li>
+<li><a href="#诗-卷07-七言古体.md#长相思二首-其一" class="internal-link wiki-link">长相思二首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#长相思二首-其二" class="internal-link wiki-link">长相思二首 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#胡无人（虏平志喜）" class="internal-link wiki-link">胡无人（虏平志喜）</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其二" class="internal-link wiki-link">春闺八首 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其三" class="internal-link wiki-link">春闺八首 其三</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其四" class="internal-link wiki-link">春闺八首 其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其五" class="internal-link wiki-link">春闺八首 其五</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其六" class="internal-link wiki-link">春闺八首 其六</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其七" class="internal-link wiki-link">春闺八首 其七</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其八" class="internal-link wiki-link">春闺八首 其八</a></li>
+<li><a href="#诗-卷07-七言古体.md#古歌（丙子秋于役天中作）" class="internal-link wiki-link">古歌（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷07-七言古体.md#悲歌（丙子秋于役天中作）" class="internal-link wiki-link">悲歌（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷07-七言古体.md#古诗二首-其一（丙子秋于役天中作）" class="internal-link wiki-link">古诗二首 其一（丙子秋于役天中作）</a></li>
+<li><a href="#诗-卷07-七言古体.md#古诗二首-其二" class="internal-link wiki-link">古诗二首 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#追和张曲江感遇诗步韵四首-其一" class="internal-link wiki-link">追和张曲江感遇诗步韵四首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#追和张曲江感遇诗步韵四首-其二" class="internal-link wiki-link">追和张曲江感遇诗步韵四首 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#追和张曲江感遇诗步韵四首-其三" class="internal-link wiki-link">追和张曲江感遇诗步韵四首 其三</a></li>
+<li><a href="#诗-卷07-七言古体.md#追和张曲江感遇诗步韵四首-其四" class="internal-link wiki-link">追和张曲江感遇诗步韵四首 其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其一-屈同姓" class="internal-link wiki-link">尚古六首 其一 屈同姓</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其二-贾少年" class="internal-link wiki-link">尚古六首 其二 贾少年</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其三-供奉靴" class="internal-link wiki-link">尚古六首 其三 供奉靴</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其四-柳下女子卿妇" class="internal-link wiki-link">尚古六首 其四 柳下女子卿妇</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其五-四公子不可一观" class="internal-link wiki-link">尚古六首 其五 四公子不可一观</a></li>
+<li><a href="#诗-卷07-七言古体.md#尚古六首-其六-天下士门下客不可同语" class="internal-link wiki-link">尚古六首 其六 天下士门下客不可同语</a></li>
+<li><a href="#诗-卷07-七言古体.md#闻陈集生学士编选粤东诗文赋寄" class="internal-link wiki-link">闻陈集生学士编选粤东诗文赋寄</a></li>
+<li><a href="#诗-卷07-七言古体.md#为王季重题读书佳山水" class="internal-link wiki-link">为王季重题读书佳山水</a></li>
+<li><a href="#诗-卷07-七言古体.md#姚孟长学士谬相奖掖感而有言" class="internal-link wiki-link">姚孟长学士谬相奖掖感而有言</a></li>
+<li><a href="#诗-卷07-七言古体.md#己巳南归晚舆见初月口占" class="internal-link wiki-link">己巳南归晚舆见初月口占</a></li>
+<li><a href="#诗-卷07-七言古体.md#东平州途中遇雨复晴" class="internal-link wiki-link">东平州途中遇雨复晴</a></li>
+<li><a href="#诗-卷07-七言古体.md#栖白门寄怀方肃之徐九一" class="internal-link wiki-link">栖白门寄怀方肃之徐九一</a></li>
+<li><a href="#诗-卷07-七言古体.md#静夜久坐寄宋尔孚辜端敬" class="internal-link wiki-link">静夜久坐寄宋尔孚辜端敬</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋日过维扬朱章华年友泊此未归相逢命酒舟中" class="internal-link wiki-link">秋日过维扬朱章华年友泊此未归相逢命酒舟中</a></li>
+<li><a href="#诗-卷07-七言古体.md#偕王芳洲朱章华二年友同集冒宗起处余以不胜酒力先回" class="internal-link wiki-link">偕王芳洲朱章华二年友同集冒宗起处余以不胜酒力先回</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟中夜眺" class="internal-link wiki-link">舟中夜眺</a></li>
+<li><a href="#诗-卷07-七言古体.md#寄怀李大生" class="internal-link wiki-link">寄怀李大生</a></li>
+<li><a href="#诗-卷07-七言古体.md#贵溪舟中阻滞漫成" class="internal-link wiki-link">贵溪舟中阻滞漫成</a></li>
+<li><a href="#诗-卷07-七言古体.md#道中逢雨再成其一" class="internal-link wiki-link">道中逢雨再成其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#东乡道中" class="internal-link wiki-link">东乡道中</a></li>
+<li><a href="#诗-卷07-七言古体.md#百山歌" class="internal-link wiki-link">百山歌</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其一" class="internal-link wiki-link">春日山居即事十首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其二" class="internal-link wiki-link">春日山居即事十首 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其三" class="internal-link wiki-link">春日山居即事十首 其三</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其四" class="internal-link wiki-link">春日山居即事十首 其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其五" class="internal-link wiki-link">春日山居即事十首 其五</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其六" class="internal-link wiki-link">春日山居即事十首 其六</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其七" class="internal-link wiki-link">春日山居即事十首 其七</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其八" class="internal-link wiki-link">春日山居即事十首 其八</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其九" class="internal-link wiki-link">春日山居即事十首 其九</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首-其十" class="internal-link wiki-link">春日山居即事十首 其十</a></li>
+<li><a href="#诗-卷07-七言古体.md#送谢韶石廉宪北上" class="internal-link wiki-link">送谢韶石廉宪北上</a></li>
+<li><a href="#诗-卷07-七言古体.md#送冯尔韬明府报最" class="internal-link wiki-link">送冯尔韬明府报最</a></li>
+<li><a href="#诗-卷07-七言古体.md#送吴斯椒明府报最" class="internal-link wiki-link">送吴斯椒明府报最</a></li>
+<li><a href="#诗-卷07-七言古体.md#追用刘司马阁试诗韵" class="internal-link wiki-link">追用刘司马阁试诗韵</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋去有感" class="internal-link wiki-link">秋去有感</a></li>
+<li><a href="#诗-卷07-七言古体.md#咏望月" class="internal-link wiki-link">咏望月</a></li>
+<li><a href="#诗-卷07-七言古体.md#寒雁" class="internal-link wiki-link">寒雁</a></li>
+<li><a href="#诗-卷07-七言古体.md#鸠" class="internal-link wiki-link">鸠</a></li>
+<li><a href="#诗-卷07-七言古体.md#纪怀诗十首-其一-抱玉" class="internal-link wiki-link">纪怀诗十首 其一 抱玉</a></li>
+<li><a href="#诗-卷07-七言古体.md#纪怀诗十首-其二-遇巷" class="internal-link wiki-link">纪怀诗十首 其二 遇巷</a></li>
+<li><a href="#诗-卷07-七言古体.md#纪怀诗十首-其三-摽梅" class="internal-link wiki-link">纪怀诗十首 其三 摽梅</a></li>
+<li><a href="#诗-卷07-七言古体.md#纪怀诗十首-其四-孤松" class="internal-link wiki-link">纪怀诗十首 其四 孤松</a></li>
+<li><a href="#诗-卷07-七言古体.md#纪怀诗十首-其五-游昆" class="internal-link wiki-link">纪怀诗十首 其五 游昆</a></li>
+<li><a href="#诗-卷07-七言古体.md#庚午冬虏儆烽传溯流金陵约同假曹方姚陈诸子北上俱以散馆尚遥深居念独行不可于辛未春遵洄而南而家扁舟不能自聊作纪怀诗十首-其六-从策" class="internal-link wiki-link">庚午冬虏儆烽传溯流金陵约同假曹方姚陈诸子北上俱以散馆尚遥深居念独行不可于辛未春遵洄而南而家扁舟不能自聊作纪怀诗十首 其六 从策</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七-幽兰" class="internal-link wiki-link">其七 幽兰</a></li>
+<li><a href="#诗-卷07-七言古体.md#其八-长剑" class="internal-link wiki-link">其八 长剑</a></li>
+<li><a href="#诗-卷07-七言古体.md#其九-几先" class="internal-link wiki-link">其九 几先</a></li>
+<li><a href="#诗-卷07-七言古体.md#其十-远游" class="internal-link wiki-link">其十 远游</a></li>
+<li><a href="#诗-卷07-七言古体.md#江伯问答" class="internal-link wiki-link">江伯问答</a></li>
+<li><a href="#诗-卷07-七言古体.md#泊南康观放水灯" class="internal-link wiki-link">泊南康观放水灯</a></li>
+<li><a href="#诗-卷07-七言古体.md#池州阻风二首-其一" class="internal-link wiki-link">池州阻风二首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#铜陵阻风二首-其一" class="internal-link wiki-link">铜陵阻风二首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#望积雪漫怀二首-其一" class="internal-link wiki-link">望积雪漫怀二首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#姚永言自维扬至过访" class="internal-link wiki-link">姚永言自维扬至过访</a></li>
+<li><a href="#诗-卷07-七言古体.md#次日访永言于报恩寺中呼酒谈诗" class="internal-link wiki-link">次日访永言于报恩寺中呼酒谈诗</a></li>
+<li><a href="#诗-卷07-七言古体.md#崩岸" class="internal-link wiki-link">崩岸</a></li>
+<li><a href="#诗-卷07-七言古体.md#初生月" class="internal-link wiki-link">初生月</a></li>
+<li><a href="#诗-卷07-七言古体.md#月落" class="internal-link wiki-link">月落</a></li>
+<li><a href="#诗-卷07-七言古体.md#枕上过彭泽起视则惊涛过颡舟与江下上矣①" class="internal-link wiki-link">枕上过彭泽起视则惊涛过颡舟与江下上矣①</a></li>
+<li><a href="#诗-卷07-七言古体.md#因读谢李过湖之作不觉怃然" class="internal-link wiki-link">因读谢李过湖之作不觉怃然</a></li>
+<li><a href="#诗-卷07-七言古体.md#月行" class="internal-link wiki-link">月行</a></li>
+<li><a href="#诗-卷07-七言古体.md#对渔者" class="internal-link wiki-link">对渔者</a></li>
+<li><a href="#诗-卷07-七言古体.md#明月五更船" class="internal-link wiki-link">明月五更船</a></li>
+<li><a href="#诗-卷07-七言古体.md#中夜声色" class="internal-link wiki-link">中夜声色</a></li>
+<li><a href="#诗-卷07-七言古体.md#晚泊与山对卧" class="internal-link wiki-link">晚泊与山对卧</a></li>
+<li><a href="#诗-卷07-七言古体.md#雨后望山上白云" class="internal-link wiki-link">雨后望山上白云</a></li>
+<li><a href="#诗-卷07-七言古体.md#阴眺" class="internal-link wiki-link">阴眺</a></li>
+<li><a href="#诗-卷07-七言古体.md#襟风" class="internal-link wiki-link">襟风</a></li>
+<li><a href="#诗-卷07-七言古体.md#从凉" class="internal-link wiki-link">从凉</a></li>
+<li><a href="#诗-卷07-七言古体.md#渔樵" class="internal-link wiki-link">渔樵</a></li>
+<li><a href="#诗-卷07-七言古体.md#过皂口舟为巨石顶碎赖前舟回救得脱诗以纪厄" class="internal-link wiki-link">过皂口舟为巨石顶碎赖前舟回救得脱诗以纪厄</a></li>
+<li><a href="#诗-卷07-七言古体.md#过赣关" class="internal-link wiki-link">过赣关</a></li>
+<li><a href="#诗-卷07-七言古体.md#梦醒" class="internal-link wiki-link">梦醒</a></li>
+<li><a href="#诗-卷07-七言古体.md#深睡" class="internal-link wiki-link">深睡</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟倦连日得诸山周旋晚泊斯隈口占二十韵酬之" class="internal-link wiki-link">舟倦连日得诸山周旋晚泊斯隈口占二十韵酬之</a></li>
+<li><a href="#诗-卷07-七言古体.md#自汀州下小刀溯流" class="internal-link wiki-link">自汀州下小刀溯流</a></li>
+<li><a href="#诗-卷07-七言古体.md#游松光岩得斝字" class="internal-link wiki-link">游松光岩得斝字</a></li>
+<li><a href="#诗-卷07-七言古体.md#寄怀方肃之" class="internal-link wiki-link">寄怀方肃之</a></li>
+<li><a href="#诗-卷07-七言古体.md#挂席过鄱阳（癸酉北征之作）" class="internal-link wiki-link">挂席过鄱阳（癸酉北征之作）</a></li>
+<li><a href="#诗-卷07-七言古体.md#是早发鲟鱼苦雨三叹" class="internal-link wiki-link">是早发鲟鱼苦雨三叹</a></li>
+<li><a href="#诗-卷07-七言古体.md#过彭泽口号" class="internal-link wiki-link">过彭泽口号</a></li>
+<li><a href="#诗-卷07-七言古体.md#三十日立夏" class="internal-link wiki-link">三十日立夏</a></li>
+<li><a href="#诗-卷07-七言古体.md#宿州道中微雨望前山行云" class="internal-link wiki-link">宿州道中微雨望前山行云</a></li>
+<li><a href="#诗-卷07-七言古体.md#过细柳营" class="internal-link wiki-link">过细柳营</a></li>
+<li><a href="#诗-卷07-七言古体.md#滁州道中吊古（甲戌使荆藩之作）" class="internal-link wiki-link">滁州道中吊古（甲戌使荆藩之作）</a></li>
+<li><a href="#诗-卷07-七言古体.md#满拟既望至楚蕲日为南薰所苦因呼月临江望云语山皆不我顾也对影歌谣凄然述之" class="internal-link wiki-link">满拟既望至楚蕲日为南薰所苦因呼月临江望云语山皆不我顾也对影歌谣凄然述之</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟暮对秋山有感" class="internal-link wiki-link">舟暮对秋山有感</a></li>
+<li><a href="#诗-卷07-七言古体.md#春雨如膏乃过多反不见其可喜竟日闭户相守不敢憎也而诗以商之" class="internal-link wiki-link">春雨如膏乃过多反不见其可喜竟日闭户相守不敢憎也而诗以商之</a></li>
+<li><a href="#诗-卷07-七言古体.md#汀山车中却寄汪皖公明府" class="internal-link wiki-link">汀山车中却寄汪皖公明府</a></li>
+<li><a href="#诗-卷07-七言古体.md#溯流夏月日值江风皆北舟滞有述" class="internal-link wiki-link">溯流夏月日值江风皆北舟滞有述</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟夜弹琴" class="internal-link wiki-link">舟夜弹琴</a></li>
+<li><a href="#诗-卷07-七言古体.md#孟夏湖舟晓望追和张曲江彭蠡湖上作" class="internal-link wiki-link">孟夏湖舟晓望追和张曲江彭蠡湖上作</a></li>
+<li><a href="#诗-卷07-七言古体.md#世道" class="internal-link wiki-link">世道</a></li>
+<li><a href="#诗-卷07-七言古体.md#民风" class="internal-link wiki-link">民风</a></li>
+<li><a href="#诗-卷07-七言古体.md#时运" class="internal-link wiki-link">时运</a></li>
+<li><a href="#诗-卷07-七言古体.md#我怀" class="internal-link wiki-link">我怀</a></li>
+<li><a href="#诗-卷07-七言古体.md#感物" class="internal-link wiki-link">感物</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋日燕邸咏怀十诗各系以题-其一-思古" class="internal-link wiki-link">秋日燕邸咏怀十诗各系以题 其一 思古</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二-称心" class="internal-link wiki-link">其二 称心</a></li>
+<li><a href="#诗-卷07-七言古体.md#其三-闭门" class="internal-link wiki-link">其三 闭门</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋日燕邸咏怀十诗各系以题-其四-卜邻" class="internal-link wiki-link">秋日燕邸咏怀十诗各系以题 其四 卜邻</a></li>
+<li><a href="#诗-卷07-七言古体.md#其五-云日" class="internal-link wiki-link">其五 云日</a></li>
+<li><a href="#诗-卷07-七言古体.md#其六-兰蕙" class="internal-link wiki-link">其六 兰蕙</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七-观蚁" class="internal-link wiki-link">其七 观蚁</a></li>
+<li><a href="#诗-卷07-七言古体.md#其八-观凤" class="internal-link wiki-link">其八 观凤</a></li>
+<li><a href="#诗-卷07-七言古体.md#其九-晓叹" class="internal-link wiki-link">其九 晓叹</a></li>
+<li><a href="#诗-卷07-七言古体.md#其十-元化" class="internal-link wiki-link">其十 元化</a></li>
+<li><a href="#诗-卷07-七言古体.md#首夏" class="internal-link wiki-link">首夏</a></li>
+<li><a href="#诗-卷07-七言古体.md#喜伯兄至都" class="internal-link wiki-link">喜伯兄至都</a></li>
+<li><a href="#诗-卷07-七言古体.md#苦夏移寓东粤别馆庭木颇森剪繁引荫" class="internal-link wiki-link">苦夏移寓东粤别馆庭木颇森剪繁引荫</a></li>
+<li><a href="#诗-卷07-七言古体.md#开卷有述" class="internal-link wiki-link">开卷有述</a></li>
+<li><a href="#诗-卷07-七言古体.md#良乡道中（丙子秋于役天中，时值虏寇交儆）" class="internal-link wiki-link">良乡道中（丙子秋于役天中，时值虏寇交儆）</a></li>
+<li><a href="#诗-卷07-七言古体.md#拟勤王" class="internal-link wiki-link">拟勤王</a></li>
+<li><a href="#诗-卷07-七言古体.md#拟安边" class="internal-link wiki-link">拟安边</a></li>
+<li><a href="#诗-卷07-七言古体.md#拟灭虏" class="internal-link wiki-link">拟灭虏</a></li>
+<li><a href="#诗-卷07-七言古体.md#延津道中望太行" class="internal-link wiki-link">延津道中望太行</a></li>
+<li><a href="#诗-卷07-七言古体.md#淇县晓发" class="internal-link wiki-link">淇县晓发</a></li>
+<li><a href="#诗-卷07-七言古体.md#中元夕郑扶烟年盟见访治酌命琴谈一二物外事既别扶烟以诗至步韵率答" class="internal-link wiki-link">中元夕郑扶烟年盟见访治酌命琴谈一二物外事既别扶烟以诗至步韵率答</a></li>
+<li><a href="#诗-卷07-七言古体.md#东溪小筑循城东而结门门虽设而常关也" class="internal-link wiki-link">东溪小筑循城东而结门门虽设而常关也</a></li>
+<li><a href="#诗-卷07-七言古体.md#门以内溪为之界不可不桥桥加以亭岐山隐现眺望宜焉" class="internal-link wiki-link">门以内溪为之界不可不桥桥加以亭岐山隐现眺望宜焉</a></li>
+<li><a href="#诗-卷07-七言古体.md#未及桥之左有径绕焉列棉十馀株杂以新卉幽者寻之楼台之致出矣" class="internal-link wiki-link">未及桥之左有径绕焉列棉十馀株杂以新卉幽者寻之楼台之致出矣</a></li>
+<li><a href="#诗-卷07-七言古体.md#枕流为楼隔水尽林阴也林尽而睥睨出过此则千树森然翠烟靡届矣" class="internal-link wiki-link">枕流为楼隔水尽林阴也林尽而睥睨出过此则千树森然翠烟靡届矣</a></li>
+<li><a href="#诗-卷07-七言古体.md#楼之外为台黄岐当其右紫陌环其左致有爽气则西颢居前也" class="internal-link wiki-link">楼之外为台黄岐当其右紫陌环其左致有爽气则西颢居前也</a></li>
+<li><a href="#诗-卷07-七言古体.md#楼台之下有室盖主人挟图籍与居之所也" class="internal-link wiki-link">楼台之下有室盖主人挟图籍与居之所也</a></li>
+<li><a href="#诗-卷07-七言古体.md#室之外为堂堂不能不客故宽广依制" class="internal-link wiki-link">室之外为堂堂不能不客故宽广依制</a></li>
+<li><a href="#诗-卷07-七言古体.md#堂乃有庭盆花次第循阶墀而布列以愉宾朋以媚幽独也" class="internal-link wiki-link">堂乃有庭盆花次第循阶墀而布列以愉宾朋以媚幽独也</a></li>
+<li><a href="#诗-卷07-七言古体.md#其中有园园无定所林木所居之地则名之" class="internal-link wiki-link">其中有园园无定所林木所居之地则名之</a></li>
+<li><a href="#诗-卷07-七言古体.md#楼之右有古棉木独挺立而秀出主人爱其不群为其筑池蓄水以居之" class="internal-link wiki-link">楼之右有古棉木独挺立而秀出主人爱其不群为其筑池蓄水以居之</a></li>
+<li><a href="#诗-卷07-七言古体.md#颜延之五君咏不列山王予谓钻李子可黜也人伦之鉴何玷酒圣哉诗以补之" class="internal-link wiki-link">颜延之五君咏不列山王予谓钻李子可黜也人伦之鉴何玷酒圣哉诗以补之</a></li>
+<li><a href="#诗-卷07-七言古体.md#督闽学辞朝" class="internal-link wiki-link">督闽学辞朝</a></li>
+<li><a href="#诗-卷07-七言古体.md#繇万安上滩赖风力日有半遂至赣州" class="internal-link wiki-link">繇万安上滩赖风力日有半遂至赣州</a></li>
+<li><a href="#诗-卷07-七言古体.md#老农叹（有引）" class="internal-link wiki-link">老农叹（有引）</a></li>
+<li><a href="#诗-卷07-七言古体.md#三三偕伴游松光岩得簇字" class="internal-link wiki-link">三三偕伴游松光岩得簇字</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋日赠诸葛基画民部使出" class="internal-link wiki-link">秋日赠诸葛基画民部使出</a></li>
+<li><a href="#诗-卷07-七言古体.md#除夕同林太常蔡孝廉集民部夏力庸处归来独成①" class="internal-link wiki-link">除夕同林太常蔡孝廉集民部夏力庸处归来独成①</a></li>
+<li><a href="#诗-卷07-七言古体.md#赠陈子仪中翰使出" class="internal-link wiki-link">赠陈子仪中翰使出</a></li>
+<li><a href="#诗-卷07-七言古体.md#赠李大生大行使出" class="internal-link wiki-link">赠李大生大行使出</a></li>
+<li><a href="#诗-卷07-七言古体.md#王嫱故里" class="internal-link wiki-link">王嫱故里</a></li>
+<li><a href="#诗-卷07-七言古体.md#三归台①" class="internal-link wiki-link">三归台①</a></li>
+<li><a href="#诗-卷07-七言古体.md#十一晚将至崇德阻雨不前" class="internal-link wiki-link">十一晚将至崇德阻雨不前</a></li>
+<li><a href="#诗-卷07-七言古体.md#十二日泫雨未息风偏舟迟" class="internal-link wiki-link">十二日泫雨未息风偏舟迟</a></li>
+<li><a href="#诗-卷07-七言古体.md#曹允大见邀西湖" class="internal-link wiki-link">曹允大见邀西湖</a></li>
+<li><a href="#诗-卷07-七言古体.md#西湖公子行（有序）" class="internal-link wiki-link">西湖公子行（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#自龙游登陆至衢州道中①" class="internal-link wiki-link">自龙游登陆至衢州道中①</a></li>
+<li><a href="#诗-卷07-七言古体.md#繇常山至玉山道中行" class="internal-link wiki-link">繇常山至玉山道中行</a></li>
+<li><a href="#诗-卷07-七言古体.md#过临川见张受先明府共商今古有怀①" class="internal-link wiki-link">过临川见张受先明府共商今古有怀①</a></li>
+<li><a href="#诗-卷07-七言古体.md#刘司马挽歌（有序）" class="internal-link wiki-link">刘司马挽歌（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#辛未春溯洄彭蠡晓望漫怀" class="internal-link wiki-link">辛未春溯洄彭蠡晓望漫怀</a></li>
+<li><a href="#诗-卷07-七言古体.md#投辞" class="internal-link wiki-link">投辞</a></li>
+<li><a href="#诗-卷07-七言古体.md#看花饮宋尔孚斋头得脉字（有序）" class="internal-link wiki-link">看花饮宋尔孚斋头得脉字（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#酒讼用尔孚韵①（有序）" class="internal-link wiki-link">酒讼用尔孚韵①（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#癸酉北征车中二十日日与尘朝夕也歌以结之" class="internal-link wiki-link">癸酉北征车中二十日日与尘朝夕也歌以结之</a></li>
+<li><a href="#诗-卷07-七言古体.md#甲戌奉使荆藩樊山王设舟邀同同使宋今础泛雨湖是日连阴霢霂及登舟而明湖已开霁相迎矣" class="internal-link wiki-link">甲戌奉使荆藩樊山王设舟邀同同使宋今础泛雨湖是日连阴霢霂及登舟而明湖已开霁相迎矣</a></li>
+<li><a href="#诗-卷07-七言古体.md#憩庐山东林寺和王阳明先生壁间韵" class="internal-link wiki-link">憩庐山东林寺和王阳明先生壁间韵</a></li>
+<li><a href="#诗-卷07-七言古体.md#过汀岭漫望志感" class="internal-link wiki-link">过汀岭漫望志感</a></li>
+<li><a href="#诗-卷07-七言古体.md#同李唐谷观象台测验回就李寓小酌仍偕往黄可远学士处集饮竟日（有序）" class="internal-link wiki-link">同李唐谷观象台测验回就李寓小酌仍偕往黄可远学士处集饮竟日（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#取道临漳见张移孝明府所练乡勇甚称其名而绿野四浮氓妇欢欣各相得也为之留连停车饮其酒竟夕而行" class="internal-link wiki-link">取道临漳见张移孝明府所练乡勇甚称其名而绿野四浮氓妇欢欣各相得也为之留连停车饮其酒竟夕而行</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋云行" class="internal-link wiki-link">秋云行</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋风辞" class="internal-link wiki-link">秋风辞</a></li>
+<li><a href="#诗-卷07-七言古体.md#内叔林韩海招同林翁曰提陈君玉柱脩禊凤凰台举酒对春山漫成二十韵" class="internal-link wiki-link">内叔林韩海招同林翁曰提陈君玉柱脩禊凤凰台举酒对春山漫成二十韵</a></li>
+<li><a href="#诗-卷07-七言古体.md#过鄱湖望庐山因作湖山吟时庚辰春王十一日也" class="internal-link wiki-link">过鄱湖望庐山因作湖山吟时庚辰春王十一日也</a></li>
+<li><a href="#诗-卷07-七言古体.md#鲟鱼浦阻风见渔者歌以问之" class="internal-link wiki-link">鲟鱼浦阻风见渔者歌以问之</a></li>
+<li><a href="#诗-卷07-七言古体.md#季秋十三日领敕恭纪" class="internal-link wiki-link">季秋十三日领敕恭纪</a></li>
+<li><a href="#诗-卷07-七言古体.md#七哀章哭宋尔孚-其一" class="internal-link wiki-link">七哀章哭宋尔孚 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#其三" class="internal-link wiki-link">其三</a></li>
+<li><a href="#诗-卷07-七言古体.md#其四" class="internal-link wiki-link">其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#其五" class="internal-link wiki-link">其五</a></li>
+<li><a href="#诗-卷07-七言古体.md#其六" class="internal-link wiki-link">其六</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七" class="internal-link wiki-link">其七</a></li>
+<li><a href="#诗-卷07-七言古体.md#自城冈策马至平远" class="internal-link wiki-link">自城冈策马至平远</a></li>
+<li><a href="#诗-卷07-七言古体.md#月晕" class="internal-link wiki-link">月晕</a></li>
+<li><a href="#诗-卷07-七言古体.md#咏望月①" class="internal-link wiki-link">咏望月①</a></li>
+<li><a href="#诗-卷07-七言古体.md#观寒雁①" class="internal-link wiki-link">观寒雁①</a></li>
+<li><a href="#诗-卷07-七言古体.md#己巳读书佳山水王季重禹穴斋名也季重入都徵诗于余即以此意赠之山水果佳应知我言" class="internal-link wiki-link">己巳读书佳山水王季重禹穴斋名也季重入都徵诗于余即以此意赠之山水果佳应知我言</a></li>
+<li><a href="#诗-卷07-七言古体.md#姚孟长学士睹余前诗谓诸同人曰读水山诏远客之语胜于北山移文感其言复有此作" class="internal-link wiki-link">姚孟长学士睹余前诗谓诸同人曰读水山诏远客之语胜于北山移文感其言复有此作</a></li>
+<li><a href="#诗-卷07-七言古体.md#赠陈子仪中翰奉使南归" class="internal-link wiki-link">赠陈子仪中翰奉使南归</a></li>
+<li><a href="#诗-卷07-七言古体.md#开卷有怀书寄方肃之徐九一在馆读书" class="internal-link wiki-link">开卷有怀书寄方肃之徐九一在馆读书</a></li>
+<li><a href="#诗-卷07-七言古体.md#江舟望月书寄宋尔孚辜端伯在都谒选" class="internal-link wiki-link">江舟望月书寄宋尔孚辜端伯在都谒选</a></li>
+<li><a href="#诗-卷07-七言古体.md#次广陵过朱章华夜集时章华被言改官中翰" class="internal-link wiki-link">次广陵过朱章华夜集时章华被言改官中翰</a></li>
+<li><a href="#诗-卷07-七言古体.md#冒宗起招同王芳洲朱章华小集皆戊辰同人" class="internal-link wiki-link">冒宗起招同王芳洲朱章华小集皆戊辰同人</a></li>
+<li><a href="#诗-卷07-七言古体.md#邗江秋月夜" class="internal-link wiki-link">邗江秋月夜</a></li>
+<li><a href="#诗-卷07-七言古体.md#将发广陵书寄李大生时大生奉使归如皋" class="internal-link wiki-link">将发广陵书寄李大生时大生奉使归如皋</a></li>
+<li><a href="#诗-卷07-七言古体.md#将至崇德风雷交作大雨如注①" class="internal-link wiki-link">将至崇德风雷交作大雨如注①</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟行眺听" class="internal-link wiki-link">舟行眺听</a></li>
+<li><a href="#诗-卷07-七言古体.md#曹允大邀游西湖穷日之力继以夜月" class="internal-link wiki-link">曹允大邀游西湖穷日之力继以夜月</a></li>
+<li><a href="#诗-卷07-七言古体.md#过钓台" class="internal-link wiki-link">过钓台</a></li>
+<li><a href="#诗-卷07-七言古体.md#自龙游登陆至衢州①" class="internal-link wiki-link">自龙游登陆至衢州①</a></li>
+<li><a href="#诗-卷07-七言古体.md#贵溪枉道为邑令所绐也诗以示之" class="internal-link wiki-link">贵溪枉道为邑令所绐也诗以示之</a></li>
+<li><a href="#诗-卷07-七言古体.md#东乡道中苦雨" class="internal-link wiki-link">东乡道中苦雨</a></li>
+<li><a href="#诗-卷07-七言古体.md#百山行五十韵繇浙江江山闽山以至潮山" class="internal-link wiki-link">百山行五十韵繇浙江江山闽山以至潮山</a></li>
+<li><a href="#诗-卷07-七言古体.md#春日山居即事十首①（补录一首）" class="internal-link wiki-link">春日山居即事十首①（补录一首）</a></li>
+<li><a href="#诗-卷07-七言古体.md#追和元诚拊髀思颇牧之作（有序）" class="internal-link wiki-link">追和元诚拊髀思颇牧之作（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#送澄海令吴斯椒北观斯椒专以文章诱士不任刑政作三十韵诗宠之且以劝之" class="internal-link wiki-link">送澄海令吴斯椒北观斯椒专以文章诱士不任刑政作三十韵诗宠之且以劝之</a></li>
+<li><a href="#诗-卷07-七言古体.md#中秋日送尔韬报最同舟至铺前溪泛月言别①" class="internal-link wiki-link">中秋日送尔韬报最同舟至铺前溪泛月言别①</a></li>
+<li><a href="#诗-卷07-七言古体.md#张仪舌严光足" class="internal-link wiki-link">张仪舌严光足</a></li>
+<li><a href="#诗-卷07-七言古体.md#小儿腰老人履" class="internal-link wiki-link">小儿腰老人履</a></li>
+<li><a href="#诗-卷07-七言古体.md#胡无人（时□儆逼近畿）" class="internal-link wiki-link">胡无人（时□儆逼近畿）</a></li>
+<li><a href="#诗-卷07-七言古体.md#池州阻风①" class="internal-link wiki-link">池州阻风①</a></li>
+<li><a href="#诗-卷07-七言古体.md#望春峰积雪漫成二作-其一" class="internal-link wiki-link">望春峰积雪漫成二作 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#望春峰积雪漫成二作-其二" class="internal-link wiki-link">望春峰积雪漫成二作 其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#愁二水" class="internal-link wiki-link">愁二水</a></li>
+<li><a href="#诗-卷07-七言古体.md#望三山①" class="internal-link wiki-link">望三山①</a></li>
+<li><a href="#诗-卷07-七言古体.md#姚永言自维扬至过访" class="internal-link wiki-link">姚永言自维扬至过访</a></li>
+<li><a href="#诗-卷07-七言古体.md#次日访永言于报恩寺" class="internal-link wiki-link">次日访永言于报恩寺</a></li>
+<li><a href="#诗-卷07-七言古体.md#春闺八首-其一" class="internal-link wiki-link">春闺八首 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#其四" class="internal-link wiki-link">其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#其五" class="internal-link wiki-link">其五</a></li>
+<li><a href="#诗-卷07-七言古体.md#其六" class="internal-link wiki-link">其六</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七" class="internal-link wiki-link">其七</a></li>
+<li><a href="#诗-卷07-七言古体.md#其八" class="internal-link wiki-link">其八</a></li>
+<li><a href="#诗-卷07-七言古体.md#月行" class="internal-link wiki-link">月行</a></li>
+<li><a href="#诗-卷07-七言古体.md#中夜声色" class="internal-link wiki-link">中夜声色</a></li>
+<li><a href="#诗-卷07-七言古体.md#晚泊与山对卧" class="internal-link wiki-link">晚泊与山对卧</a></li>
+<li><a href="#诗-卷07-七言古体.md#披襟" class="internal-link wiki-link">披襟</a></li>
+<li><a href="#诗-卷07-七言古体.md#渔樵" class="internal-link wiki-link">渔樵</a></li>
+<li><a href="#诗-卷07-七言古体.md#过皂口舟为巨石顶碎赖前舟回救得脱①" class="internal-link wiki-link">过皂口舟为巨石顶碎赖前舟回救得脱①</a></li>
+<li><a href="#诗-卷07-七言古体.md#泊攸镇①" class="internal-link wiki-link">泊攸镇①</a></li>
+<li><a href="#诗-卷07-七言古体.md#过赣关①" class="internal-link wiki-link">过赣关①</a></li>
+<li><a href="#诗-卷07-七言古体.md#梦醒①" class="internal-link wiki-link">梦醒①</a></li>
+<li><a href="#诗-卷07-七言古体.md#深睡①" class="internal-link wiki-link">深睡①</a></li>
+<li><a href="#诗-卷07-七言古体.md#舟倦连日得诸山周旋晚泊口占二十韵①" class="internal-link wiki-link">舟倦连日得诸山周旋晚泊口占二十韵①</a></li>
+<li><a href="#诗-卷07-七言古体.md#自汀州下小刀溯流①" class="internal-link wiki-link">自汀州下小刀溯流①</a></li>
+<li><a href="#诗-卷07-七言古体.md#秋斋独对阅张曲江集追和感遇诗八作-其一" class="internal-link wiki-link">秋斋独对阅张曲江集追和感遇诗八作 其一</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷07-七言古体.md#其三" class="internal-link wiki-link">其三</a></li>
+<li><a href="#诗-卷07-七言古体.md#其四" class="internal-link wiki-link">其四</a></li>
+<li><a href="#诗-卷07-七言古体.md#其五" class="internal-link wiki-link">其五</a></li>
+<li><a href="#诗-卷07-七言古体.md#其六" class="internal-link wiki-link">其六</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七" class="internal-link wiki-link">其七</a></li>
+<li><a href="#诗-卷07-七言古体.md#闻陈集生学士编选粤诗赠诗三十韵" class="internal-link wiki-link">闻陈集生学士编选粤诗赠诗三十韵</a></li>
+<li><a href="#诗-卷07-七言古体.md#答方肃之二十韵" class="internal-link wiki-link">答方肃之二十韵</a></li>
+<li><a href="#诗-卷07-七言古体.md#三三偕诸友及弟侄溯流溪北游松岗竹岗二岩兼陟黄岐绝顶薄暮还棹得目字①" class="internal-link wiki-link">三三偕诸友及弟侄溯流溪北游松岗竹岗二岩兼陟黄岐绝顶薄暮还棹得目字①</a></li>
+<li><a href="#诗-卷07-七言古体.md#代诸弟侄得斝字" class="internal-link wiki-link">代诸弟侄得斝字</a></li>
+<li><a href="#诗-卷07-七言古体.md#看花饮宋尔孚清斋得脉字（有序）" class="internal-link wiki-link">看花饮宋尔孚清斋得脉字（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#春山八事-其一-春草" class="internal-link wiki-link">春山八事 其一 春草</a></li>
+<li><a href="#诗-卷07-七言古体.md#其二-春松" class="internal-link wiki-link">其二 春松</a></li>
+<li><a href="#诗-卷07-七言古体.md#其三-春鸟" class="internal-link wiki-link">其三 春鸟</a></li>
+<li><a href="#诗-卷07-七言古体.md#其四-春云" class="internal-link wiki-link">其四 春云</a></li>
+<li><a href="#诗-卷07-七言古体.md#春山八事-其五-春泉" class="internal-link wiki-link">春山八事 其五 春泉</a></li>
+<li><a href="#诗-卷07-七言古体.md#其六-春月" class="internal-link wiki-link">其六 春月</a></li>
+<li><a href="#诗-卷07-七言古体.md#其七-春风①" class="internal-link wiki-link">其七 春风①</a></li>
+<li><a href="#诗-卷07-七言古体.md#其八-春雨" class="internal-link wiki-link">其八 春雨</a></li>
+<li><a href="#诗-卷07-七言古体.md#春梦（有序）" class="internal-link wiki-link">春梦（有序）</a></li>
+<li><a href="#诗-卷07-七言古体.md#四月一日日已夏而候犹春戏作劝春光一篇" class="internal-link wiki-link">四月一日日已夏而候犹春戏作劝春光一篇</a></li>
+<li><a href="#诗-卷07-七言古体.md#松风梦" class="internal-link wiki-link">松风梦</a></li>
+<li><a href="#诗-卷07-七言古体.md#蓬罗行" class="internal-link wiki-link">蓬罗行</a></li>
+<li><a href="#诗-卷07-七言古体.md#山花落" class="internal-link wiki-link">山花落</a></li>
+<li><a href="#诗-卷07-七言古体.md#环桂皆山" class="internal-link wiki-link">环桂皆山</a></li>
+</ul>
+<h3 id="卷八-·-五言律诗-(84-首)">卷八 · 五言律诗 (84 首)</h3>
+<ul>
+<li><a href="#诗-卷08-五言律诗.md#过清江晤陈建侯主簿走笔书赠" class="internal-link wiki-link">过清江晤陈建侯主簿走笔书赠</a></li>
+<li><a href="#诗-卷08-五言律诗.md#泊洪都赠何蜚鸣" class="internal-link wiki-link">泊洪都赠何蜚鸣</a></li>
+<li><a href="#诗-卷08-五言律诗.md#和张曲江湖口望庐山瀑布泉" class="internal-link wiki-link">和张曲江湖口望庐山瀑布泉</a></li>
+<li><a href="#诗-卷08-五言律诗.md#和江上" class="internal-link wiki-link">和江上</a></li>
+<li><a href="#诗-卷08-五言律诗.md#和自彭蠡湖初入江" class="internal-link wiki-link">和自彭蠡湖初入江</a></li>
+<li><a href="#诗-卷08-五言律诗.md#将至采石矶飘风骤发收舟不及泛泛江中者移时诗以志险用前韵" class="internal-link wiki-link">将至采石矶飘风骤发收舟不及泛泛江中者移时诗以志险用前韵</a></li>
+<li><a href="#诗-卷08-五言律诗.md#久棹" class="internal-link wiki-link">久棹</a></li>
+<li><a href="#诗-卷08-五言律诗.md#宋九青给谏将联诗社诗以商之三首-其一" class="internal-link wiki-link">宋九青给谏将联诗社诗以商之三首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#宋九青给谏将联诗社诗以商之三首-其二" class="internal-link wiki-link">宋九青给谏将联诗社诗以商之三首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#宋九青给谏将联诗社诗以商之三首-其三" class="internal-link wiki-link">宋九青给谏将联诗社诗以商之三首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#上陵道中" class="internal-link wiki-link">上陵道中</a></li>
+<li><a href="#诗-卷08-五言律诗.md#陪祀昭陵" class="internal-link wiki-link">陪祀昭陵</a></li>
+<li><a href="#诗-卷08-五言律诗.md#归道取西山是夜宿碧云" class="internal-link wiki-link">归道取西山是夜宿碧云</a></li>
+<li><a href="#诗-卷08-五言律诗.md#是早过香山" class="internal-link wiki-link">是早过香山</a></li>
+<li><a href="#诗-卷08-五言律诗.md#来青纵目" class="internal-link wiki-link">来青纵目</a></li>
+<li><a href="#诗-卷08-五言律诗.md#洪光松盘" class="internal-link wiki-link">洪光松盘</a></li>
+<li><a href="#诗-卷08-五言律诗.md#玉泉观源" class="internal-link wiki-link">玉泉观源</a></li>
+<li><a href="#诗-卷08-五言律诗.md#万庄稍憩" class="internal-link wiki-link">万庄稍憩</a></li>
+<li><a href="#诗-卷08-五言律诗.md#再督两馆感昔" class="internal-link wiki-link">再督两馆感昔</a></li>
+<li><a href="#诗-卷08-五言律诗.md#喜朝鲜来贡" class="internal-link wiki-link">喜朝鲜来贡</a></li>
+<li><a href="#诗-卷08-五言律诗.md#以仲冬月转本司副郎自述" class="internal-link wiki-link">以仲冬月转本司副郎自述</a></li>
+<li><a href="#诗-卷08-五言律诗.md#饱食卒岁因之自警四首-其一" class="internal-link wiki-link">饱食卒岁因之自警四首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#饱食卒岁因之自警四首-其二" class="internal-link wiki-link">饱食卒岁因之自警四首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#饱食卒岁因之自警四首-其三" class="internal-link wiki-link">饱食卒岁因之自警四首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#饱食卒岁因之自警四首-其四" class="internal-link wiki-link">饱食卒岁因之自警四首 其四</a></li>
+<li><a href="#诗-卷08-五言律诗.md#送邹石可出守襄阳三首-其一" class="internal-link wiki-link">送邹石可出守襄阳三首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#送邹石可出守襄阳三首-其二" class="internal-link wiki-link">送邹石可出守襄阳三首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#送邹石可出守襄阳三首-其三" class="internal-link wiki-link">送邹石可出守襄阳三首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#国计" class="internal-link wiki-link">国计</a></li>
+<li><a href="#诗-卷08-五言律诗.md#主恩" class="internal-link wiki-link">主恩</a></li>
+<li><a href="#诗-卷08-五言律诗.md#时难" class="internal-link wiki-link">时难</a></li>
+<li><a href="#诗-卷08-五言律诗.md#旰食" class="internal-link wiki-link">旰食</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其一-徵兵" class="internal-link wiki-link">兵事十首 其一 徵兵</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其二-措饷" class="internal-link wiki-link">兵事十首 其二 措饷</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其三-防河" class="internal-link wiki-link">兵事十首 其三 防河</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其四-城守" class="internal-link wiki-link">兵事十首 其四 城守</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其五-分险" class="internal-link wiki-link">兵事十首 其五 分险</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其六-合围" class="internal-link wiki-link">兵事十首 其六 合围</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其七-老师" class="internal-link wiki-link">兵事十首 其七 老师</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其八-策抚" class="internal-link wiki-link">兵事十首 其八 策抚</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其九-传烽" class="internal-link wiki-link">兵事十首 其九 传烽</a></li>
+<li><a href="#诗-卷08-五言律诗.md#兵事十首-其十-露布拟而期之也" class="internal-link wiki-link">兵事十首 其十 露布拟而期之也</a></li>
+<li><a href="#诗-卷08-五言律诗.md#季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首-其一" class="internal-link wiki-link">季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首-其二" class="internal-link wiki-link">季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首-其三" class="internal-link wiki-link">季春十日姚永言招同黄可远宋九青夜集谈诗微商同异三首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首-其一" class="internal-link wiki-link">阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首-其二" class="internal-link wiki-link">阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首-其三" class="internal-link wiki-link">阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首-其四" class="internal-link wiki-link">阅邸抄见晋中闻喜沁原等县开立人市至父子夫妻相食又豫中南阳母子相食随奉明纶前后发御前银五万馀遣使星夜解往设法救济感叹有作四首 其四</a></li>
+<li><a href="#诗-卷08-五言律诗.md#孟秋十六日于役天中与黄赞伯联辔有述二首-其一" class="internal-link wiki-link">孟秋十六日于役天中与黄赞伯联辔有述二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#孟秋十六日于役天中与黄赞伯联辔有述二首-其二" class="internal-link wiki-link">孟秋十六日于役天中与黄赞伯联辔有述二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#自感二首-其一" class="internal-link wiki-link">自感二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#自感二首-其二" class="internal-link wiki-link">自感二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#淇水古意" class="internal-link wiki-link">淇水古意</a></li>
+<li><a href="#诗-卷08-五言律诗.md#闱中第三场有鹤集鸣明远楼当事索言纪瑞" class="internal-link wiki-link">闱中第三场有鹤集鸣明远楼当事索言纪瑞</a></li>
+<li><a href="#诗-卷08-五言律诗.md#夜坐阅卷毕循步阶櫩仰象有言" class="internal-link wiki-link">夜坐阅卷毕循步阶櫩仰象有言</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋雨连日是夕拜榜既毕云烂星陈明月出焉是可纪也二首-其一" class="internal-link wiki-link">秋雨连日是夕拜榜既毕云烂星陈明月出焉是可纪也二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋雨连日是夕拜榜既毕云烂星陈明月出焉是可纪也二首-其二" class="internal-link wiki-link">秋雨连日是夕拜榜既毕云烂星陈明月出焉是可纪也二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#上雒王别馆曰城市丹丘其中园洞石山特幽至可屡游诸君子见招多于此习而不厌因以有言二首-其一" class="internal-link wiki-link">上雒王别馆曰城市丹丘其中园洞石山特幽至可屡游诸君子见招多于此习而不厌因以有言二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#上雒王别馆曰城市丹丘其中园洞石山特幽至可屡游诸君子见招多于此习而不厌因以有言二首-其二" class="internal-link wiki-link">上雒王别馆曰城市丹丘其中园洞石山特幽至可屡游诸君子见招多于此习而不厌因以有言二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#登石山之巅楼楼有振衣石二首-其一" class="internal-link wiki-link">登石山之巅楼楼有振衣石二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#登石山之巅楼楼有振衣石二首-其二" class="internal-link wiki-link">登石山之巅楼楼有振衣石二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#永城王邀同赞伯宴郊外别墅墅中环亭为池池荷留秋秋宵迟客两悠然也二首-其一" class="internal-link wiki-link">永城王邀同赞伯宴郊外别墅墅中环亭为池池荷留秋秋宵迟客两悠然也二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#永城王邀同赞伯宴郊外别墅墅中环亭为池池荷留秋秋宵迟客两悠然也二首-其二" class="internal-link wiki-link">永城王邀同赞伯宴郊外别墅墅中环亭为池池荷留秋秋宵迟客两悠然也二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#柘城王邀同赞伯晚登铁塔二首-其一" class="internal-link wiki-link">柘城王邀同赞伯晚登铁塔二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#柘城王邀同赞伯晚登铁塔二首-其二" class="internal-link wiki-link">柘城王邀同赞伯晚登铁塔二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#过临清何洁卿民部招同赞伯署中园集" class="internal-link wiki-link">过临清何洁卿民部招同赞伯署中园集</a></li>
+<li><a href="#诗-卷08-五言律诗.md#之武城留题公署冀长民者一见之" class="internal-link wiki-link">之武城留题公署冀长民者一见之</a></li>
+<li><a href="#诗-卷08-五言律诗.md#报命之日即转本司正即有述二首-其一" class="internal-link wiki-link">报命之日即转本司正即有述二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#报命之日即转本司正即有述二首-其二" class="internal-link wiki-link">报命之日即转本司正即有述二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首-其一" class="internal-link wiki-link">有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首-其二" class="internal-link wiki-link">有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首-其三" class="internal-link wiki-link">有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首 其三</a></li>
+<li><a href="#诗-卷08-五言律诗.md#有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首-其四" class="internal-link wiki-link">有怀岐岩新寺因寄悦则讯其近日功程兼以勉之四首 其四</a></li>
+<li><a href="#诗-卷08-五言律诗.md#赠宋尔义北上访兄兼寄其兄尔孚二首-其一" class="internal-link wiki-link">赠宋尔义北上访兄兼寄其兄尔孚二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#赠宋尔义北上访兄兼寄其兄尔孚二首-其二" class="internal-link wiki-link">赠宋尔义北上访兄兼寄其兄尔孚二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#辞筵独坐漫柬诸子" class="internal-link wiki-link">辞筵独坐漫柬诸子</a></li>
+<li><a href="#诗-卷08-五言律诗.md#戊辰殿试后述怀二首-其一" class="internal-link wiki-link">戊辰殿试后述怀二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#戊辰殿试后述怀二首-其二" class="internal-link wiki-link">戊辰殿试后述怀二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋日入馆纪事二首-其一" class="internal-link wiki-link">秋日入馆纪事二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋日入馆纪事二首-其二" class="internal-link wiki-link">秋日入馆纪事二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋馆读书二首-其一" class="internal-link wiki-link">秋馆读书二首 其一</a></li>
+<li><a href="#诗-卷08-五言律诗.md#秋馆读书二首-其二" class="internal-link wiki-link">秋馆读书二首 其二</a></li>
+<li><a href="#诗-卷08-五言律诗.md#林浴元民部邀游虎丘小坐入夜溯流归阊门" class="internal-link wiki-link">林浴元民部邀游虎丘小坐入夜溯流归阊门</a></li>
+</ul>
+<h3 id="卷九-·-五言律诗-(38-首)">卷九 · 五言律诗 (38 首)</h3>
+<ul>
+<li><a href="#诗-卷09-五言律诗.md#杨维斗徐君和朱云子共邀舟游二首-其一" class="internal-link wiki-link">杨维斗徐君和朱云子共邀舟游二首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#杨维斗徐君和朱云子共邀舟游二首-其二" class="internal-link wiki-link">杨维斗徐君和朱云子共邀舟游二首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#春闺八首-其三" class="internal-link wiki-link">春闺八首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#得肃之近集快读数遍作诗三首-其一" class="internal-link wiki-link">得肃之近集快读数遍作诗三首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#得肃之近集快读数遍作诗三首-其二" class="internal-link wiki-link">得肃之近集快读数遍作诗三首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#得肃之近集快读数遍作诗三首-其三" class="internal-link wiki-link">得肃之近集快读数遍作诗三首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#病臂" class="internal-link wiki-link">病臂</a></li>
+<li><a href="#诗-卷09-五言律诗.md#鸠" class="internal-link wiki-link">鸠</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其一" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其二" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其三" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其四" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其五" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其五</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其六" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其六</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其七" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其七</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其八" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其八</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其九" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其九</a></li>
+<li><a href="#诗-卷09-五言律诗.md#壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律-其十" class="internal-link wiki-link">壬辰避地马鞍山治一枝未就兹春闻儆复于前址搆栖感赋十律 其十</a></li>
+<li><a href="#诗-卷09-五言律诗.md#晚眺得初月有怀二首-其一" class="internal-link wiki-link">晚眺得初月有怀二首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#晚眺得初月有怀二首-其二" class="internal-link wiki-link">晚眺得初月有怀二首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得芳草无行径" class="internal-link wiki-link">赋得芳草无行径</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得空山正落花" class="internal-link wiki-link">赋得空山正落花</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得虚牖风惊梦" class="internal-link wiki-link">赋得虚牖风惊梦</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得空床月厌人" class="internal-link wiki-link">赋得空床月厌人</a></li>
+<li><a href="#诗-卷09-五言律诗.md#烟色翠痕" class="internal-link wiki-link">烟色翠痕</a></li>
+<li><a href="#诗-卷09-五言律诗.md#鸟啼花落" class="internal-link wiki-link">鸟啼花落</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得鸟啼春未足" class="internal-link wiki-link">赋得鸟啼春未足</a></li>
+<li><a href="#诗-卷09-五言律诗.md#赋得花落梦无聊" class="internal-link wiki-link">赋得花落梦无聊</a></li>
+<li><a href="#诗-卷09-五言律诗.md#春未足应有馀春鸟啼何事" class="internal-link wiki-link">春未足应有馀春鸟啼何事</a></li>
+<li><a href="#诗-卷09-五言律诗.md#梦无聊犹可寻梦花落堪思" class="internal-link wiki-link">梦无聊犹可寻梦花落堪思</a></li>
+<li><a href="#诗-卷09-五言律诗.md#春去" class="internal-link wiki-link">春去</a></li>
+<li><a href="#诗-卷09-五言律诗.md#雨后" class="internal-link wiki-link">雨后</a></li>
+<li><a href="#诗-卷09-五言律诗.md#一鸟" class="internal-link wiki-link">一鸟</a></li>
+<li><a href="#诗-卷09-五言律诗.md#所遇" class="internal-link wiki-link">所遇</a></li>
+<li><a href="#诗-卷09-五言律诗.md#代人送阳朔某尉任满言归" class="internal-link wiki-link">代人送阳朔某尉任满言归</a></li>
+<li><a href="#诗-卷09-五言律诗.md#雨夜古思" class="internal-link wiki-link">雨夜古思</a></li>
+<li><a href="#诗-卷09-五言律诗.md#梦断" class="internal-link wiki-link">梦断</a></li>
+<li><a href="#诗-卷09-五言律诗.md#禅坐四首-其一" class="internal-link wiki-link">禅坐四首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#禅坐四首-其二" class="internal-link wiki-link">禅坐四首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#禅坐四首-其三" class="internal-link wiki-link">禅坐四首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#禅坐四首-其四" class="internal-link wiki-link">禅坐四首 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其一" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其二" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其三" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其四" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其五" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其五</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其六" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其六</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其七" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其七</a></li>
+<li><a href="#诗-卷09-五言律诗.md#阴雨连旬诗以懊之八首-其八" class="internal-link wiki-link">阴雨连旬诗以懊之八首 其八</a></li>
+<li><a href="#诗-卷09-五言律诗.md#人日将旦得微雪四律-其一" class="internal-link wiki-link">人日将旦得微雪四律 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#人日将旦得微雪四律-其二" class="internal-link wiki-link">人日将旦得微雪四律 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#人日将旦得微雪四律-其三" class="internal-link wiki-link">人日将旦得微雪四律 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#人日将旦得微雪四律-其四" class="internal-link wiki-link">人日将旦得微雪四律 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#庙墙外桃花盛开漫望有述四首-其一" class="internal-link wiki-link">庙墙外桃花盛开漫望有述四首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#庙墙外桃花盛开漫望有述四首-其二" class="internal-link wiki-link">庙墙外桃花盛开漫望有述四首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#庙墙外桃花盛开漫望有述四首-其三" class="internal-link wiki-link">庙墙外桃花盛开漫望有述四首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#庙墙外桃花盛开漫望有述四首-其四" class="internal-link wiki-link">庙墙外桃花盛开漫望有述四首 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#微雨催春飞红片片四首-其一" class="internal-link wiki-link">微雨催春飞红片片四首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#微雨催春飞红片片四首-其二" class="internal-link wiki-link">微雨催春飞红片片四首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#微雨催春飞红片片四首-其三" class="internal-link wiki-link">微雨催春飞红片片四首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#微雨催春飞红片片四首-其四" class="internal-link wiki-link">微雨催春飞红片片四首 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#墙外芭蕉数株含思摇影呼而问之" class="internal-link wiki-link">墙外芭蕉数株含思摇影呼而问之</a></li>
+<li><a href="#诗-卷09-五言律诗.md#立秋前数日再采菡萏插净瓶续华留艳" class="internal-link wiki-link">立秋前数日再采菡萏插净瓶续华留艳</a></li>
+<li><a href="#诗-卷09-五言律诗.md#念三日酉时立秋晚对感叹" class="internal-link wiki-link">念三日酉时立秋晚对感叹</a></li>
+<li><a href="#诗-卷09-五言律诗.md#初秋遣悲二首-其一" class="internal-link wiki-link">初秋遣悲二首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#初秋遣悲二首-其二" class="internal-link wiki-link">初秋遣悲二首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#登滕王阁步丘琼山南昌第一楼之韵三首-其一" class="internal-link wiki-link">登滕王阁步丘琼山南昌第一楼之韵三首 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#登滕王阁步丘琼山南昌第一楼之韵三首-其二" class="internal-link wiki-link">登滕王阁步丘琼山南昌第一楼之韵三首 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#登滕王阁步丘琼山南昌第一楼之韵三首-其三" class="internal-link wiki-link">登滕王阁步丘琼山南昌第一楼之韵三首 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#下滩" class="internal-link wiki-link">下滩</a></li>
+<li><a href="#诗-卷09-五言律诗.md#久泊" class="internal-link wiki-link">久泊</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其一" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其一</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其二" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其二</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其三" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其三</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其四" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其四</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其五" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其五</a></li>
+<li><a href="#诗-卷09-五言律诗.md#金陵雪月仲春夜坐邀我不寐也冰几韵之-其六" class="internal-link wiki-link">金陵雪月仲春夜坐邀我不寐也冰几韵之 其六</a></li>
+<li><a href="#诗-卷09-五言律诗.md#昏鸦" class="internal-link wiki-link">昏鸦</a></li>
+<li><a href="#诗-卷09-五言律诗.md#残年" class="internal-link wiki-link">残年</a></li>
+<li><a href="#诗-卷09-五言律诗.md#暮岁" class="internal-link wiki-link">暮岁</a></li>
+<li><a href="#诗-卷09-五言律诗.md#雪夜独坐" class="internal-link wiki-link">雪夜独坐</a></li>
+<li><a href="#诗-卷09-五言律诗.md#月夜久坐偶进一杯" class="internal-link wiki-link">月夜久坐偶进一杯</a></li>
+<li><a href="#诗-卷09-五言律诗.md#畏见" class="internal-link wiki-link">畏见</a></li>
+<li><a href="#诗-卷09-五言律诗.md#桐庐舟中夜坐" class="internal-link wiki-link">桐庐舟中夜坐</a></li>
+<li><a href="#诗-卷09-五言律诗.md#途中见菊" class="internal-link wiki-link">途中见菊</a></li>
+<li><a href="#诗-卷09-五言律诗.md#秋生" class="internal-link wiki-link">秋生</a></li>
+</ul>
+<h3 id="卷十-·-七言律诗-(120-首)">卷十 · 七言律诗 (120 首)</h3>
+<ul>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-珠矶-其一" class="internal-link wiki-link">自吴城至马当湖江八景 珠矶 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-星墩-其二" class="internal-link wiki-link">自吴城至马当湖江八景 星墩 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-瀑布-其三" class="internal-link wiki-link">自吴城至马当湖江八景 瀑布 其三</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-虾蟆石-其四" class="internal-link wiki-link">自吴城至马当湖江八景 虾蟆石 其四</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-大姑山-其五" class="internal-link wiki-link">自吴城至马当湖江八景 大姑山 其五</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-石钟-其六" class="internal-link wiki-link">自吴城至马当湖江八景 石钟 其六</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-小姑山-其七" class="internal-link wiki-link">自吴城至马当湖江八景 小姑山 其七</a></li>
+<li><a href="#诗-卷10-七言律诗.md#自吴城至马当湖江八景-马当山-其八" class="internal-link wiki-link">自吴城至马当湖江八景 马当山 其八</a></li>
+<li><a href="#诗-卷10-七言律诗.md#九日同周仪伯张长卿陈木生游玉泉寺" class="internal-link wiki-link">九日同周仪伯张长卿陈木生游玉泉寺</a></li>
+<li><a href="#诗-卷10-七言律诗.md#是夜宿碧云寺" class="internal-link wiki-link">是夜宿碧云寺</a></li>
+<li><a href="#诗-卷10-七言律诗.md#次日过香山寺" class="internal-link wiki-link">次日过香山寺</a></li>
+<li><a href="#诗-卷10-七言律诗.md#冬夜同曹允大方肃之姚永言徐九一陈尔新宋则甫过从李大生夜集得关字" class="internal-link wiki-link">冬夜同曹允大方肃之姚永言徐九一陈尔新宋则甫过从李大生夜集得关字</a></li>
+<li><a href="#诗-卷10-七言律诗.md#戊辰除夕同乡人小集" class="internal-link wiki-link">戊辰除夕同乡人小集</a></li>
+<li><a href="#诗-卷10-七言律诗.md#赠曹允大得假" class="internal-link wiki-link">赠曹允大得假</a></li>
+<li><a href="#诗-卷10-七言律诗.md#过细柳营" class="internal-link wiki-link">过细柳营</a></li>
+<li><a href="#诗-卷10-七言律诗.md#西湖舟中谒岳武穆庙并墓所" class="internal-link wiki-link">西湖舟中谒岳武穆庙并墓所</a></li>
+<li><a href="#诗-卷10-七言律诗.md#严州过滩" class="internal-link wiki-link">严州过滩</a></li>
+<li><a href="#诗-卷10-七言律诗.md#离舟" class="internal-link wiki-link">离舟</a></li>
+<li><a href="#诗-卷10-七言律诗.md#广信早发" class="internal-link wiki-link">广信早发</a></li>
+<li><a href="#诗-卷10-七言律诗.md#到家感喜-其一" class="internal-link wiki-link">到家感喜 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#到家感喜-其二" class="internal-link wiki-link">到家感喜 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#杨乐庵建慈云寺既成见招得胎字二首-其一" class="internal-link wiki-link">杨乐庵建慈云寺既成见招得胎字二首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#杨乐庵建慈云寺既成见招得胎字二首-其二" class="internal-link wiki-link">杨乐庵建慈云寺既成见招得胎字二首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#为林翁曰提题城南书室" class="internal-link wiki-link">为林翁曰提题城南书室</a></li>
+<li><a href="#诗-卷10-七言律诗.md#己巳除夕有雨" class="internal-link wiki-link">己巳除夕有雨</a></li>
+<li><a href="#诗-卷10-七言律诗.md#元日仍雨试笔" class="internal-link wiki-link">元日仍雨试笔</a></li>
+<li><a href="#诗-卷10-七言律诗.md#虏儆烽传步谢韶石廉宪韵" class="internal-link wiki-link">虏儆烽传步谢韶石廉宪韵</a></li>
+<li><a href="#诗-卷10-七言律诗.md#阅邸报有感" class="internal-link wiki-link">阅邸报有感</a></li>
+<li><a href="#诗-卷10-七言律诗.md#舟夜有所思" class="internal-link wiki-link">舟夜有所思</a></li>
+<li><a href="#诗-卷10-七言律诗.md#北上见露布感吟" class="internal-link wiki-link">北上见露布感吟</a></li>
+<li><a href="#诗-卷10-七言律诗.md#庚午除夕偕伯常兄吴城舟中二首-其一" class="internal-link wiki-link">庚午除夕偕伯常兄吴城舟中二首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#庚午除夕偕伯常兄吴城舟中二首-其二" class="internal-link wiki-link">庚午除夕偕伯常兄吴城舟中二首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#过安庆柬方肃之" class="internal-link wiki-link">过安庆柬方肃之</a></li>
+<li><a href="#诗-卷10-七言律诗.md#归篷" class="internal-link wiki-link">归篷</a></li>
+<li><a href="#诗-卷10-七言律诗.md#午窗" class="internal-link wiki-link">午窗</a></li>
+<li><a href="#诗-卷10-七言律诗.md#夜眺" class="internal-link wiki-link">夜眺</a></li>
+<li><a href="#诗-卷10-七言律诗.md#去舟日与风逆归舟乃能顺也" class="internal-link wiki-link">去舟日与风逆归舟乃能顺也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晓柳千堤绿" class="internal-link wiki-link">晓柳千堤绿</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晚桃一带红" class="internal-link wiki-link">晚桃一带红</a></li>
+<li><a href="#诗-卷10-七言律诗.md#竟日青山" class="internal-link wiki-link">竟日青山</a></li>
+<li><a href="#诗-卷10-七言律诗.md#南来好伴" class="internal-link wiki-link">南来好伴</a></li>
+<li><a href="#诗-卷10-七言律诗.md#孤村" class="internal-link wiki-link">孤村</a></li>
+<li><a href="#诗-卷10-七言律诗.md#清明日雨" class="internal-link wiki-link">清明日雨</a></li>
+<li><a href="#诗-卷10-七言律诗.md#望" class="internal-link wiki-link">望</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晚过彭蠡波静月生" class="internal-link wiki-link">晚过彭蠡波静月生</a></li>
+<li><a href="#诗-卷10-七言律诗.md#夜发过江西" class="internal-link wiki-link">夜发过江西</a></li>
+<li><a href="#诗-卷10-七言律诗.md#寤言" class="internal-link wiki-link">寤言</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晚刻喜得微雨" class="internal-link wiki-link">晚刻喜得微雨</a></li>
+<li><a href="#诗-卷10-七言律诗.md#记得出门" class="internal-link wiki-link">记得出门</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晚对自叹" class="internal-link wiki-link">晚对自叹</a></li>
+<li><a href="#诗-卷10-七言律诗.md#泊万安小滩村雨后待月" class="internal-link wiki-link">泊万安小滩村雨后待月</a></li>
+<li><a href="#诗-卷10-七言律诗.md#所见" class="internal-link wiki-link">所见</a></li>
+<li><a href="#诗-卷10-七言律诗.md#雨发雩都" class="internal-link wiki-link">雨发雩都</a></li>
+<li><a href="#诗-卷10-七言律诗.md#听滩" class="internal-link wiki-link">听滩</a></li>
+<li><a href="#诗-卷10-七言律诗.md#留春" class="internal-link wiki-link">留春</a></li>
+<li><a href="#诗-卷10-七言律诗.md#己卯季冬北征就道舟中却寄张公亮明府明府时以新诗索予小序二首-其一" class="internal-link wiki-link">己卯季冬北征就道舟中却寄张公亮明府明府时以新诗索予小序二首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#己卯季冬北征就道舟中却寄张公亮明府明府时以新诗索予小序二首-其二" class="internal-link wiki-link">己卯季冬北征就道舟中却寄张公亮明府明府时以新诗索予小序二首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#宋尔孚携斗酒及新诗追至三河同舟竟日夜而别酒醒却望寻韵寄答" class="internal-link wiki-link">宋尔孚携斗酒及新诗追至三河同舟竟日夜而别酒醒却望寻韵寄答</a></li>
+<li><a href="#诗-卷10-七言律诗.md#过汀岭" class="internal-link wiki-link">过汀岭</a></li>
+<li><a href="#诗-卷10-七言律诗.md#樟树镇舟中守岁得雨" class="internal-link wiki-link">樟树镇舟中守岁得雨</a></li>
+<li><a href="#诗-卷10-七言律诗.md#庚辰元日溯流剑江" class="internal-link wiki-link">庚辰元日溯流剑江</a></li>
+<li><a href="#诗-卷10-七言律诗.md#是岁闰王正故首月春至稍迟" class="internal-link wiki-link">是岁闰王正故首月春至稍迟</a></li>
+<li><a href="#诗-卷10-七言律诗.md#春日苦雪" class="internal-link wiki-link">春日苦雪</a></li>
+<li><a href="#诗-卷10-七言律诗.md#皖江雪望" class="internal-link wiki-link">皖江雪望</a></li>
+<li><a href="#诗-卷10-七言律诗.md#二月二日入山东境" class="internal-link wiki-link">二月二日入山东境</a></li>
+<li><a href="#诗-卷10-七言律诗.md#春分后入东土无日不与诸花共朝夕也" class="internal-link wiki-link">春分后入东土无日不与诸花共朝夕也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#东阿道中稍见诸山逢迎然陵峦低浅殊不惬春望也" class="internal-link wiki-link">东阿道中稍见诸山逢迎然陵峦低浅殊不惬春望也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#午后得雨尘沙稍退诸山作烟云色微觉可人" class="internal-link wiki-link">午后得雨尘沙稍退诸山作烟云色微觉可人</a></li>
+<li><a href="#诗-卷10-七言律诗.md#初十早渡德州河是午至景州" class="internal-link wiki-link">初十早渡德州河是午至景州</a></li>
+<li><a href="#诗-卷10-七言律诗.md#十一晚将至商家林漫望" class="internal-link wiki-link">十一晚将至商家林漫望</a></li>
+<li><a href="#诗-卷10-七言律诗.md#北地风沙殊少春色春光懒困倍于人矣" class="internal-link wiki-link">北地风沙殊少春色春光懒困倍于人矣</a></li>
+<li><a href="#诗-卷10-七言律诗.md#雄邑道中见易水愤胡马之污清流也" class="internal-link wiki-link">雄邑道中见易水愤胡马之污清流也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#晓发新城喜见西山山色尚在明灭间也" class="internal-link wiki-link">晓发新城喜见西山山色尚在明灭间也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#薄暮将至涿鹿诸峰片片可数明月忽自东相映矣" class="internal-link wiki-link">薄暮将至涿鹿诸峰片片可数明月忽自东相映矣</a></li>
+<li><a href="#诗-卷10-七言律诗.md#季夏六日过徐九一小坐同集者为方肃之周仪伯分得先字二首-其一" class="internal-link wiki-link">季夏六日过徐九一小坐同集者为方肃之周仪伯分得先字二首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#季夏六日过徐九一小坐同集者为方肃之周仪伯分得先字二首-其二" class="internal-link wiki-link">季夏六日过徐九一小坐同集者为方肃之周仪伯分得先字二首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#杨葵宸宫赞分桐晋府特上捕蝗之章诗以柬之" class="internal-link wiki-link">杨葵宸宫赞分桐晋府特上捕蝗之章诗以柬之</a></li>
+<li><a href="#诗-卷10-七言律诗.md#葵宸有相念之语复以诗答其意" class="internal-link wiki-link">葵宸有相念之语复以诗答其意</a></li>
+<li><a href="#诗-卷10-七言律诗.md#会昌登陆山行即目" class="internal-link wiki-link">会昌登陆山行即目</a></li>
+<li><a href="#诗-卷10-七言律诗.md#修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首-其一" class="internal-link wiki-link">修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首-其二" class="internal-link wiki-link">修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首-其三" class="internal-link wiki-link">修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首 其三</a></li>
+<li><a href="#诗-卷10-七言律诗.md#修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首-其四" class="internal-link wiki-link">修邑志成有不察而斋怒者乃得谤又以有所誉来也感而赋之四首 其四</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其一-环城榕色" class="internal-link wiki-link">榕城八景 其一 环城榕色</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其二-绕窖棉阴" class="internal-link wiki-link">榕城八景 其二 绕窖棉阴</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其三-紫陌春晴" class="internal-link wiki-link">榕城八景 其三 紫陌春晴</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其四-黄岐晚翠" class="internal-link wiki-link">榕城八景 其四 黄岐晚翠</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其五-二溪明月" class="internal-link wiki-link">榕城八景 其五 二溪明月</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其六-双洞疏烟" class="internal-link wiki-link">榕城八景 其六 双洞疏烟</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其七-元塔登高" class="internal-link wiki-link">榕城八景 其七 元塔登高</a></li>
+<li><a href="#诗-卷10-七言律诗.md#榕城八景-其八-鳌桥钓浪" class="internal-link wiki-link">榕城八景 其八 鳌桥钓浪</a></li>
+<li><a href="#诗-卷10-七言律诗.md#题双峰寺有怀石山禅师" class="internal-link wiki-link">题双峰寺有怀石山禅师</a></li>
+<li><a href="#诗-卷10-七言律诗.md#西园" class="internal-link wiki-link">西园</a></li>
+<li><a href="#诗-卷10-七言律诗.md#云岛" class="internal-link wiki-link">云岛</a></li>
+<li><a href="#诗-卷10-七言律诗.md#孔有德倡援辽叛卒屠七邑破登城登抚孙元化按兵不动甘为虏也志慨" class="internal-link wiki-link">孔有德倡援辽叛卒屠七邑破登城登抚孙元化按兵不动甘为虏也志慨</a></li>
+<li><a href="#诗-卷10-七言律诗.md#感时" class="internal-link wiki-link">感时</a></li>
+<li><a href="#诗-卷10-七言律诗.md#催科" class="internal-link wiki-link">催科</a></li>
+<li><a href="#诗-卷10-七言律诗.md#经计" class="internal-link wiki-link">经计</a></li>
+<li><a href="#诗-卷10-七言律诗.md#偕诸友赏川茶得行字三首-其一" class="internal-link wiki-link">偕诸友赏川茶得行字三首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#偕诸友赏川茶得行字三首-其二" class="internal-link wiki-link">偕诸友赏川茶得行字三首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#偕诸友赏川茶得行字三首-其三" class="internal-link wiki-link">偕诸友赏川茶得行字三首 其三</a></li>
+<li><a href="#诗-卷10-七言律诗.md#次日薄暮偕诸伴集尔孚浮春涘得言字" class="internal-link wiki-link">次日薄暮偕诸伴集尔孚浮春涘得言字</a></li>
+<li><a href="#诗-卷10-七言律诗.md#和宋尔孚悠韵" class="internal-link wiki-link">和宋尔孚悠韵</a></li>
+<li><a href="#诗-卷10-七言律诗.md#和杨承之分韵" class="internal-link wiki-link">和杨承之分韵</a></li>
+<li><a href="#诗-卷10-七言律诗.md#夏日陈羹姚吴越望越瀛偕陆山甫谢儒美集饮南岩" class="internal-link wiki-link">夏日陈羹姚吴越望越瀛偕陆山甫谢儒美集饮南岩</a></li>
+<li><a href="#诗-卷10-七言律诗.md#五月二日王子龙招看赛龙舟得流字" class="internal-link wiki-link">五月二日王子龙招看赛龙舟得流字</a></li>
+<li><a href="#诗-卷10-七言律诗.md#再用子龙韵" class="internal-link wiki-link">再用子龙韵</a></li>
+<li><a href="#诗-卷10-七言律诗.md#孙蜚莪偕宋尔孚杨承之携酒过从得榴字是日夏尽" class="internal-link wiki-link">孙蜚莪偕宋尔孚杨承之携酒过从得榴字是日夏尽</a></li>
+<li><a href="#诗-卷10-七言律诗.md#题宋尔义亦楼" class="internal-link wiki-link">题宋尔义亦楼</a></li>
+<li><a href="#诗-卷10-七言律诗.md#寄赠冯尔韬给谏二首-其一" class="internal-link wiki-link">寄赠冯尔韬给谏二首 其一</a></li>
+<li><a href="#诗-卷10-七言律诗.md#寄赠冯尔韬给谏二首-其二" class="internal-link wiki-link">寄赠冯尔韬给谏二首 其二</a></li>
+<li><a href="#诗-卷10-七言律诗.md#烹茗邀悦则过坐偶及禅理即席口占" class="internal-link wiki-link">烹茗邀悦则过坐偶及禅理即席口占</a></li>
+<li><a href="#诗-卷10-七言律诗.md#癸酉北征二人偕至茶阳江帆迅速翻怪春风促予离也" class="internal-link wiki-link">癸酉北征二人偕至茶阳江帆迅速翻怪春风促予离也</a></li>
+<li><a href="#诗-卷10-七言律诗.md#舟中别诸亲远媵者" class="internal-link wiki-link">舟中别诸亲远媵者</a></li>
+<li><a href="#诗-卷10-七言律诗.md#过永定关" class="internal-link wiki-link">过永定关</a></li>
+<li><a href="#诗-卷10-七言律诗.md#杨承之以谒虔州王文成祠诗见示用韵" class="internal-link wiki-link">杨承之以谒虔州王文成祠诗见示用韵</a></li>
+<li><a href="#诗-卷10-七言律诗.md#阻风晚泊五云驿" class="internal-link wiki-link">阻风晚泊五云驿</a></li>
+<li><a href="#诗-卷10-七言律诗.md#既而暮雨萧然别有遣予怀者" class="internal-link wiki-link">既而暮雨萧然别有遣予怀者</a></li>
+<li><a href="#诗-卷10-七言律诗.md#风泊洪都何非鸣明府榼酒相贻走笔谢之" class="internal-link wiki-link">风泊洪都何非鸣明府榼酒相贻走笔谢之</a></li>
+<li><a href="#诗-卷10-七言律诗.md#连朝如晦廿四早风平舟发披衣起望山月随人矣" class="internal-link wiki-link">连朝如晦廿四早风平舟发披衣起望山月随人矣</a></li>
+</ul>
+<h3 id="卷十一-·-七言律诗-(120-首)">卷十一 · 七言律诗 (120 首)</h3>
+<ul>
+<li><a href="#诗-卷11-七言律诗.md#因念澄江时得如此则来舫去刀两俱莫逆固不欲专丐南飙独予帆迅也" class="internal-link wiki-link">因念澄江时得如此则来舫去刀两俱莫逆固不欲专丐南飙独予帆迅也</a></li>
+<li><a href="#诗-卷11-七言律诗.md#过采石吊李白墓" class="internal-link wiki-link">过采石吊李白墓</a></li>
+<li><a href="#诗-卷11-七言律诗.md#恭谒孝陵二首-其一" class="internal-link wiki-link">恭谒孝陵二首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#恭谒孝陵二首-其二" class="internal-link wiki-link">恭谒孝陵二首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#雨日李小湾宗伯召饮寅齐暮辞风舆口占为谢" class="internal-link wiki-link">雨日李小湾宗伯召饮寅齐暮辞风舆口占为谢</a></li>
+<li><a href="#诗-卷11-七言律诗.md#将至滁州途中得雨" class="internal-link wiki-link">将至滁州途中得雨</a></li>
+<li><a href="#诗-卷11-七言律诗.md#晓发过关山" class="internal-link wiki-link">晓发过关山</a></li>
+<li><a href="#诗-卷11-七言律诗.md#过桃山岳武穆庙" class="internal-link wiki-link">过桃山岳武穆庙</a></li>
+<li><a href="#诗-卷11-七言律诗.md#有感诸同年" class="internal-link wiki-link">有感诸同年</a></li>
+<li><a href="#诗-卷11-七言律诗.md#望阙" class="internal-link wiki-link">望阙</a></li>
+<li><a href="#诗-卷11-七言律诗.md#解柱明中翰见招草桥山庄是日孙大器管泰阶曹允大黄改庵刘胤平同其弟拙存俱集" class="internal-link wiki-link">解柱明中翰见招草桥山庄是日孙大器管泰阶曹允大黄改庵刘胤平同其弟拙存俱集</a></li>
+<li><a href="#诗-卷11-七言律诗.md#是日诸子肩舆余独乘马醉归辄供笑谑诗以解嘲" class="internal-link wiki-link">是日诸子肩舆余独乘马醉归辄供笑谑诗以解嘲</a></li>
+<li><a href="#诗-卷11-七言律诗.md#立秋晓对" class="internal-link wiki-link">立秋晓对</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋馆读书" class="internal-link wiki-link">秋馆读书</a></li>
+<li><a href="#诗-卷11-七言律诗.md#赋得秋凉入郊墟-其一" class="internal-link wiki-link">赋得秋凉入郊墟 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#赋得秋凉入郊墟-其二" class="internal-link wiki-link">赋得秋凉入郊墟 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#渴愁" class="internal-link wiki-link">渴愁</a></li>
+<li><a href="#诗-卷11-七言律诗.md#揽辔" class="internal-link wiki-link">揽辔</a></li>
+<li><a href="#诗-卷11-七言律诗.md#方肃之得转假附来使寄怀" class="internal-link wiki-link">方肃之得转假附来使寄怀</a></li>
+<li><a href="#诗-卷11-七言律诗.md#陈子仪初入都相过小酌是刻得雨" class="internal-link wiki-link">陈子仪初入都相过小酌是刻得雨</a></li>
+<li><a href="#诗-卷11-七言律诗.md#封荆将就道子仪宜以诗祖余也而索余己巳赠行之作因复以诗答之" class="internal-link wiki-link">封荆将就道子仪宜以诗祖余也而索余己巳赠行之作因复以诗答之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#封荆就道以仲夏九日" class="internal-link wiki-link">封荆就道以仲夏九日</a></li>
+<li><a href="#诗-卷11-七言律诗.md#忆去岁北趋九歌之作感而有述" class="internal-link wiki-link">忆去岁北趋九歌之作感而有述</a></li>
+<li><a href="#诗-卷11-七言律诗.md#暑尘道中回首有感之作" class="internal-link wiki-link">暑尘道中回首有感之作</a></li>
+<li><a href="#诗-卷11-七言律诗.md#岐路" class="internal-link wiki-link">岐路</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋心" class="internal-link wiki-link">秋心</a></li>
+<li><a href="#诗-卷11-七言律诗.md#入徐界望黄河" class="internal-link wiki-link">入徐界望黄河</a></li>
+<li><a href="#诗-卷11-七言律诗.md#季夏买舟白水将赴楚蕲阻雨未发却寄仁和宋尔孚明府" class="internal-link wiki-link">季夏买舟白水将赴楚蕲阻雨未发却寄仁和宋尔孚明府</a></li>
+<li><a href="#诗-卷11-七言律诗.md#将至采石守风夜眺见江流四拥一缆悠然不禁烟波之感" class="internal-link wiki-link">将至采石守风夜眺见江流四拥一缆悠然不禁烟波之感</a></li>
+<li><a href="#诗-卷11-七言律诗.md#孟秋之朔发金陵旬日始至芜湖" class="internal-link wiki-link">孟秋之朔发金陵旬日始至芜湖</a></li>
+<li><a href="#诗-卷11-七言律诗.md#舟夜守立秋" class="internal-link wiki-link">舟夜守立秋</a></li>
+<li><a href="#诗-卷11-七言律诗.md#十五早得雨晓对诸山" class="internal-link wiki-link">十五早得雨晓对诸山</a></li>
+<li><a href="#诗-卷11-七言律诗.md#舟滞大通得同使宋今础书知至广济相需多日" class="internal-link wiki-link">舟滞大通得同使宋今础书知至广济相需多日</a></li>
+<li><a href="#诗-卷11-七言律诗.md#来札有一苇恣泊江鱼尝新之语乃余舟中景则大不然也因移就小舟极夜之力至皖江拟即就道兼赴先以诗谢" class="internal-link wiki-link">来札有一苇恣泊江鱼尝新之语乃余舟中景则大不然也因移就小舟极夜之力至皖江拟即就道兼赴先以诗谢</a></li>
+<li><a href="#诗-卷11-七言律诗.md#舍棹兼程以不得即就今础为恨" class="internal-link wiki-link">舍棹兼程以不得即就今础为恨</a></li>
+<li><a href="#诗-卷11-七言律诗.md#今础久寓广济相需筮诸关圣得此时宾主欢相得他日王侯却并肩之语筮者方旋而余继至相晤出此竟叹灵奇因各诗以纪之" class="internal-link wiki-link">今础久寓广济相需筮诸关圣得此时宾主欢相得他日王侯却并肩之语筮者方旋而余继至相晤出此竟叹灵奇因各诗以纪之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#偶阅太白集因商李杜同异" class="internal-link wiki-link">偶阅太白集因商李杜同异</a></li>
+<li><a href="#诗-卷11-七言律诗.md#与今础至蕲春同话一署因及旧事州茂才袁道长兄弟翩然相顾各以诗章见赠走笔步韵答其一" class="internal-link wiki-link">与今础至蕲春同话一署因及旧事州茂才袁道长兄弟翩然相顾各以诗章见赠走笔步韵答其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#孟秋廿八日册封礼成恭纪" class="internal-link wiki-link">孟秋廿八日册封礼成恭纪</a></li>
+<li><a href="#诗-卷11-七言律诗.md#荆王锡宴兼索诗篇应教启谢" class="internal-link wiki-link">荆王锡宴兼索诗篇应教启谢</a></li>
+<li><a href="#诗-卷11-七言律诗.md#偕今础谒樊山王留酌清轩更有雨湖之约" class="internal-link wiki-link">偕今础谒樊山王留酌清轩更有雨湖之约</a></li>
+<li><a href="#诗-卷11-七言律诗.md#是夕饶黄山侍御邀同今础酌南楼共望雨湖" class="internal-link wiki-link">是夕饶黄山侍御邀同今础酌南楼共望雨湖</a></li>
+<li><a href="#诗-卷11-七言律诗.md#四日发蕲阳有感" class="internal-link wiki-link">四日发蕲阳有感</a></li>
+<li><a href="#诗-卷11-七言律诗.md#是夕泊垄坪镇舟眺" class="internal-link wiki-link">是夕泊垄坪镇舟眺</a></li>
+<li><a href="#诗-卷11-七言律诗.md#见月落秋空云敛波出悠然有感" class="internal-link wiki-link">见月落秋空云敛波出悠然有感</a></li>
+<li><a href="#诗-卷11-七言律诗.md#庐山道中憩东林寺询寺僧以远公旧事" class="internal-link wiki-link">庐山道中憩东林寺询寺僧以远公旧事</a></li>
+<li><a href="#诗-卷11-七言律诗.md#对庐山默约" class="internal-link wiki-link">对庐山默约</a></li>
+<li><a href="#诗-卷11-七言律诗.md#西山秋水-初八日南浦登舟" class="internal-link wiki-link">西山秋水 初八日南浦登舟</a></li>
+<li><a href="#诗-卷11-七言律诗.md#急雨" class="internal-link wiki-link">急雨</a></li>
+<li><a href="#诗-卷11-七言律诗.md#临流" class="internal-link wiki-link">临流</a></li>
+<li><a href="#诗-卷11-七言律诗.md#穷川" class="internal-link wiki-link">穷川</a></li>
+<li><a href="#诗-卷11-七言律诗.md#中秋夜泊界亭村雨望" class="internal-link wiki-link">中秋夜泊界亭村雨望</a></li>
+<li><a href="#诗-卷11-七言律诗.md#人日寄谢儒美兼招赴宛在堂也" class="internal-link wiki-link">人日寄谢儒美兼招赴宛在堂也</a></li>
+<li><a href="#诗-卷11-七言律诗.md#趋燕在即值儒美有五羊之行驰书言别诗以复之" class="internal-link wiki-link">趋燕在即值儒美有五羊之行驰书言别诗以复之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#郡中别馆未为客也而客况倍之长宵不寐因之诗之" class="internal-link wiki-link">郡中别馆未为客也而客况倍之长宵不寐因之诗之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#暮春北征舟中寄题宋尔义荔馆酬灯夜见邀诗债也" class="internal-link wiki-link">暮春北征舟中寄题宋尔义荔馆酬灯夜见邀诗债也</a></li>
+<li><a href="#诗-卷11-七言律诗.md#泊采石步谒李供奉祠-其一" class="internal-link wiki-link">泊采石步谒李供奉祠 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#泊采石步谒李供奉祠-其二" class="internal-link wiki-link">泊采石步谒李供奉祠 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#金陵舟次五月五日" class="internal-link wiki-link">金陵舟次五月五日</a></li>
+<li><a href="#诗-卷11-七言律诗.md#将渡江就道过刘映薇寓次小集" class="internal-link wiki-link">将渡江就道过刘映薇寓次小集</a></li>
+<li><a href="#诗-卷11-七言律诗.md#渡徐州河" class="internal-link wiki-link">渡徐州河</a></li>
+<li><a href="#诗-卷11-七言律诗.md#午车剧尘心眼交颓过任丘见城下红莲袅袅袭人喜而咏之" class="internal-link wiki-link">午车剧尘心眼交颓过任丘见城下红莲袅袅袭人喜而咏之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#以诗言诗送王觉斯学士之南掌院二首-其一" class="internal-link wiki-link">以诗言诗送王觉斯学士之南掌院二首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#以诗言诗送王觉斯学士之南掌院二首-其二" class="internal-link wiki-link">以诗言诗送王觉斯学士之南掌院二首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送冯留仙备兵苏松" class="internal-link wiki-link">送冯留仙备兵苏松</a></li>
+<li><a href="#诗-卷11-七言律诗.md#细柳营-其一" class="internal-link wiki-link">细柳营 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#细柳营-其二" class="internal-link wiki-link">细柳营 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#迎春" class="internal-link wiki-link">迎春</a></li>
+<li><a href="#诗-卷11-七言律诗.md#除夕前一日立春-其一" class="internal-link wiki-link">除夕前一日立春 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#除夕前一日立春-其二" class="internal-link wiki-link">除夕前一日立春 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#祫祭陪祀四首-其一" class="internal-link wiki-link">祫祭陪祀四首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#祫祭陪祀四首-其二" class="internal-link wiki-link">祫祭陪祀四首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#祫祭陪祀四首-其三" class="internal-link wiki-link">祫祭陪祀四首 其三</a></li>
+<li><a href="#诗-卷11-七言律诗.md#祫祭陪祀四首-其四" class="internal-link wiki-link">祫祭陪祀四首 其四</a></li>
+<li><a href="#诗-卷11-七言律诗.md#对西山因忆昨游" class="internal-link wiki-link">对西山因忆昨游</a></li>
+<li><a href="#诗-卷11-七言律诗.md#趋署回闭户有所思" class="internal-link wiki-link">趋署回闭户有所思</a></li>
+<li><a href="#诗-卷11-七言律诗.md#除夕二首-其一" class="internal-link wiki-link">除夕二首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#除夕二首-其二" class="internal-link wiki-link">除夕二首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#丙子年起元日早朝" class="internal-link wiki-link">丙子年起元日早朝</a></li>
+<li><a href="#诗-卷11-七言律诗.md#朝回自叹" class="internal-link wiki-link">朝回自叹</a></li>
+<li><a href="#诗-卷11-七言律诗.md#人日邹石可民部招同林紫涛侍御夜集" class="internal-link wiki-link">人日邹石可民部招同林紫涛侍御夜集</a></li>
+<li><a href="#诗-卷11-七言律诗.md#紫涛频以牙痛告归若有所期诗中及之" class="internal-link wiki-link">紫涛频以牙痛告归若有所期诗中及之</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送林紫涛巡按宣大三首-其一" class="internal-link wiki-link">送林紫涛巡按宣大三首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送林紫涛巡按宣大三首-其二" class="internal-link wiki-link">送林紫涛巡按宣大三首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送林紫涛巡按宣大三首-其三" class="internal-link wiki-link">送林紫涛巡按宣大三首 其三</a></li>
+<li><a href="#诗-卷11-七言律诗.md#步韵和汪皖公计部扇头近作" class="internal-link wiki-link">步韵和汪皖公计部扇头近作</a></li>
+<li><a href="#诗-卷11-七言律诗.md#即事有感仍呈皖公计部" class="internal-link wiki-link">即事有感仍呈皖公计部</a></li>
+<li><a href="#诗-卷11-七言律诗.md#自问" class="internal-link wiki-link">自问</a></li>
+<li><a href="#诗-卷11-七言律诗.md#孟秋四日承命典中州乡闱恭纪" class="internal-link wiki-link">孟秋四日承命典中州乡闱恭纪</a></li>
+<li><a href="#诗-卷11-七言律诗.md#共事为黄赞伯铨部赞伯我友有同心矣" class="internal-link wiki-link">共事为黄赞伯铨部赞伯我友有同心矣</a></li>
+<li><a href="#诗-卷11-七言律诗.md#与赞伯有商" class="internal-link wiki-link">与赞伯有商</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其一" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其二" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其三" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其三</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其四" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其四</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其五" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其五</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其六" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其六</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其七" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其七</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既渡河车中即事以新旧见闻作古今愿怀诗八首-其八" class="internal-link wiki-link">既渡河车中即事以新旧见闻作古今愿怀诗八首 其八</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其一-陷昌震陵" class="internal-link wiki-link">秋辨九首 其一 陷昌震陵</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其二-宣镇捷功" class="internal-link wiki-link">秋辨九首 其二 宣镇捷功</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其三-辽帅归镇" class="internal-link wiki-link">秋辨九首 其三 辽帅归镇</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其四-枢督交病" class="internal-link wiki-link">秋辨九首 其四 枢督交病</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其五-倚将将将" class="internal-link wiki-link">秋辨九首 其五 倚将将将</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其六-救民收民" class="internal-link wiki-link">秋辨九首 其六 救民收民</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其七-陵疆功罪" class="internal-link wiki-link">秋辨九首 其七 陵疆功罪</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其八-朝天闻乐" class="internal-link wiki-link">秋辨九首 其八 朝天闻乐</a></li>
+<li><a href="#诗-卷11-七言律诗.md#秋辨九首-其九-望阙思乡" class="internal-link wiki-link">秋辨九首 其九 望阙思乡</a></li>
+<li><a href="#诗-卷11-七言律诗.md#既作九辨诗因以自解" class="internal-link wiki-link">既作九辨诗因以自解</a></li>
+<li><a href="#诗-卷11-七言律诗.md#饮王子龙斋达旦冒雨而归连日滂沱不已秋夕既七银河黯然独坐偶成遣怀书谢" class="internal-link wiki-link">饮王子龙斋达旦冒雨而归连日滂沱不已秋夕既七银河黯然独坐偶成遣怀书谢</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送王子龙广文公车" class="internal-link wiki-link">送王子龙广文公车</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送辜端伯给谏使竣还朝三首-其一" class="internal-link wiki-link">送辜端伯给谏使竣还朝三首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送辜端伯给谏使竣还朝三首-其二" class="internal-link wiki-link">送辜端伯给谏使竣还朝三首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#送辜端伯给谏使竣还朝三首-其三" class="internal-link wiki-link">送辜端伯给谏使竣还朝三首 其三</a></li>
+<li><a href="#诗-卷11-七言律诗.md#九日清斋独坐" class="internal-link wiki-link">九日清斋独坐</a></li>
+<li><a href="#诗-卷11-七言律诗.md#九日同诸公登涵元塔四首-其一" class="internal-link wiki-link">九日同诸公登涵元塔四首 其一</a></li>
+<li><a href="#诗-卷11-七言律诗.md#九日同诸公登涵元塔四首-其二" class="internal-link wiki-link">九日同诸公登涵元塔四首 其二</a></li>
+<li><a href="#诗-卷11-七言律诗.md#九日同诸公登涵元塔四首-其三" class="internal-link wiki-link">九日同诸公登涵元塔四首 其三</a></li>
+<li><a href="#诗-卷11-七言律诗.md#九日同诸公登涵元塔四首-其四" class="internal-link wiki-link">九日同诸公登涵元塔四首 其四</a></li>
+<li><a href="#诗-卷11-七言律诗.md#题为九日登塔四作" class="internal-link wiki-link">题为九日登塔四作</a></li>
+</ul>
+<h3 id="卷十二-·-七言律诗-(121-首)">卷十二 · 七言律诗 (121 首)</h3>
+<ul>
+<li><a href="#诗-卷12-七言律诗.md#富沙较士即事" class="internal-link wiki-link">富沙较士即事</a></li>
+<li><a href="#诗-卷12-七言律诗.md#怀富沙诸子" class="internal-link wiki-link">怀富沙诸子</a></li>
+<li><a href="#诗-卷12-七言律诗.md#季夏念一日顺昌道中" class="internal-link wiki-link">季夏念一日顺昌道中</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初秋九日发樵川薄暮至拿口驿" class="internal-link wiki-link">初秋九日发樵川薄暮至拿口驿</a></li>
+<li><a href="#诗-卷12-七言律诗.md#薄暮发富屯月行二十里至顺昌" class="internal-link wiki-link">薄暮发富屯月行二十里至顺昌</a></li>
+<li><a href="#诗-卷12-七言律诗.md#繇白莲至铁岭月行至将乐" class="internal-link wiki-link">繇白莲至铁岭月行至将乐</a></li>
+<li><a href="#诗-卷12-七言律诗.md#易小玉华为独清洞" class="internal-link wiki-link">易小玉华为独清洞</a></li>
+<li><a href="#诗-卷12-七言律诗.md#过细柳营" class="internal-link wiki-link">过细柳营</a></li>
+<li><a href="#诗-卷12-七言律诗.md#将至嘉兴舟行夜眺" class="internal-link wiki-link">将至嘉兴舟行夜眺</a></li>
+<li><a href="#诗-卷12-七言律诗.md#入门" class="internal-link wiki-link">入门</a></li>
+<li><a href="#诗-卷12-七言律诗.md#循东溪旧书室" class="internal-link wiki-link">循东溪旧书室</a></li>
+<li><a href="#诗-卷12-七言律诗.md#杨乐庵年友建慈云寺既成招饮索题二首（仅录第二首）" class="internal-link wiki-link">杨乐庵年友建慈云寺既成招饮索题二首（仅录第二首）</a></li>
+<li><a href="#诗-卷12-七言律诗.md#除夕雨" class="internal-link wiki-link">除夕雨</a></li>
+<li><a href="#诗-卷12-七言律诗.md#庚午元日仍雨" class="internal-link wiki-link">庚午元日仍雨</a></li>
+<li><a href="#诗-卷12-七言律诗.md#和尔韬悼亡姬月容二作-其一" class="internal-link wiki-link">和尔韬悼亡姬月容二作 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#和尔韬悼亡姬月容二作-其二" class="internal-link wiki-link">和尔韬悼亡姬月容二作 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#虏儆烽传步谢韶石廉宪约冯尔韬勤王之作" class="internal-link wiki-link">虏儆烽传步谢韶石廉宪约冯尔韬勤王之作</a></li>
+<li><a href="#诗-卷12-七言律诗.md#虏儆已息偕尔韬书怀寄广昌令宋尔孚" class="internal-link wiki-link">虏儆已息偕尔韬书怀寄广昌令宋尔孚</a></li>
+<li><a href="#诗-卷12-七言律诗.md#赏川茶花得行字四首（补录第四首）" class="internal-link wiki-link">赏川茶花得行字四首（补录第四首）</a></li>
+<li><a href="#诗-卷12-七言律诗.md#步尔孚悠韵之作" class="internal-link wiki-link">步尔孚悠韵之作</a></li>
+<li><a href="#诗-卷12-七言律诗.md#天中日王子龙招看龙舟得流字" class="internal-link wiki-link">天中日王子龙招看龙舟得流字</a></li>
+<li><a href="#诗-卷12-七言律诗.md#孙蜚莪宋尔孚携酒琴过从得榴字是日夏尽" class="internal-link wiki-link">孙蜚莪宋尔孚携酒琴过从得榴字是日夏尽</a></li>
+<li><a href="#诗-卷12-七言律诗.md#修邑志成感赋四律（补录第三首）" class="internal-link wiki-link">修邑志成感赋四律（补录第三首）</a></li>
+<li><a href="#诗-卷12-七言律诗.md#有挟改数字不得者再吟二律-其一" class="internal-link wiki-link">有挟改数字不得者再吟二律 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#有挟改数字不得者再吟二律-其二" class="internal-link wiki-link">有挟改数字不得者再吟二律 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#寄赠冯令君尔韬初擢给谏二首-其一" class="internal-link wiki-link">寄赠冯令君尔韬初擢给谏二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#寄赠冯令君尔韬初擢给谏二首-其二" class="internal-link wiki-link">寄赠冯令君尔韬初擢给谏二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#人日自号三士道人" class="internal-link wiki-link">人日自号三士道人</a></li>
+<li><a href="#诗-卷12-七言律诗.md#人日立春浮云蔽日使人愁叹而问春" class="internal-link wiki-link">人日立春浮云蔽日使人愁叹而问春</a></li>
+<li><a href="#诗-卷12-七言律诗.md#听读书有感" class="internal-link wiki-link">听读书有感</a></li>
+<li><a href="#诗-卷12-七言律诗.md#中兴一旅文武遗臣欲尽制乙未闻感叹有作" class="internal-link wiki-link">中兴一旅文武遗臣欲尽制乙未闻感叹有作</a></li>
+<li><a href="#诗-卷12-七言律诗.md#八月初四日纪事二首-其一" class="internal-link wiki-link">八月初四日纪事二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#八月初四日纪事二首-其二" class="internal-link wiki-link">八月初四日纪事二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初七午出南关" class="internal-link wiki-link">初七午出南关</a></li>
+<li><a href="#诗-卷12-七言律诗.md#十四日至太平却望" class="internal-link wiki-link">十四日至太平却望</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念一早舟至邕江" class="internal-link wiki-link">念一早舟至邕江</a></li>
+<li><a href="#诗-卷12-七言律诗.md#邕江午眺" class="internal-link wiki-link">邕江午眺</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆即事" class="internal-link wiki-link">羁馆即事</a></li>
+<li><a href="#诗-卷12-七言律诗.md#季秋七日过乌蛮滩谒伏波祠" class="internal-link wiki-link">季秋七日过乌蛮滩谒伏波祠</a></li>
+<li><a href="#诗-卷12-七言律诗.md#九日泊浔州望登高者有述" class="internal-link wiki-link">九日泊浔州望登高者有述</a></li>
+<li><a href="#诗-卷12-七言律诗.md#十三晚泊藤县对岸" class="internal-link wiki-link">十三晚泊藤县对岸</a></li>
+<li><a href="#诗-卷12-七言律诗.md#十五晚抵苍梧" class="internal-link wiki-link">十五晚抵苍梧</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念二晚至端水宵望达旦" class="internal-link wiki-link">念二晚至端水宵望达旦</a></li>
+<li><a href="#诗-卷12-七言律诗.md#晤连近城枢督于天宁寺" class="internal-link wiki-link">晤连近城枢督于天宁寺</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念八日复往西粤夜泊桂林村" class="internal-link wiki-link">念八日复往西粤夜泊桂林村</a></li>
+<li><a href="#诗-卷12-七言律诗.md#泊德庆得黄花一盆舟次聊当胜友" class="internal-link wiki-link">泊德庆得黄花一盆舟次聊当胜友</a></li>
+<li><a href="#诗-卷12-七言律诗.md#孟冬五日晤璞山上人于梧水" class="internal-link wiki-link">孟冬五日晤璞山上人于梧水</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初七午发苍梧上滩即目" class="internal-link wiki-link">初七午发苍梧上滩即目</a></li>
+<li><a href="#诗-卷12-七言律诗.md#十五晚上马滩至昭平" class="internal-link wiki-link">十五晚上马滩至昭平</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念日泊平乐雨舟述怀" class="internal-link wiki-link">念日泊平乐雨舟述怀</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念三日抵阳朔雨湍添濑感而有述" class="internal-link wiki-link">念三日抵阳朔雨湍添濑感而有述</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念五夕过星屏村奇峰幻岫得云雨而增异" class="internal-link wiki-link">念五夕过星屏村奇峰幻岫得云雨而增异</a></li>
+<li><a href="#诗-卷12-七言律诗.md#念八日过斗鸡山恶其名之鄙也而不敢易" class="internal-link wiki-link">念八日过斗鸡山恶其名之鄙也而不敢易</a></li>
+<li><a href="#诗-卷12-七言律诗.md#将抵桂城千峰叠送万堞遥临泊舟漫述" class="internal-link wiki-link">将抵桂城千峰叠送万堞遥临泊舟漫述</a></li>
+<li><a href="#诗-卷12-七言律诗.md#一日长至朔风加厉" class="internal-link wiki-link">一日长至朔风加厉</a></li>
+<li><a href="#诗-卷12-七言律诗.md#是午移寄城隍庙暮眺有感" class="internal-link wiki-link">是午移寄城隍庙暮眺有感</a></li>
+<li><a href="#诗-卷12-七言律诗.md#遥对七星岩而意浮" class="internal-link wiki-link">遥对七星岩而意浮</a></li>
+<li><a href="#诗-卷12-七言律诗.md#企望独秀山而神往" class="internal-link wiki-link">企望独秀山而神往</a></li>
+<li><a href="#诗-卷12-七言律诗.md#九日诸当事公集庙中询避地始末诗以代供" class="internal-link wiki-link">九日诸当事公集庙中询避地始末诗以代供</a></li>
+<li><a href="#诗-卷12-七言律诗.md#连近城自端水寄书言别诗以答之" class="internal-link wiki-link">连近城自端水寄书言别诗以答之</a></li>
+<li><a href="#诗-卷12-七言律诗.md#雨后得梅花一枝赋得梅花满枝空断肠" class="internal-link wiki-link">雨后得梅花一枝赋得梅花满枝空断肠</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初腊代人送友之燕" class="internal-link wiki-link">初腊代人送友之燕</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其一" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其二" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其三" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其三</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其四" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其四</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其五" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其五</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其六" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其六</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其七" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其七</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其八" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其八</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其九" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其九</a></li>
+<li><a href="#诗-卷12-七言律诗.md#羁馆除夕读老庄合刻漫赋十章-其十" class="internal-link wiki-link">羁馆除夕读老庄合刻漫赋十章 其十</a></li>
+<li><a href="#诗-卷12-七言律诗.md#壬寅元日二首-其一" class="internal-link wiki-link">壬寅元日二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#壬寅元日二首-其二" class="internal-link wiki-link">壬寅元日二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初春即事二首-其一" class="internal-link wiki-link">初春即事二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初春即事二首-其二" class="internal-link wiki-link">初春即事二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初二至初四三夜皆火" class="internal-link wiki-link">初二至初四三夜皆火</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初五夜城外火初六午城中复火" class="internal-link wiki-link">初五夜城外火初六午城中复火</a></li>
+<li><a href="#诗-卷12-七言律诗.md#握中上人语录漫题三首-其一" class="internal-link wiki-link">握中上人语录漫题三首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#握中上人语录漫题三首-其二" class="internal-link wiki-link">握中上人语录漫题三首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#握中上人语录漫题三首-其三" class="internal-link wiki-link">握中上人语录漫题三首 其三</a></li>
+<li><a href="#诗-卷12-七言律诗.md#春风欲半李花尽白聊取一枝为桃增艳二首-其一" class="internal-link wiki-link">春风欲半李花尽白聊取一枝为桃增艳二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#春风欲半李花尽白聊取一枝为桃增艳二首-其二" class="internal-link wiki-link">春风欲半李花尽白聊取一枝为桃增艳二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#瓶花已悴不忍遽掷诗以送之" class="internal-link wiki-link">瓶花已悴不忍遽掷诗以送之</a></li>
+<li><a href="#诗-卷12-七言律诗.md#滇云叹三首-其一" class="internal-link wiki-link">滇云叹三首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#滇云叹三首-其二" class="internal-link wiki-link">滇云叹三首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#滇云叹三首-其三" class="internal-link wiki-link">滇云叹三首 其三</a></li>
+<li><a href="#诗-卷12-七言律诗.md#读平准书有感" class="internal-link wiki-link">读平准书有感</a></li>
+<li><a href="#诗-卷12-七言律诗.md#史称民不益赋而天下用饶然乎否" class="internal-link wiki-link">史称民不益赋而天下用饶然乎否</a></li>
+<li><a href="#诗-卷12-七言律诗.md#花朝" class="internal-link wiki-link">花朝</a></li>
+<li><a href="#诗-卷12-七言律诗.md#禊日风望" class="internal-link wiki-link">禊日风望</a></li>
+<li><a href="#诗-卷12-七言律诗.md#原直上人抵桂甘雨随瓢羁馆漫赠二作-其一" class="internal-link wiki-link">原直上人抵桂甘雨随瓢羁馆漫赠二作 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#原直上人抵桂甘雨随瓢羁馆漫赠二作-其二" class="internal-link wiki-link">原直上人抵桂甘雨随瓢羁馆漫赠二作 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#寒食风雨思古漫怀" class="internal-link wiki-link">寒食风雨思古漫怀</a></li>
+<li><a href="#诗-卷12-七言律诗.md#清明悼亡二首-其一" class="internal-link wiki-link">清明悼亡二首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#清明悼亡二首-其二" class="internal-link wiki-link">清明悼亡二首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#长日" class="internal-link wiki-link">长日</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其一" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其二" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其三" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其三</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其四" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其四</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其五" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其五</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其六" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其六</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其七" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其七</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其八" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其八</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其九" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其九</a></li>
+<li><a href="#诗-卷12-七言律诗.md#二十立夏下旬犹春月也作留春诗十首-其十" class="internal-link wiki-link">二十立夏下旬犹春月也作留春诗十首 其十</a></li>
+<li><a href="#诗-卷12-七言律诗.md#辞春送月" class="internal-link wiki-link">辞春送月</a></li>
+<li><a href="#诗-卷12-七言律诗.md#百年一事" class="internal-link wiki-link">百年一事</a></li>
+<li><a href="#诗-卷12-七言律诗.md#初夏骤烝借阴庭树" class="internal-link wiki-link">初夏骤烝借阴庭树</a></li>
+<li><a href="#诗-卷12-七言律诗.md#往事" class="internal-link wiki-link">往事</a></li>
+<li><a href="#诗-卷12-七言律诗.md#一时" class="internal-link wiki-link">一时</a></li>
+<li><a href="#诗-卷12-七言律诗.md#馀思" class="internal-link wiki-link">馀思</a></li>
+<li><a href="#诗-卷12-七言律诗.md#读易有所思" class="internal-link wiki-link">读易有所思</a></li>
+<li><a href="#诗-卷12-七言律诗.md#筮易有所疑" class="internal-link wiki-link">筮易有所疑</a></li>
+<li><a href="#诗-卷12-七言律诗.md#戏作谚语言桂民" class="internal-link wiki-link">戏作谚语言桂民</a></li>
+<li><a href="#诗-卷12-七言律诗.md#长夏自慰" class="internal-link wiki-link">长夏自慰</a></li>
+<li><a href="#诗-卷12-七言律诗.md#诸奚续采菡萏助华增艳感而再赋三律-其一" class="internal-link wiki-link">诸奚续采菡萏助华增艳感而再赋三律 其一</a></li>
+<li><a href="#诗-卷12-七言律诗.md#诸奚续采菡萏助华增艳感而再赋三律-其二" class="internal-link wiki-link">诸奚续采菡萏助华增艳感而再赋三律 其二</a></li>
+<li><a href="#诗-卷12-七言律诗.md#诸奚续采菡萏助华增艳感而再赋三律-其三" class="internal-link wiki-link">诸奚续采菡萏助华增艳感而再赋三律 其三</a></li>
+<li><a href="#诗-卷12-七言律诗.md#送辜端伯给谏使竣还朝" class="internal-link wiki-link">送辜端伯给谏使竣还朝</a></li>
+</ul>
+<h3 id="卷十三-·-五言排律-(24-首)">卷十三 · 五言排律 (24 首)</h3>
+<ul>
+<li><a href="#诗-卷13-五言排律.md#赋得薰风从南来（阁试）" class="internal-link wiki-link">赋得薰风从南来（阁试）</a></li>
+<li><a href="#诗-卷13-五言排律.md#懋敬殿落成恭纪阁试" class="internal-link wiki-link">懋敬殿落成恭纪阁试</a></li>
+<li><a href="#诗-卷13-五言排律.md#喜雨即事" class="internal-link wiki-link">喜雨即事</a></li>
+<li><a href="#诗-卷13-五言排律.md#赠陈尔新得假时余亦赋归" class="internal-link wiki-link">赠陈尔新得假时余亦赋归</a></li>
+<li><a href="#诗-卷13-五言排律.md#自燕都至白门纪行四十韵" class="internal-link wiki-link">自燕都至白门纪行四十韵</a></li>
+<li><a href="#诗-卷13-五言排律.md#凭轼望云" class="internal-link wiki-link">凭轼望云</a></li>
+<li><a href="#诗-卷13-五言排律.md#寄怀曹允大" class="internal-link wiki-link">寄怀曹允大</a></li>
+<li><a href="#诗-卷13-五言排律.md#林浴元民部邀游虎丘夜半方回" class="internal-link wiki-link">林浴元民部邀游虎丘夜半方回</a></li>
+<li><a href="#诗-卷13-五言排律.md#次姑苏杨维斗徐君和朱云子共邀舟游" class="internal-link wiki-link">次姑苏杨维斗徐君和朱云子共邀舟游</a></li>
+<li><a href="#诗-卷13-五言排律.md#别曹允大后便邮复寄言" class="internal-link wiki-link">别曹允大后便邮复寄言</a></li>
+<li><a href="#诗-卷13-五言排律.md#南城何凝生以遂垞具体索题" class="internal-link wiki-link">南城何凝生以遂垞具体索题</a></li>
+<li><a href="#诗-卷13-五言排律.md#黄尔栽弄璋召饮新斋得而字" class="internal-link wiki-link">黄尔栽弄璋召饮新斋得而字</a></li>
+<li><a href="#诗-卷13-五言排律.md#兖州道中驰力上何象冈宗伯" class="internal-link wiki-link">兖州道中驰力上何象冈宗伯</a></li>
+<li><a href="#诗-卷13-五言排律.md#孟夏念八日奉命册封荆藩德安王并妃就道计程之作" class="internal-link wiki-link">孟夏念八日奉命册封荆藩德安王并妃就道计程之作</a></li>
+<li><a href="#诗-卷13-五言排律.md#感祖陵震惊矢愤" class="internal-link wiki-link">感祖陵震惊矢愤</a></li>
+<li><a href="#诗-卷13-五言排律.md#经池河红心濠梁道中目伤口绘三十韵" class="internal-link wiki-link">经池河红心濠梁道中目伤口绘三十韵</a></li>
+<li><a href="#诗-卷13-五言排律.md#固镇驿阻滞感述" class="internal-link wiki-link">固镇驿阻滞感述</a></li>
+<li><a href="#诗-卷13-五言排律.md#利国监晓发" class="internal-link wiki-link">利国监晓发</a></li>
+<li><a href="#诗-卷13-五言排律.md#书情呈倪玉汝宫端" class="internal-link wiki-link">书情呈倪玉汝宫端</a></li>
+<li><a href="#诗-卷13-五言排律.md#送何香山师相" class="internal-link wiki-link">送何香山师相</a></li>
+<li><a href="#诗-卷13-五言排律.md#再寄允大" class="internal-link wiki-link">再寄允大</a></li>
+<li><a href="#诗-卷13-五言排律.md#阴眺" class="internal-link wiki-link">阴眺</a></li>
+<li><a href="#诗-卷13-五言排律.md#山情" class="internal-link wiki-link">山情</a></li>
+<li><a href="#诗-卷13-五言排律.md#秋斋独对阅张曲江集追和感遇诗八作-其八" class="internal-link wiki-link">秋斋独对阅张曲江集追和感遇诗八作 其八</a></li>
+</ul>
+<h3 id="卷十四-·-七言排律-(5-首)">卷十四 · 七言排律 (5 首)</h3>
+<ul>
+<li><a href="#诗-卷14-七言排律.md#清明雷发占为有年……敬衷易之诸卦以明理之固然" class="internal-link wiki-link">清明雷发占为有年……敬衷易之诸卦以明理之固然</a></li>
+<li><a href="#诗-卷14-七言排律.md#孟夏六日宛在堂后两楼告竣……得中字" class="internal-link wiki-link">孟夏六日宛在堂后两楼告竣……得中字</a></li>
+<li><a href="#诗-卷14-七言排律.md#董子下帷处" class="internal-link wiki-link">董子下帷处</a></li>
+<li><a href="#诗-卷14-七言排律.md#无衣篇" class="internal-link wiki-link">无衣篇</a></li>
+</ul>
+<h3 id="卷十五-·-五言绝句-(71-首)">卷十五 · 五言绝句 (71 首)</h3>
+<ul>
+<li><a href="#诗-卷15-五言绝句.md#题驿舍画屏二首-其一" class="internal-link wiki-link">题驿舍画屏二首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#题驿舍画屏二首-其二" class="internal-link wiki-link">题驿舍画屏二首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#立秋日二首-其一" class="internal-link wiki-link">立秋日二首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#立秋日二首-其二" class="internal-link wiki-link">立秋日二首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#次东乡雨夜枕上口占二首-其一" class="internal-link wiki-link">次东乡雨夜枕上口占二首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#次东乡雨夜枕上口占二首-其二" class="internal-link wiki-link">次东乡雨夜枕上口占二首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春小园花发已半有友共对三首-其一" class="internal-link wiki-link">季冬立春小园花发已半有友共对三首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春小园花发已半有友共对三首-其二" class="internal-link wiki-link">季冬立春小园花发已半有友共对三首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春小园花发已半有友共对三首-其三" class="internal-link wiki-link">季冬立春小园花发已半有友共对三首 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#鄱阳舟中晓望" class="internal-link wiki-link">鄱阳舟中晓望</a></li>
+<li><a href="#诗-卷15-五言绝句.md#迎春晓占" class="internal-link wiki-link">迎春晓占</a></li>
+<li><a href="#诗-卷15-五言绝句.md#春江听雪" class="internal-link wiki-link">春江听雪</a></li>
+<li><a href="#诗-卷15-五言绝句.md#语庐山" class="internal-link wiki-link">语庐山</a></li>
+<li><a href="#诗-卷15-五言绝句.md#食" class="internal-link wiki-link">食</a></li>
+<li><a href="#诗-卷15-五言绝句.md#睡" class="internal-link wiki-link">睡</a></li>
+<li><a href="#诗-卷15-五言绝句.md#閒" class="internal-link wiki-link">閒</a></li>
+<li><a href="#诗-卷15-五言绝句.md#酌" class="internal-link wiki-link">酌</a></li>
+<li><a href="#诗-卷15-五言绝句.md#退之气魄" class="internal-link wiki-link">退之气魄</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季贞风流" class="internal-link wiki-link">季贞风流</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其一" class="internal-link wiki-link">阿子歌十首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其二" class="internal-link wiki-link">阿子歌十首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其三" class="internal-link wiki-link">阿子歌十首 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其四" class="internal-link wiki-link">阿子歌十首 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其五" class="internal-link wiki-link">阿子歌十首 其五</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其六" class="internal-link wiki-link">阿子歌十首 其六</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其七" class="internal-link wiki-link">阿子歌十首 其七</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其八" class="internal-link wiki-link">阿子歌十首 其八</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌十首-其九" class="internal-link wiki-link">阿子歌十首 其九</a></li>
+<li><a href="#诗-卷15-五言绝句.md#车中即见四首-其一-虹影" class="internal-link wiki-link">车中即见四首 其一 虹影</a></li>
+<li><a href="#诗-卷15-五言绝句.md#车中即见四首-其二-雁沙" class="internal-link wiki-link">车中即见四首 其二 雁沙</a></li>
+<li><a href="#诗-卷15-五言绝句.md#车中即见四首-其三-自顾" class="internal-link wiki-link">车中即见四首 其三 自顾</a></li>
+<li><a href="#诗-卷15-五言绝句.md#车中即见四首-其四-双窥" class="internal-link wiki-link">车中即见四首 其四 双窥</a></li>
+<li><a href="#诗-卷15-五言绝句.md#返照" class="internal-link wiki-link">返照</a></li>
+<li><a href="#诗-卷15-五言绝句.md#客程" class="internal-link wiki-link">客程</a></li>
+<li><a href="#诗-卷15-五言绝句.md#与伯常兄小酌" class="internal-link wiki-link">与伯常兄小酌</a></li>
+<li><a href="#诗-卷15-五言绝句.md#泊大滩" class="internal-link wiki-link">泊大滩</a></li>
+<li><a href="#诗-卷15-五言绝句.md#泊赛上" class="internal-link wiki-link">泊赛上</a></li>
+<li><a href="#诗-卷15-五言绝句.md#下姑听啼鸟" class="internal-link wiki-link">下姑听啼鸟</a></li>
+<li><a href="#诗-卷15-五言绝句.md#自大姑至硿头酌酒数滩" class="internal-link wiki-link">自大姑至硿头酌酒数滩</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其一" class="internal-link wiki-link">对春鸟有感十首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其二" class="internal-link wiki-link">对春鸟有感十首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其三" class="internal-link wiki-link">对春鸟有感十首 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其四" class="internal-link wiki-link">对春鸟有感十首 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其五" class="internal-link wiki-link">对春鸟有感十首 其五</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其六" class="internal-link wiki-link">对春鸟有感十首 其六</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其七" class="internal-link wiki-link">对春鸟有感十首 其七</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其八" class="internal-link wiki-link">对春鸟有感十首 其八</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其九" class="internal-link wiki-link">对春鸟有感十首 其九</a></li>
+<li><a href="#诗-卷15-五言绝句.md#对春鸟有感十首-其十" class="internal-link wiki-link">对春鸟有感十首 其十</a></li>
+<li><a href="#诗-卷15-五言绝句.md#所见四首-其一" class="internal-link wiki-link">所见四首 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#所见四首-其二" class="internal-link wiki-link">所见四首 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#所见四首-其三" class="internal-link wiki-link">所见四首 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#所见四首-其四" class="internal-link wiki-link">所见四首 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#鄱阳晓望" class="internal-link wiki-link">鄱阳晓望</a></li>
+<li><a href="#诗-卷15-五言绝句.md#食" class="internal-link wiki-link">食</a></li>
+<li><a href="#诗-卷15-五言绝句.md#坐" class="internal-link wiki-link">坐</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春五绝-其一-故园" class="internal-link wiki-link">季冬立春五绝 其一 故园</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春五绝-其二-岭外" class="internal-link wiki-link">季冬立春五绝 其二 岭外</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春五绝-其三-梅花" class="internal-link wiki-link">季冬立春五绝 其三 梅花</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春五绝-其四-桃花" class="internal-link wiki-link">季冬立春五绝 其四 桃花</a></li>
+<li><a href="#诗-卷15-五言绝句.md#季冬立春五绝-其五-李花" class="internal-link wiki-link">季冬立春五绝 其五 李花</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其一" class="internal-link wiki-link">阿子歌九绝 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其二" class="internal-link wiki-link">阿子歌九绝 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其三" class="internal-link wiki-link">阿子歌九绝 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其四" class="internal-link wiki-link">阿子歌九绝 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其五" class="internal-link wiki-link">阿子歌九绝 其五</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其六" class="internal-link wiki-link">阿子歌九绝 其六</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其七" class="internal-link wiki-link">阿子歌九绝 其七</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其八" class="internal-link wiki-link">阿子歌九绝 其八</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阿子歌九绝-其九" class="internal-link wiki-link">阿子歌九绝 其九</a></li>
+<li><a href="#诗-卷15-五言绝句.md#韩山气象" class="internal-link wiki-link">韩山气象</a></li>
+<li><a href="#诗-卷15-五言绝句.md#贺监风流" class="internal-link wiki-link">贺监风流</a></li>
+<li><a href="#诗-卷15-五言绝句.md#辋川画意" class="internal-link wiki-link">辋川画意</a></li>
+<li><a href="#诗-卷15-五言绝句.md#江上花词" class="internal-link wiki-link">江上花词</a></li>
+<li><a href="#诗-卷15-五言绝句.md#鹿门归兴" class="internal-link wiki-link">鹿门归兴</a></li>
+<li><a href="#诗-卷15-五言绝句.md#石鱼醉歌" class="internal-link wiki-link">石鱼醉歌</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其一" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其二" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其三" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其四" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其五" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其五</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其六" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其六</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其七" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其七</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其八" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其八</a></li>
+<li><a href="#诗-卷15-五言绝句.md#禊日春雨初宿西月微明思从中来漫成九绝-其九" class="internal-link wiki-link">禊日春雨初宿西月微明思从中来漫成九绝 其九</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其一-一怨" class="internal-link wiki-link">四怨三愁五情诗 其一 一怨</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其二-二怨" class="internal-link wiki-link">四怨三愁五情诗 其二 二怨</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其三-三怨" class="internal-link wiki-link">四怨三愁五情诗 其三 三怨</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其四-四怨" class="internal-link wiki-link">四怨三愁五情诗 其四 四怨</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其五-一愁" class="internal-link wiki-link">四怨三愁五情诗 其五 一愁</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其六-二愁" class="internal-link wiki-link">四怨三愁五情诗 其六 二愁</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其七-三愁" class="internal-link wiki-link">四怨三愁五情诗 其七 三愁</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其八-一情" class="internal-link wiki-link">四怨三愁五情诗 其八 一情</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其九-二情" class="internal-link wiki-link">四怨三愁五情诗 其九 二情</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其十-三情" class="internal-link wiki-link">四怨三愁五情诗 其十 三情</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其十一-四情" class="internal-link wiki-link">四怨三愁五情诗 其十一 四情</a></li>
+<li><a href="#诗-卷15-五言绝句.md#四怨三愁五情诗-其十二-五情" class="internal-link wiki-link">四怨三愁五情诗 其十二 五情</a></li>
+<li><a href="#诗-卷15-五言绝句.md#梅花忆四绝-其一" class="internal-link wiki-link">梅花忆四绝 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#梅花忆四绝-其二" class="internal-link wiki-link">梅花忆四绝 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#梅花忆四绝-其三" class="internal-link wiki-link">梅花忆四绝 其三</a></li>
+<li><a href="#诗-卷15-五言绝句.md#梅花忆四绝-其四" class="internal-link wiki-link">梅花忆四绝 其四</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阴寒二绝-其一" class="internal-link wiki-link">阴寒二绝 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#阴寒二绝-其二" class="internal-link wiki-link">阴寒二绝 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#狂风二绝-其一" class="internal-link wiki-link">狂风二绝 其一</a></li>
+<li><a href="#诗-卷15-五言绝句.md#狂风二绝-其二" class="internal-link wiki-link">狂风二绝 其二</a></li>
+<li><a href="#诗-卷15-五言绝句.md#竟日" class="internal-link wiki-link">竟日</a></li>
+<li><a href="#诗-卷15-五言绝句.md#长夜" class="internal-link wiki-link">长夜</a></li>
+<li><a href="#诗-卷15-五言绝句.md#晓月" class="internal-link wiki-link">晓月</a></li>
+<li><a href="#诗-卷15-五言绝句.md#朝旭" class="internal-link wiki-link">朝旭</a></li>
+</ul>
+<h3 id="卷十六-·-六言绝句-(22-首)">卷十六 · 六言绝句 (22 首)</h3>
+<ul>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事二十首-其六" class="internal-link wiki-link">宛在堂中即事二十首 其六</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事二十首-其十九" class="internal-link wiki-link">宛在堂中即事二十首 其十九</a></li>
+<li><a href="#诗-卷16-六言绝句.md#车中即事五首-其一-朝夕" class="internal-link wiki-link">车中即事五首 其一 朝夕</a></li>
+<li><a href="#诗-卷16-六言绝句.md#车中即事五首-其二-晓夜" class="internal-link wiki-link">车中即事五首 其二 晓夜</a></li>
+<li><a href="#诗-卷16-六言绝句.md#车中即事五首-其三-南北" class="internal-link wiki-link">车中即事五首 其三 南北</a></li>
+<li><a href="#诗-卷16-六言绝句.md#车中即事五首-其四-西东" class="internal-link wiki-link">车中即事五首 其四 西东</a></li>
+<li><a href="#诗-卷16-六言绝句.md#车中即事五首-其五-闻问" class="internal-link wiki-link">车中即事五首 其五 闻问</a></li>
+<li><a href="#诗-卷16-六言绝句.md#连日苦雨讯杨承之" class="internal-link wiki-link">连日苦雨讯杨承之</a></li>
+<li><a href="#诗-卷16-六言绝句.md#讯王山人" class="internal-link wiki-link">讯王山人</a></li>
+<li><a href="#诗-卷16-六言绝句.md#讯悦则上人" class="internal-link wiki-link">讯悦则上人</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其一" class="internal-link wiki-link">宛在堂中即事 其一</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其二" class="internal-link wiki-link">宛在堂中即事 其二</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其三" class="internal-link wiki-link">宛在堂中即事 其三</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其四" class="internal-link wiki-link">宛在堂中即事 其四</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其五" class="internal-link wiki-link">宛在堂中即事 其五</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其六" class="internal-link wiki-link">宛在堂中即事 其六</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其七" class="internal-link wiki-link">宛在堂中即事 其七</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其八" class="internal-link wiki-link">宛在堂中即事 其八</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其九" class="internal-link wiki-link">宛在堂中即事 其九</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十" class="internal-link wiki-link">宛在堂中即事 其十</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十一" class="internal-link wiki-link">宛在堂中即事 其十一</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十二" class="internal-link wiki-link">宛在堂中即事 其十二</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十三" class="internal-link wiki-link">宛在堂中即事 其十三</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十四" class="internal-link wiki-link">宛在堂中即事 其十四</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十五" class="internal-link wiki-link">宛在堂中即事 其十五</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十六" class="internal-link wiki-link">宛在堂中即事 其十六</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十七" class="internal-link wiki-link">宛在堂中即事 其十七</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十八" class="internal-link wiki-link">宛在堂中即事 其十八</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其十九" class="internal-link wiki-link">宛在堂中即事 其十九</a></li>
+<li><a href="#诗-卷16-六言绝句.md#宛在堂中即事-其二十" class="internal-link wiki-link">宛在堂中即事 其二十</a></li>
+<li><a href="#诗-卷16-六言绝句.md#又讯宋尔孚" class="internal-link wiki-link">又讯宋尔孚</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其一" class="internal-link wiki-link">暮春山课即事书怀十二绝 其一</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其二" class="internal-link wiki-link">暮春山课即事书怀十二绝 其二</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其三" class="internal-link wiki-link">暮春山课即事书怀十二绝 其三</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其四" class="internal-link wiki-link">暮春山课即事书怀十二绝 其四</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其五" class="internal-link wiki-link">暮春山课即事书怀十二绝 其五</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其六" class="internal-link wiki-link">暮春山课即事书怀十二绝 其六</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其七" class="internal-link wiki-link">暮春山课即事书怀十二绝 其七</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其八" class="internal-link wiki-link">暮春山课即事书怀十二绝 其八</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其九" class="internal-link wiki-link">暮春山课即事书怀十二绝 其九</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其十" class="internal-link wiki-link">暮春山课即事书怀十二绝 其十</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其十一" class="internal-link wiki-link">暮春山课即事书怀十二绝 其十一</a></li>
+<li><a href="#诗-卷16-六言绝句.md#暮春山课即事书怀十二绝-其十二" class="internal-link wiki-link">暮春山课即事书怀十二绝 其十二</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其一-逍遥游" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其一 逍遥游</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其二-齐物论" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其二 齐物论</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其三-养生主" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其三 养生主</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其四-人间世" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其四 人间世</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其五-德充符" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其五 德充符</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其六-大宗师" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其六 大宗师</a></li>
+<li><a href="#诗-卷16-六言绝句.md#檃括南华经词旨述内篇六言七章-其七-应帝王" class="internal-link wiki-link">檃括南华经词旨述内篇六言七章 其七 应帝王</a></li>
+</ul>
+<h3 id="卷十七-·-七言绝句-(25-首)">卷十七 · 七言绝句 (25 首)</h3>
+<ul>
+<li><a href="#诗-卷17-七言绝句.md#望庐山和苏韵" class="internal-link wiki-link">望庐山和苏韵</a></li>
+<li><a href="#诗-卷17-七言绝句.md#四月一日二首-其一" class="internal-link wiki-link">四月一日二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#四月一日二首-其二" class="internal-link wiki-link">四月一日二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#系春" class="internal-link wiki-link">系春</a></li>
+<li><a href="#诗-卷17-七言绝句.md#问春" class="internal-link wiki-link">问春</a></li>
+<li><a href="#诗-卷17-七言绝句.md#说士与逸民之品不同" class="internal-link wiki-link">说士与逸民之品不同</a></li>
+<li><a href="#诗-卷17-七言绝句.md#得时与避世之怀各一" class="internal-link wiki-link">得时与避世之怀各一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#呼奚觅怪石二首-其一" class="internal-link wiki-link">呼奚觅怪石二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#呼奚觅怪石二首-其二" class="internal-link wiki-link">呼奚觅怪石二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#衢州道中二首-其一" class="internal-link wiki-link">衢州道中二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#衢州道中二首-其二" class="internal-link wiki-link">衢州道中二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝-其一" class="internal-link wiki-link">十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝-其二" class="internal-link wiki-link">十八早自从叔公车舫至峡江过伯常兄舟中共酌醉后口占二绝 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首-其一" class="internal-link wiki-link">时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首-其二" class="internal-link wiki-link">时得家报伯常兄城侄痘疹新愈喜甚口占相慰二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过丰城剑江二首-其一" class="internal-link wiki-link">过丰城剑江二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过丰城剑江二首-其二" class="internal-link wiki-link">过丰城剑江二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#望庐山（崇祯本）" class="internal-link wiki-link">望庐山（崇祯本）</a></li>
+<li><a href="#诗-卷17-七言绝句.md#既而湖山暮接清风拂月复成其一" class="internal-link wiki-link">既而湖山暮接清风拂月复成其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#因念昔者寺僧乞诗子瞻留一绝……今之题庐山者益多谨依韵述之以告诸词客" class="internal-link wiki-link">因念昔者寺僧乞诗子瞻留一绝……今之题庐山者益多谨依韵述之以告诸词客</a></li>
+<li><a href="#诗-卷17-七言绝句.md#偶占" class="internal-link wiki-link">偶占</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其一" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其二" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其三" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其四" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其四</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其五" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其五</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其六" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其六</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其七" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其七</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟发雩都苦雨随缘成八首-其八" class="internal-link wiki-link">舟发雩都苦雨随缘成八首 其八</a></li>
+<li><a href="#诗-卷17-七言绝句.md#小卧口占二首-其一" class="internal-link wiki-link">小卧口占二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#小卧口占二首-其二" class="internal-link wiki-link">小卧口占二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#走笔向宋尔孚乞绛桃" class="internal-link wiki-link">走笔向宋尔孚乞绛桃</a></li>
+<li><a href="#诗-卷17-七言绝句.md#短叶乞花不能尽意……乃余所求者本也" class="internal-link wiki-link">短叶乞花不能尽意……乃余所求者本也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#更乞百叶一种" class="internal-link wiki-link">更乞百叶一种</a></li>
+<li><a href="#诗-卷17-七言绝句.md#乞绛桃而得碧桃因向主人称谢" class="internal-link wiki-link">乞绛桃而得碧桃因向主人称谢</a></li>
+<li><a href="#诗-卷17-七言绝句.md#乞绛不与而与碧兼为花神解嘲" class="internal-link wiki-link">乞绛不与而与碧兼为花神解嘲</a></li>
+<li><a href="#诗-卷17-七言绝句.md#尔孚复以诗乞余长春花新本数株此花种固来自尔孚也" class="internal-link wiki-link">尔孚复以诗乞余长春花新本数株此花种固来自尔孚也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#林九娘墓三首-其一" class="internal-link wiki-link">林九娘墓三首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#林九娘墓三首-其二" class="internal-link wiki-link">林九娘墓三首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#林九娘墓三首-其三" class="internal-link wiki-link">林九娘墓三首 其三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#速杨承之诸子过坐" class="internal-link wiki-link">速杨承之诸子过坐</a></li>
+<li><a href="#诗-卷17-七言绝句.md#向王子龙乞盆兰" class="internal-link wiki-link">向王子龙乞盆兰</a></li>
+<li><a href="#诗-卷17-七言绝句.md#三月三十夜与承之偕二兄小酌……上平十三" class="internal-link wiki-link">三月三十夜与承之偕二兄小酌……上平十三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#下平十三" class="internal-link wiki-link">下平十三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#上十三" class="internal-link wiki-link">上十三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#去十三" class="internal-link wiki-link">去十三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#入十三" class="internal-link wiki-link">入十三</a></li>
+<li><a href="#诗-卷17-七言绝句.md#晚泊小步承之向索诗题口占答之" class="internal-link wiki-link">晚泊小步承之向索诗题口占答之</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过峡江悼自从叔二绝-其一" class="internal-link wiki-link">过峡江悼自从叔二绝 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过峡江悼自从叔二绝-其二" class="internal-link wiki-link">过峡江悼自从叔二绝 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#答杨承之上巳诗" class="internal-link wiki-link">答杨承之上巳诗</a></li>
+<li><a href="#诗-卷17-七言绝句.md#白发非春事承之亦愁春乎答此似嘲实以慰也" class="internal-link wiki-link">白发非春事承之亦愁春乎答此似嘲实以慰也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#百里金陵" class="internal-link wiki-link">百里金陵</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过采石吊李白墓四首-其一-一快其遇知章也" class="internal-link wiki-link">过采石吊李白墓四首 其一 一快其遇知章也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过采石吊李白墓四首-其二-一伤其厄力士也" class="internal-link wiki-link">过采石吊李白墓四首 其二 一伤其厄力士也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过采石吊李白墓四首-其三-一伤其以诗见弃而快其才也" class="internal-link wiki-link">过采石吊李白墓四首 其三 一伤其以诗见弃而快其才也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#过采石吊李白墓四首-其四-一快其以酒相忘而伤其志也" class="internal-link wiki-link">过采石吊李白墓四首 其四 一快其以酒相忘而伤其志也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟间柳絮二首-其一" class="internal-link wiki-link">舟间柳絮二首 其一</a></li>
+<li><a href="#诗-卷17-七言绝句.md#舟间柳絮二首-其二" class="internal-link wiki-link">舟间柳絮二首 其二</a></li>
+<li><a href="#诗-卷17-七言绝句.md#既而见柳浪不兴丝波自卷觉起絮因风尚多事耳" class="internal-link wiki-link">既而见柳浪不兴丝波自卷觉起絮因风尚多事耳</a></li>
+<li><a href="#诗-卷17-七言绝句.md#偶见郭六脩侍御怜古诗八绝句步韵漫成-其一-西楚霸王妾虞氏" class="internal-link wiki-link">偶见郭六脩侍御怜古诗八绝句步韵漫成 其一 西楚霸王妾虞氏</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其二-魏武赎归蔡文姬" class="internal-link wiki-link">其二 魏武赎归蔡文姬</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其三-桃叶渡泛秦淮" class="internal-link wiki-link">其三 桃叶渡泛秦淮</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其四-春尽以诘旦渡江是晚风雷骤发" class="internal-link wiki-link">其四 春尽以诘旦渡江是晚风雷骤发</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其五-陈见侯自燕得选回相遇浦口舟中" class="internal-link wiki-link">其五 陈见侯自燕得选回相遇浦口舟中</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其六-四月一日发浦口" class="internal-link wiki-link">其六 四月一日发浦口</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其七-舟车" class="internal-link wiki-link">其七 舟车</a></li>
+<li><a href="#诗-卷17-七言绝句.md#其八-策蹇" class="internal-link wiki-link">其八 策蹇</a></li>
+<li><a href="#诗-卷17-七言绝句.md#昏尘" class="internal-link wiki-link">昏尘</a></li>
+<li><a href="#诗-卷17-七言绝句.md#大店借宿" class="internal-link wiki-link">大店借宿</a></li>
+<li><a href="#诗-卷17-七言绝句.md#黄河道中" class="internal-link wiki-link">黄河道中</a></li>
+<li><a href="#诗-卷17-七言绝句.md#拖泥郊野宿" class="internal-link wiki-link">拖泥郊野宿</a></li>
+<li><a href="#诗-卷17-七言绝句.md#闻姚永言不果北上" class="internal-link wiki-link">闻姚永言不果北上</a></li>
+<li><a href="#诗-卷17-七言绝句.md#望尘" class="internal-link wiki-link">望尘</a></li>
+<li><a href="#诗-卷17-七言绝句.md#汶上晓发见烟树参云" class="internal-link wiki-link">汶上晓发见烟树参云</a></li>
+<li><a href="#诗-卷17-七言绝句.md#午车睡吟不知已至高唐也" class="internal-link wiki-link">午车睡吟不知已至高唐也</a></li>
+<li><a href="#诗-卷17-七言绝句.md#千柳" class="internal-link wiki-link">千柳</a></li>
+<li><a href="#诗-卷17-七言绝句.md#孤松" class="internal-link wiki-link">孤松</a></li>
+<li><a href="#诗-卷17-七言绝句.md#雄邑署中夜坐得月" class="internal-link wiki-link">雄邑署中夜坐得月</a></li>
+<li><a href="#诗-卷17-七言绝句.md#固安饮黄亨臣明府署中达旦" class="internal-link wiki-link">固安饮黄亨臣明府署中达旦</a></li>
+<li><a href="#诗-卷17-七言绝句.md#散馆曹允大相讯诗以代柬" class="internal-link wiki-link">散馆曹允大相讯诗以代柬</a></li>
+<li><a href="#诗-卷17-七言绝句.md#封荆将就道别梁瑶石铨部适卢本潜给谏胡兰石侍御俱集小酌口号" class="internal-link wiki-link">封荆将就道别梁瑶石铨部适卢本潜给谏胡兰石侍御俱集小酌口号</a></li>
+<li><a href="#诗-卷17-七言绝句.md#简点行箱" class="internal-link wiki-link">简点行箱</a></li>
+<li><a href="#诗-卷17-七言绝句.md#夏日奉命册荆藩车中计程之作" class="internal-link wiki-link">夏日奉命册荆藩车中计程之作</a></li>
+<li><a href="#诗-卷17-七言绝句.md#倦醉" class="internal-link wiki-link">倦醉</a></li>
+<li><a href="#诗-卷17-七言绝句.md#晚至黄河阻渡" class="internal-link wiki-link">晚至黄河阻渡</a></li>
+<li><a href="#诗-卷17-七言绝句.md#晓渡" class="internal-link wiki-link">晓渡</a></li>
+<li><a href="#诗-卷17-七言绝句.md#凉阴" class="internal-link wiki-link">凉阴</a></li>
+</ul>
+<h3 id="卷十八-·-七言绝句-(89-首)">卷十八 · 七言绝句 (89 首)</h3>
+<ul>
+<li><a href="#诗-卷18-七言绝句.md#风拂" class="internal-link wiki-link">风拂</a></li>
+<li><a href="#诗-卷18-七言绝句.md#露团" class="internal-link wiki-link">露团</a></li>
+<li><a href="#诗-卷18-七言绝句.md#流閒" class="internal-link wiki-link">流閒</a></li>
+<li><a href="#诗-卷18-七言绝句.md#书怀" class="internal-link wiki-link">书怀</a></li>
+<li><a href="#诗-卷18-七言绝句.md#潜山道中晚行怀方肃之四首-其一" class="internal-link wiki-link">潜山道中晚行怀方肃之四首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#潜山道中晚行怀方肃之四首-其二" class="internal-link wiki-link">潜山道中晚行怀方肃之四首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#潜山道中晚行怀方肃之四首-其三" class="internal-link wiki-link">潜山道中晚行怀方肃之四首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#潜山道中晚行怀方肃之四首-其四" class="internal-link wiki-link">潜山道中晚行怀方肃之四首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#夜行至晓" class="internal-link wiki-link">夜行至晓</a></li>
+<li><a href="#诗-卷18-七言绝句.md#黄梅道中听松风" class="internal-link wiki-link">黄梅道中听松风</a></li>
+<li><a href="#诗-卷18-七言绝句.md#分署承今础以二诗相招使者立促步韵答之" class="internal-link wiki-link">分署承今础以二诗相招使者立促步韵答之</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寓所有绿柳垂阴拂云檐落因复以此转招今础步其二之韵" class="internal-link wiki-link">寓所有绿柳垂阴拂云檐落因复以此转招今础步其二之韵</a></li>
+<li><a href="#诗-卷18-七言绝句.md#州刺史唐伯闇以蕲州志相贻" class="internal-link wiki-link">州刺史唐伯闇以蕲州志相贻</a></li>
+<li><a href="#诗-卷18-七言绝句.md#卧起" class="internal-link wiki-link">卧起</a></li>
+<li><a href="#诗-卷18-七言绝句.md#夜吟" class="internal-link wiki-link">夜吟</a></li>
+<li><a href="#诗-卷18-七言绝句.md#仲秋三日送节马上口占别今础四首-其一" class="internal-link wiki-link">仲秋三日送节马上口占别今础四首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#仲秋三日送节马上口占别今础四首-其二" class="internal-link wiki-link">仲秋三日送节马上口占别今础四首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#仲秋三日送节马上口占别今础四首-其三" class="internal-link wiki-link">仲秋三日送节马上口占别今础四首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#仲秋三日送节马上口占别今础四首-其四" class="internal-link wiki-link">仲秋三日送节马上口占别今础四首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#道经庐山憩东林寺僧人索句" class="internal-link wiki-link">道经庐山憩东林寺僧人索句</a></li>
+<li><a href="#诗-卷18-七言绝句.md#车中望最高峰" class="internal-link wiki-link">车中望最高峰</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过赣关见民舟阻隔有感" class="internal-link wiki-link">过赣关见民舟阻隔有感</a></li>
+<li><a href="#诗-卷18-七言绝句.md#山峡见月" class="internal-link wiki-link">山峡见月</a></li>
+<li><a href="#诗-卷18-七言绝句.md#舟行偶成" class="internal-link wiki-link">舟行偶成</a></li>
+<li><a href="#诗-卷18-七言绝句.md#舍陆就汀舟喜见家乡在即三首-其一" class="internal-link wiki-link">舍陆就汀舟喜见家乡在即三首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#舍陆就汀舟喜见家乡在即三首-其二" class="internal-link wiki-link">舍陆就汀舟喜见家乡在即三首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#舍陆就汀舟喜见家乡在即三首-其三" class="internal-link wiki-link">舍陆就汀舟喜见家乡在即三首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#至大埔闻乡音" class="internal-link wiki-link">至大埔闻乡音</a></li>
+<li><a href="#诗-卷18-七言绝句.md#孟夏一日瑞金署中晓望" class="internal-link wiki-link">孟夏一日瑞金署中晓望</a></li>
+<li><a href="#诗-卷18-七言绝句.md#鄱湖晓色" class="internal-link wiki-link">鄱湖晓色</a></li>
+<li><a href="#诗-卷18-七言绝句.md#三河舟晚" class="internal-link wiki-link">三河舟晚</a></li>
+<li><a href="#诗-卷18-七言绝句.md#茶阳登车念别亲友亦稀人事山行纵日欣感交心" class="internal-link wiki-link">茶阳登车念别亲友亦稀人事山行纵日欣感交心</a></li>
+<li><a href="#诗-卷18-七言绝句.md#雪后杨荆岫见投近藁走笔代柬" class="internal-link wiki-link">雪后杨荆岫见投近藁走笔代柬</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客司即事四首-其一" class="internal-link wiki-link">客司即事四首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客司即事四首-其二" class="internal-link wiki-link">客司即事四首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客司即事四首-其三" class="internal-link wiki-link">客司即事四首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客司即事四首-其四" class="internal-link wiki-link">客司即事四首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其一" class="internal-link wiki-link">寄家中诸兄弟十首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其二" class="internal-link wiki-link">寄家中诸兄弟十首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其三" class="internal-link wiki-link">寄家中诸兄弟十首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其四" class="internal-link wiki-link">寄家中诸兄弟十首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其五" class="internal-link wiki-link">寄家中诸兄弟十首 其五</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其六" class="internal-link wiki-link">寄家中诸兄弟十首 其六</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其七" class="internal-link wiki-link">寄家中诸兄弟十首 其七</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其八" class="internal-link wiki-link">寄家中诸兄弟十首 其八</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其九" class="internal-link wiki-link">寄家中诸兄弟十首 其九</a></li>
+<li><a href="#诗-卷18-七言绝句.md#寄家中诸兄弟十首-其十" class="internal-link wiki-link">寄家中诸兄弟十首 其十</a></li>
+<li><a href="#诗-卷18-七言绝句.md#对春雪偶书" class="internal-link wiki-link">对春雪偶书</a></li>
+<li><a href="#诗-卷18-七言绝句.md#见落花有感" class="internal-link wiki-link">见落花有感</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其一" class="internal-link wiki-link">过邯郸口号六首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其二" class="internal-link wiki-link">过邯郸口号六首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其三" class="internal-link wiki-link">过邯郸口号六首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其四" class="internal-link wiki-link">过邯郸口号六首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其五" class="internal-link wiki-link">过邯郸口号六首 其五</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过邯郸口号六首-其六" class="internal-link wiki-link">过邯郸口号六首 其六</a></li>
+<li><a href="#诗-卷18-七言绝句.md#晚眺" class="internal-link wiki-link">晚眺</a></li>
+<li><a href="#诗-卷18-七言绝句.md#竣事以季秋十三日渡黄河" class="internal-link wiki-link">竣事以季秋十三日渡黄河</a></li>
+<li><a href="#诗-卷18-七言绝句.md#哀鞠四绝-其一" class="internal-link wiki-link">哀鞠四绝 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#哀鞠四绝-其二" class="internal-link wiki-link">哀鞠四绝 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#哀鞠四绝-其三" class="internal-link wiki-link">哀鞠四绝 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#哀鞠四绝-其四" class="internal-link wiki-link">哀鞠四绝 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#痛兄三绝-其一" class="internal-link wiki-link">痛兄三绝 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#痛兄三绝-其二" class="internal-link wiki-link">痛兄三绝 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#痛兄三绝-其三" class="internal-link wiki-link">痛兄三绝 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#悼内二绝-其一" class="internal-link wiki-link">悼内二绝 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#悼内二绝-其二" class="internal-link wiki-link">悼内二绝 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过庐山绝句" class="internal-link wiki-link">过庐山绝句</a></li>
+<li><a href="#诗-卷18-七言绝句.md#过石钟绝句" class="internal-link wiki-link">过石钟绝句</a></li>
+<li><a href="#诗-卷18-七言绝句.md#立春日风雪如晦漫望有感五首-其一" class="internal-link wiki-link">立春日风雪如晦漫望有感五首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#立春日风雪如晦漫望有感五首-其二" class="internal-link wiki-link">立春日风雪如晦漫望有感五首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#立春日风雪如晦漫望有感五首-其三" class="internal-link wiki-link">立春日风雪如晦漫望有感五首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#立春日风雪如晦漫望有感五首-其四" class="internal-link wiki-link">立春日风雪如晦漫望有感五首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#立春日风雪如晦漫望有感五首-其五" class="internal-link wiki-link">立春日风雪如晦漫望有感五首 其五</a></li>
+<li><a href="#诗-卷18-七言绝句.md#上元后二日雪霁得月江舟漫兴五首-其一" class="internal-link wiki-link">上元后二日雪霁得月江舟漫兴五首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#上元后二日雪霁得月江舟漫兴五首-其二" class="internal-link wiki-link">上元后二日雪霁得月江舟漫兴五首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#上元后二日雪霁得月江舟漫兴五首-其三" class="internal-link wiki-link">上元后二日雪霁得月江舟漫兴五首 其三</a></li>
+<li><a href="#诗-卷18-七言绝句.md#上元后二日雪霁得月江舟漫兴五首-其四" class="internal-link wiki-link">上元后二日雪霁得月江舟漫兴五首 其四</a></li>
+<li><a href="#诗-卷18-七言绝句.md#上元后二日雪霁得月江舟漫兴五首-其五" class="internal-link wiki-link">上元后二日雪霁得月江舟漫兴五首 其五</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客舟两月王春又一矣而凉雱不已诗以懊之二首-其一" class="internal-link wiki-link">客舟两月王春又一矣而凉雱不已诗以懊之二首 其一</a></li>
+<li><a href="#诗-卷18-七言绝句.md#客舟两月王春又一矣而凉雱不已诗以懊之二首-其二" class="internal-link wiki-link">客舟两月王春又一矣而凉雱不已诗以懊之二首 其二</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其一-闰正前望冯邺仙大正邀游醉翁亭" class="internal-link wiki-link">游滁山二十咏 其一 闰正前望冯邺仙大正邀游醉翁亭</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其二-有易醉翁亭为解酲阁者书以解㗅" class="internal-link wiki-link">游滁山二十咏 其二 有易醉翁亭为解酲阁者书以解㗅</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其三-大正既改立文忠专祠而酿泉六一俱以次复其故迹" class="internal-link wiki-link">游滁山二十咏 其三 大正既改立文忠专祠而酿泉六一俱以次复其故迹</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其四-欧门桥却却望" class="internal-link wiki-link">游滁山二十咏 其四 欧门桥却却望</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其五-醉翁手植梅" class="internal-link wiki-link">游滁山二十咏 其五 醉翁手植梅</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其六-酿泉" class="internal-link wiki-link">游滁山二十咏 其六 酿泉</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其七-饮六一泉偶触欧文如泉之语" class="internal-link wiki-link">游滁山二十咏 其七 饮六一泉偶触欧文如泉之语</a></li>
+<li><a href="#诗-卷18-七言绝句.md#游滁山二十咏-其八-黄维烈囧丞以望日邀游百子潭" class="internal-link wiki-link">游滁山二十咏 其八 黄维烈囧丞以望日邀游百子潭</a></li>
+</ul>
+<h3 id="卷十九-·-诗余（词）-(15-首)">卷十九 · 诗余（词） (15 首)</h3>
+<ul>
+<li><a href="#诗-卷19-诗余（词）.md#行香子-其一（春病自遣四首，己巳作）" class="internal-link wiki-link">行香子 其一（春病自遣四首，己巳作）</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#其二" class="internal-link wiki-link">其二</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#其三" class="internal-link wiki-link">其三</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#其四" class="internal-link wiki-link">其四</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#采桑子-对花" class="internal-link wiki-link">采桑子 对花</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#南乡子-欲别花竞开" class="internal-link wiki-link">南乡子 欲别花竞开</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#踏莎行-登楼望紫峰" class="internal-link wiki-link">踏莎行 登楼望紫峰</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#长相思-听黄鹂" class="internal-link wiki-link">长相思 听黄鹂</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#忆秦娥-雨后川茶" class="internal-link wiki-link">忆秦娥 雨后川茶</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#捣练子-海棠" class="internal-link wiki-link">捣练子 海棠</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#忆王孙-白海棠" class="internal-link wiki-link">忆王孙 白海棠</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#如梦令-松竹梅兰四君" class="internal-link wiki-link">如梦令 松竹梅兰四君</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#卜算子-五日怀旧" class="internal-link wiki-link">卜算子 五日怀旧</a></li>
+<li><a href="#诗-卷19-诗余（词）.md#西江月-六日饮醉华馆" class="internal-link wiki-link">西江月 六日饮醉华馆</a></li>
+</ul>
+<h3 id="卷二十-·-四言诗-(17-首)">卷二十 · 四言诗 (17 首)</h3>
+<ul>
+<li><a href="#诗-卷20-四言诗.md#司徒林忠宣公赞" class="internal-link wiki-link">司徒林忠宣公赞</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其一-朱矶（出湖三十里）" class="internal-link wiki-link">八章 其一 朱矶（出湖三十里）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其二-星墩（在星子县湖中）" class="internal-link wiki-link">八章 其二 星墩（在星子县湖中）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其三-瀑布（在匡庐）" class="internal-link wiki-link">八章 其三 瀑布（在匡庐）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其四-虾蟆石（在南康下）" class="internal-link wiki-link">八章 其四 虾蟆石（在南康下）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其五-大姑鞋（在湖口上三十里）" class="internal-link wiki-link">八章 其五 大姑鞋（在湖口上三十里）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其六-石钟（在湖口县）" class="internal-link wiki-link">八章 其六 石钟（在湖口县）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其七-小姑钗（在彭泽下十里）" class="internal-link wiki-link">八章 其七 小姑钗（在彭泽下十里）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八章-其八-马当山（在小姑下二十里）" class="internal-link wiki-link">八章 其八 马当山（在小姑下二十里）</a></li>
+<li><a href="#诗-卷20-四言诗.md#八月四章（丙子河南闱中作）" class="internal-link wiki-link">八月四章（丙子河南闱中作）</a></li>
+<li><a href="#诗-卷20-四言诗.md#鹿鸣三章（念四日纪事）" class="internal-link wiki-link">鹿鸣三章（念四日纪事）</a></li>
+<li><a href="#诗-卷20-四言诗.md#言旋（以季秋晦前二日抵寓）" class="internal-link wiki-link">言旋（以季秋晦前二日抵寓）</a></li>
+<li><a href="#诗-卷20-四言诗.md#家谋" class="internal-link wiki-link">家谋</a></li>
+<li><a href="#诗-卷20-四言诗.md#寒菊四章" class="internal-link wiki-link">寒菊四章</a></li>
+<li><a href="#诗-卷20-四言诗.md#世心" class="internal-link wiki-link">世心</a></li>
+<li><a href="#诗-卷20-四言诗.md#众口" class="internal-link wiki-link">众口</a></li>
+<li><a href="#诗-卷20-四言诗.md#追昔" class="internal-link wiki-link">追昔</a></li>
+<li><a href="#诗-卷20-四言诗.md#勖今" class="internal-link wiki-link">勖今</a></li>
+<li><a href="#诗-卷20-四言诗.md#汉谣四首-其一" class="internal-link wiki-link">汉谣四首 其一</a></li>
+<li><a href="#诗-卷20-四言诗.md#汉谣四首-其二" class="internal-link wiki-link">汉谣四首 其二</a></li>
+<li><a href="#诗-卷20-四言诗.md#汉谣四首-其三" class="internal-link wiki-link">汉谣四首 其三</a></li>
+<li><a href="#诗-卷20-四言诗.md#汉谣四首-其四" class="internal-link wiki-link">汉谣四首 其四</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其一-骈拇" class="internal-link wiki-link">读南华外篇述以四言十五章 其一 骈拇</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其二-马蹄" class="internal-link wiki-link">读南华外篇述以四言十五章 其二 马蹄</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其三-胠箧" class="internal-link wiki-link">读南华外篇述以四言十五章 其三 胠箧</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其四-在宥" class="internal-link wiki-link">读南华外篇述以四言十五章 其四 在宥</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其五-天地" class="internal-link wiki-link">读南华外篇述以四言十五章 其五 天地</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其六-天道" class="internal-link wiki-link">读南华外篇述以四言十五章 其六 天道</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其七-天运" class="internal-link wiki-link">读南华外篇述以四言十五章 其七 天运</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其八-刻意" class="internal-link wiki-link">读南华外篇述以四言十五章 其八 刻意</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其九-缮性" class="internal-link wiki-link">读南华外篇述以四言十五章 其九 缮性</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十-秋水" class="internal-link wiki-link">读南华外篇述以四言十五章 其十 秋水</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十一-至乐" class="internal-link wiki-link">读南华外篇述以四言十五章 其十一 至乐</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十二-达生" class="internal-link wiki-link">读南华外篇述以四言十五章 其十二 达生</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十三-山木" class="internal-link wiki-link">读南华外篇述以四言十五章 其十三 山木</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十四-田子方" class="internal-link wiki-link">读南华外篇述以四言十五章 其十四 田子方</a></li>
+<li><a href="#诗-卷20-四言诗.md#读南华外篇述以四言十五章-其十五-知北游" class="internal-link wiki-link">读南华外篇述以四言十五章 其十五 知北游</a></li>
+<li><a href="#诗-卷20-四言诗.md#矫志诗二首-其一" class="internal-link wiki-link">矫志诗二首 其一</a></li>
+<li><a href="#诗-卷20-四言诗.md#矫志诗二首-其二" class="internal-link wiki-link">矫志诗二首 其二</a></li>
+<li><a href="#诗-卷20-四言诗.md#励志诗二首-其一" class="internal-link wiki-link">励志诗二首 其一</a></li>
+<li><a href="#诗-卷20-四言诗.md#励志诗二首-其二" class="internal-link wiki-link">励志诗二首 其二</a></li>
+<li><a href="#诗-卷20-四言诗.md#时心" class="internal-link wiki-link">时心</a></li>
+<li><a href="#诗-卷20-四言诗.md#今性" class="internal-link wiki-link">今性</a></li>
+<li><a href="#诗-卷20-四言诗.md#或绘形瀛洲中而隐名姓思深哉诗以宠之" class="internal-link wiki-link">或绘形瀛洲中而隐名姓思深哉诗以宠之</a></li>
+</ul>
+<h3 id="卷二十一-·-赞文-(1-首)">卷二十一 · 赞文 (1 首)</h3>
+<ul>
+<li><a href="#诗-卷21-赞文.md#赞三士道人自赞" class="internal-link wiki-link">赞三士道人自赞</a></li>
+</ul>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

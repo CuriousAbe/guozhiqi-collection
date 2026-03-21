@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十七 · 祭文墓誌銘 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" class="active">卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十七-·-祭文墓誌銘">卷二十七 · 祭文墓誌銘</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十七</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第309a_l–324頁 | 視覺逐頁轉錄 → 富版本編訂</p>
+</blockquote>
+<p>本卷收祭文八篇、墓誌銘及行略五篇，共十三篇。祭文部分以庚午年（1630）三篇开端，涵盖挚友、僧墓、海神、岳祖、族叔、殉难官员等对象，时间跨度从1630年至1638年前后；墓誌铭及行略部分包括姻亲宋繩勖封官墓誌铭、幼女江女墓誌、庠生靜湖公行略、亡母林氏行略、彭處士墓誌铭五篇。全卷深刻反映<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>的家族关系、人际网络与情感世界，其中「先母太安人行略」为本卷最珍贵的家族史文献，「江女墓誌」则是明代士大夫为夭折幼女所作的罕见真情之作。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<h3 id="祭文（8篇）">祭文（8篇）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+<th>頁碼</th>
+<th>對象</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#祭宋繩坊文" class="internal-link">#祭宋繩坊文</a></td>
+<td>庚午（1630）</td>
+<td>309a_r–309b</td>
+<td>摯友</td>
+<td>悼友·交誼</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#遘和尚墓祭文" class="internal-link">#遘和尚墓祭文</a></td>
+<td>庚午（1630）</td>
+<td>309b_l–311a_r</td>
+<td>僧墓</td>
+<td>禪思·超度</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#祭海神文" class="internal-link">#祭海神文</a></td>
+<td>庚午（1630）</td>
+<td>311a_r</td>
+<td>海神</td>
+<td>民間信仰</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#祭林仰晉岳祖文" class="internal-link">#祭林仰晉岳祖文</a></td>
+<td>辛未（1631）</td>
+<td>311a_l–312a_r</td>
+<td>友人岳祖</td>
+<td>五福·哀輓</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#祭自從叔孝廉文" class="internal-link">#祭自從叔孝廉文</a></td>
+<td>癸酉（1633）</td>
+<td>312a_r–312b_r</td>
+<td>族叔</td>
+<td>親族·悼亡</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="#祭林棋餘岳祖文" class="internal-link">#祭林棋餘岳祖文</a></td>
+<td>丙子（1636）</td>
+<td>312b_r–313a_r</td>
+<td>友人岳祖</td>
+<td>遺恨·追思</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="#祭邑尉陶鴻鄉都司鄭祖紹文" class="internal-link">#祭邑尉陶鴻鄉都司鄭祖紹文</a></td>
+<td>崇禎十一年（1638）</td>
+<td>313a_l–314a_l</td>
+<td>殉難官員</td>
+<td>國殤·騷體</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="#祭宋熙文文" class="internal-link">#祭宋熙文文</a></td>
+<td>—</td>
+<td>314</td>
+<td>鄉紳</td>
+<td>隱逸·進退</td>
+</tr>
+</tbody>
+</table>
+<h3 id="墓誌銘-/-行略（5篇）">墓誌銘 / 行略（5篇）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+<th>頁碼</th>
+<th>對象</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9</td>
+<td><a href="#宋繩勖封官墓誌銘" class="internal-link">#宋繩勖封官墓誌銘</a></td>
+<td>卒庚午（1630）</td>
+<td>315a_l–317a</td>
+<td>姻親</td>
+<td>高蹈·五柳</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="#江女墓誌" class="internal-link">#江女墓誌</a></td>
+<td>丁丑（1637）</td>
+<td>317a_l–317b_l</td>
+<td>親女</td>
+<td>夭折·父愛</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="#庠生鄉寶靜湖公行略" class="internal-link">#庠生鄉寶靜湖公行略</a></td>
+<td>戊寅（1638）前後</td>
+<td>317b_r–318末</td>
+<td>友人先父</td>
+<td>積德·家風</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="#先母太安人徵齊林氏行略" class="internal-link">#先母太安人徵齊林氏行略</a></td>
+<td>—</td>
+<td>319a_r–322a</td>
+<td>親母</td>
+<td>孝思·家族史</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="#彭處士墓誌銘" class="internal-link">#彭處士墓誌銘</a></td>
+<td>—</td>
+<td>322b–324</td>
+<td>鄉人</td>
+<td>隱居·濟世</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="祭宋繩坊文">祭宋繩坊文</h2>
+<blockquote>
+<p><strong>繫年</strong>：庚午（1630） | <strong>體裁</strong>：祭文
+<strong>關聯人物</strong>：<a href="#宋繩坊" class="internal-link wiki-link">宋繩坊</a>（摯友·進士）、家大人（郭之奇之父）
+<strong>關鍵主題</strong>：<code>#悼亡</code> <code>#交谊</code> <code>#莫逆之交</code> <code>#庚午</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>嗚呼○哀哉○公此日而竟無復有意於人世也○公此日而竟與世緣退也○公與家大人公長公與余俱○稱莫○逆友而復年諸妯諸○種種相摯幾久○公百勤動為百著作○余皆得而問之○公亦莫之余○□故今日之弔入公者非</p>
+<p>〔中段〕</p>
+<p>輪心今而不忍形諸口而今也不幸以言中履令余○有多言之悔而不禁撫胸視公之前一夕○慈性公已弗能而猶眉服裁欲請訴狀若如懸</p>
+<p>〔尾段待精校〕</p>
+<h3 id="白话全译">白话全译</h3>
+<p>呜呼哀哉！您今日竟然不再眷恋人世了，今日竟然与世间缘分就此了断了。您与家父、令长公子、以及我，都称得上莫逆之交，加之两家妯娌亲眷往来，种种深挚的情谊延续了多少年。您百般勤勉、百般著述，我都能得以请益；您对我也从无保留。所以今日来吊唁您的人，并非……</p>
+<p>〔中段〕如今想到心痛不忍形诸言语，而不幸以往所说竟一一应验，令我有多言之悔。不禁抚胸回想您生前最后一夕，慈和的性情已不能自持，犹强作镇定，面有恳切之色，仿佛还有话要说……</p>
+<h3 id="题解">题解</h3>
+<p>本篇为郭之奇悼念挚友<a href="#宋繩坊" class="internal-link wiki-link">宋繩坊</a>之祭文，作于庚午年（1630）。宋繩坊为进士，与郭之奇父子两代皆为莫逆之交，两家妯娌亲眷亦往来频繁。「公百勤动为百著作，余皆得而问之」一句，说明宋繩坊不仅是朋友，更是郭之奇文学上的导师。「多言之悔」暗示作者曾预言友人命运而不幸言中，使得悼念之情更添一层自责。本篇是了解郭之奇早期社交圈（以宋氏家族为核心）的重要文献。</p>
+<hr />
+<h2 id="遘和尚墓祭文">遘和尚墓祭文</h2>
+<blockquote>
+<p><strong>繫年</strong>：庚午（1630）秋 | <strong>體裁</strong>：祭文（長篇） | <strong>字數</strong>：約1200字
+<strong>關聯人物</strong>：楝圓主人 / 榕史（<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>自號）
+<strong>關聯地點</strong>：<a href="#雙塞寺" class="internal-link wiki-link">雙塞寺</a>、浮洲
+<strong>關鍵主題</strong>：<code>#佛教</code> <code>#禅思</code> <code>#超度</code> <code>#生死观</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>遘和尚墓祭文。庚午年作。</p>
+<p><strong>創作背景</strong>：崇禎庚午秋，楝圓主人榕史郭子，卜繁雙塞寺左圓，鏡河水有浮洲，和尚墓五墓之來久已矣。</p>
+<p>年代皆顓覊淪○埋其一二○僅存荒址○主人懼夫歲月所侵○頻歸鉤沒○木石之氣或雜盧空○敫當超度之會○鳩工薦具○謀諸僧徒○卜地于峰遠洞幽雲深淵冷之○所以告之曰○出家作和尚人非大慧性大慈悲虔見世間一切爭攘腥膩然不忍一日安居○即係大頑實不靈者○即係大忍心害理傷倫滅紐之輩○除是三等別無所為出家和尚人○蓋非此三等亦定不宜出家作和尚也○是故得其正者了死生○</p>
+<p>去形相忘物我○以脱離無係戀○為初學進步以圓通○無掛礙得為功夫到頭及其悟○飢真急思了此四大○於是坦然化寂○立證樂土○其下此諸沙陀要皆才庸質闇○徒知隨聲拜影○撞鐘敲木魚飽喫一生僧飯○臨危或惶怖涕泣○或吃瞪狂任號○諸僧衆為之懺悔焚龕○畢竟神迷魄落沮散冈知○至於一種造薩敗類禍積佛門○死則當入無間萬劫不得翻身○輕者亦為驢為馬輪迴奇道○蓋有是三等生和尚便有是三等死和</p>
+<p>尚○理之必然○非主人之臆說也○則今日此墓中數杯土○總離不得此三等死和尚○將待之以為驢為馬地獄畜道○主人不忍也○其或皆殊散冈知○與草木同朽者○此比比如是○而主人猶不忍也○進之以了死生○去形相志物我○爾諸和尚卽猶不必盡能圓通一切○獨不知脱離二字○是碻甫拔剃摩頂時○一副念頭不差者○若主人所為鳩工薦具○易地而言以告之○或者熹為此也○言亦止此也○或云子實偪虛處此與和尚○</p>
+<p>爭此土內多欲而辯以文○處死和尚宴泉無知○必能德此言○而生和尚終不以此言為有益也○主人曰是大不然○死和尚之揭此也久矣○月夜鐘聲樹陰流響○領略既多靈骨不朽○其上者固不俠吾言遊神墮表之所○獨恐諸生和尚猶然作世俗觀○一事滯礙魍于松風泉月○至超度遷滯○鬼音言下超度已終○下者固為死和○細縹深思當以至真悟○使慧者悟力益清○癡者癡兔立破○則此言固為死和</p>
+<p>尚而發也○而其益於生和尚也多矣○</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>遘和尚墓祭文，庚午年（1630）秋作。</p>
+<p>崇祯庚午年秋天，楝园主人（即作者自号「榕史」的郭之奇），在双塞寺左侧安顿，镜河水边有浮洲，和尚墓共五座，来历已经很久了。</p>
+<p>年代久远，僧人们早已流散零落，墓址仅存荒迹。主人担忧岁月侵蚀使之完全湮没，木石之气混杂虚空，便趁超度法会之机，募集工匠和祭具，与僧众商议，择峰远洞幽、云深渊冷之地迁葬，并以此言告慰亡灵：</p>
+<p>出家做和尚的人，不外三等：其一，大慧性、大慈悲、虔心目睹世间一切争攘腥膻而不忍安居一日者；其二，大顽愚、实不通灵者；其三，大忍心、伤理灭伦之败类。除此三等，别无所谓出家之人——不属这三等的，也确实不适合出家。</p>
+<p>所以，得其正者，了悟生死，超脱形相，忘却物我，以脱离无牵挂为初学，以圆通无挂碍为究竟。及其悟道，饥则真饥，急则真急，了却地水火风四大，于是坦然化寂，立证乐土。其下者——那些才庸质暗的沙弥，只知随声跪拜、撞钟敲木鱼、饱吃一辈子僧饭，临危或惶恐涕泣、或呆瞪狂号，僧众为之忏悔焚龛，终究神迷魄散、不知所归。至于那些败坏佛门的祸害之辈，死后当入无间地狱，万劫不得翻身，轻者也要做驴做马、轮回畜道。——有三等「生和尚」，便有三等「死和尚」，这是必然之理，非主人臆说。</p>
+<p>那么，今日这墓中数抔土，终究离不开这三等「死和尚」。若将其待以驴马地狱畜道，主人于心不忍；若他们都已魂飞魄散、与草木同朽——这比比皆是——主人也仍然不忍。所以进而劝以了悟生死、超脱形相。你们这些和尚，即便不能圆通一切，难道不知道「脱离」二字？那是当初剃度摩顶时一副不差的念头。主人之所以鸠工备具、择地迁葬而告以此言，或许正是为此。言到此处也就止了。</p>
+<p>有人或许说：你其实是借佛事而文辞争胜，多所欲说而以文饰之。死和尚安眠泉下无知无觉，必然领受此言；而生和尚终不以此言为有益。主人说：大不然！死和尚揭示此理已经很久了——月夜钟声、树荫流响，领略已多，灵骨不朽。上等者固然不需我的言语，已神游于涅槃之外；唯恐生和尚们仍然以世俗眼光看待一切，一事滞碍便迷失于松风泉月之间。至于超度迁葬，是为了消除滞碍。下等者固然已是死和尚，但细加深思，当以至真之悟——使慧者悟力更清，痴者痴念立破——那么，此言固然是为死和尚而发，而其有益于生和尚者更多啊。</p>
+<h3 id="题解_1">题解</h3>
+<p>本篇是郭之奇游览<a href="#双塞寺" class="internal-link wiki-link">双塞寺</a>时为浮洲五座旧僧墓所作的祭文，作于庚午年（1630）秋。文中以「楝圆主人」「榕史」自称，这都是郭之奇的别号。全文以迁葬为由，层层推演出家人「三等说」：大慧大悲者为上，才庸质暗者居中，败坏佛门者最下；有三等「生和尚」便有三等「死和尚」。继而转入生死与超度的哲学讨论，以「脱离」二字为关键。结尾巧妙回应了「此言对死和尚有何用」的诘问，指出真正的受益者是尚在世间的「生和尚」。全篇论理与抒情并重，是研究郭之奇佛学思想的重要文献。</p>
+<hr />
+<h2 id="祭海神文">祭海神文</h2>
+<blockquote>
+<p><strong>繫年</strong>：庚午（1630） | <strong>體裁</strong>：祭文（短篇）
+<strong>關聯地點</strong>：<a href="#廣灣" class="internal-link wiki-link">廣灣</a>（廣東沿海）
+<strong>關鍵主題</strong>：<code>#海神</code> <code>#民间信仰</code> <code>#祭祀</code> <code>#渔民</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>維○海○為神○廣灣○枋○祭海神文 庚午作</p>
+<p>廣大慈仁○維民飽德○莫知其津○其家嶺外○因敢忘厭○秋毫皆賜○親○維神率○爰酒波臣○起居食祭○維神奉○矧茲薄業○水之潦○探神所陳○而利是巡○雖神嘉惠相彼○小民漁者為○口○所賴衣食○荏荏碣○神尚念此有藏卅埋○弘茲斤○鹵○貸以甲鮪○恬波時順○篷濤勿臻○汪洋不戕○滴滴成勻</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>海之为神，广大慈仁，人民受其恩德而不知其边际。我家居岭外，岂敢忘恩？秋毫之赐皆所感念。谨以酒祭奉波臣（海神），起居食息皆赖神佑。况且这微薄的渔业生计全赖水泽，仰探神灵所赐之利。虽然海神普惠众生，但小民渔者以此为口粮、赖以衣食。希望神灵念及这片海域蕴藏之丰厚，赐以鱼鲔之利，使波平浪静、风调水顺，滔天巨浪不至，汪洋不伤性命，滴滴甘露均匀降临。</p>
+<h3 id="题解_2">题解</h3>
+<p>本篇为祭祀南海海神的礼仪短文，作于庚午年（1630）。郭之奇寓居广东潮汕沿海，对海神信仰有切身体验。「维民饱德，莫知其津」以《诗经》雅颂笔法颂海神之德；「小民渔者为口」则回到渔民现实生计。「恬波时顺，篷涛勿臻」是对平安出海的朴素祈愿。全篇骈散相间，体现了明代岭南沿海地区的民间祭祀传统。</p>
+<hr />
+<h2 id="祭林仰晉岳祖文">祭林仰晉岳祖文</h2>
+<blockquote>
+<p><strong>繫年</strong>：辛未（1631） | <strong>體裁</strong>：祭文
+<strong>關聯人物</strong>：<a href="#林仰晉" class="internal-link wiki-link">林仰晉</a>岳祖（外祖父辈）
+<strong>關鍵主題</strong>：<code>#祭祀</code> <code>#五福</code> <code>#林氏家族</code> <code>#考终</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>矢心圖報○</p>
+<p>祭林仰晉岳祖文 辛未年作</p>
+<p>嗚呼○岳祖公此已矣○公公曷可已○公之壽富康寧好德○考終全上天之錫敷備人間之福祉○故為公者莫若○可以已也○雖然○公之壽富康寧好德考終天之所私○人之所視公又安可已也○公通籥五十年今於邑不○過四共立於朝不過一○紀其日漸摩於里間薰陶○於都都者絲親近疎自行及止就非公之教澤之表</p>
+<p>被之宜夫捐館而聞○其近者奔哭于庭○遠者揮涕于里○宦于斯者生于是者冈不交口容嗟相對淮瀴嗟嗟○人各有心誰能強此始知積於厚者感也深○造於隆者施也累○則公所以淪人之肌洽人之髓○登百年而有終○抑自今而伊始耶○鳴呼○朝盈夕虛世情如市○絲路出門公道如砥○公何以得此于里間都鄙之間○而況其不徒以里間都鄙之間佟也○公今於邑不過四秉巳之民○生猶祝而祀之○矧今而聞無父無毋終</p>
+<p>何待矣○公立於朝不過一紀○而累朝梯梯之股肱之日耳之○特達超之老成倚之○及夫不可留而隆禮仰之歲時存問○復將虛左位而侯之○矧今而聞人之云土易其倚○斯而觀則朝廷之尊四海之大○其欲有公也如弗及也○而使也其不可無公也如有公以安也如之何不哀哉○公固為可以已也○不可已而竟○日之痾○公隱公眾莫不然○矧余小子親愛之私○余於式之誠登或九比億○去冬余行猶倒公腿○今夏舟旋徒</p>
+<p>〔末段待精校〕</p>
+<p>嗚呼哀哉 饗</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>呜呼！岳祖公就此长逝了。公啊，怎能就此了结？公之寿、富、康宁、好德、考终——五福齐全，上天之赐敷备人间之福祉，做人到您这般地步，可以说圆满了。虽然如此，您的五福是上天所偏爱、世人所仰望的，又怎能说「已矣」呢？</p>
+<p>公从政五十年，在本邑不过治理四方之民，立朝不过一纪之久，而日常在乡里间的渐摩薰陶、在都邑间的亲疏远近，从言行举止到进退出处，无不是公教泽的体现。</p>
+<p>所以公一旦辞世，消息传出——近者奔哭于庭，远者挥涕于里，为官为民者无不交口叹息、相对涕零。人各有心，谁能强求？由此方知：积德深厚者，感人也深；造福隆重者，施惠也远。那么，公之所以沦入人心、深入骨髓，难道仅是百年有终？还是从今日方才开始？</p>
+<p>呜呼！朝盈夕虚，世情如市；丝路出门，公道如砥。公何以在乡里都邑间赢得如此尊崇？何况不仅是乡里都邑而已。公在本邑不过治四方之民，在世时百姓便祝祷祭祀；何况如今闻公辞世？公立朝不过一纪，而历朝视为股肱、倚为老成；待到不可挽留，则以隆礼相仰、岁时存问，甚至虚左位以待。何况如今人之归土？可见，朝廷之尊、四海之大，欲有公而不可得，不可无公以安天下——怎能不悲哀？</p>
+<p>公固然可以含笑而终，而不可终之痛，公虽隐忍，众人莫不如此。况且我这晚辈有亲爱之私——去年冬天我还登门探望公卧病之膝，今年夏天乘舟而归却已是……</p>
+<p>呜呼哀哉！伏惟尚飨。</p>
+<h3 id="题解_3">题解</h3>
+<p>本篇祭祀友人<a href="#林仰晉" class="internal-link wiki-link">林仰晉</a>的岳祖，作于辛未年（1631）。文中以古礼「五福」——寿、富、康宁、好德、考终——开篇，盛赞岳祖一生圆满。「公通籥五十年」说明岳祖从政长达半个世纪，影响深远。篇中以「近者奔哭于庭，远者挥涕于里」形容丧讯传出后的悲恸场景，又以「朝廷之尊四海之大，其欲有公也如弗及」抬高至国家层面。结尾「去冬余行犹倒公腿，今夏舟旋徒」记录了郭之奇亲身探病与闻讣的时间线，令人动容。本篇与第6篇（祭林棋余岳祖文）并列，反映郭之奇与<a href="#林氏家族" class="internal-link wiki-link">林氏家族</a>的深厚渊源。</p>
+<hr />
+<h2 id="祭自從叔孝廉文">祭自從叔孝廉文</h2>
+<blockquote>
+<p><strong>繫年</strong>：癸酉（1633） | <strong>體裁</strong>：祭文
+<strong>關聯人物</strong>：從叔（族叔·孝廉/舉人）
+<strong>關鍵主題</strong>：<code>#亲族</code> <code>#悼亡</code> <code>#孝廉</code> <code>#五不宜死</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>祭自從叔孝廉文 癸酉年作</p>
+<p>嗚呼○從叔直不瘉矣○叔病經年○子懷惟愰○及茲彌留○怦怦末睹○王正燕趙床頭一○撫視息奄奄○待于如繾</p>
+<p>不宜死三不可死五叔○氣驅雲英才冠軍朝國需叔死胡迫○叔義維鳳約已敦宗我家馮世叔死胡蹵叔腸披雪古道顓顓要友不忘叔死胡捨考孚閣○舊有一宜壽叔備其三而天不副刻問諸人云胡不真○後瞻前顏再與亢陳○公車四聘尤鞭一命○叔則死矣○壯心曷竟有弟先棄高堂日痊○叔則死矣○水救誰訟幽嬰青房影弔嬌嫋○叔則死矣○誰憐未亡長男未婚次男向范○叔則死矣○擎擎彼昆弱女參差策病扶</p>
+<p>爺○叔則死矣○此雙姓嗚呼○人就無死傷無叔似矧○余於叔凡廷畢比○憶昔江津庚歲茲辰○相逢命酒峽○江之瀨今來春仲花飛鳥嗚○觸地興時非人誰動把</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>呜呼！从叔竟然不治了。叔叔病了一整年，侄儿忧心如焚；及至弥留之际，心跳不安却未能亲眼目睹。床头探视，气息奄奄，情意缱绻……</p>
+<p>按理说「三不宜死、五不可死」：叔叔气概如云、英才冠于一朝，国家正需要您，为何死得如此仓促？叔叔义薄云天、敦睦宗族，我家世代交好，为何竟要承受这般蹉跌？叔叔肝胆如雪、古道热肠、要友不忘，为何忍心舍去？旧有一说「宜寿」者须备三德，叔叔三者皆备而上天不副，问天何以不真？前瞻后顾，再三陈述——公车四度征聘、犹待一命之荣：</p>
+<p>叔则死矣！壮心何以竟此？有弟先行而高堂日渐痊愈。叔则死矣！谁来申冤救难？幽幽青房中影吊孤婉。叔则死矣！谁来怜惜未亡之妻、未婚的长男、年幼的次男？叔则死矣！扶持那些弱小的兄弟姐妹、参差不齐的儿女、策杖扶病的老父？叔则死矣！两姓同哀，呜呼！人孰无死，伤心没有比叔更令人痛惜的了。</p>
+<p>我与叔叔同朝共事、出入相比。追忆往昔庚午年此时此刻，在江津峡江之滨相逢把酒；而今春仲花飞鸟鸣，触景伤情，物是人非，谁不动容？</p>
+<h3 id="题解_4">题解</h3>
+<p>本篇祭祀作者族叔，作于癸酉年（1633）。从叔为孝廉（举人），病逝于壮年。文中以「三不宜死、五不可死」的排比句式层层递进，将族叔的才华、品德、人际关系、家庭责任逐一列举，每到一处便以「叔则死矣」作为痛切的反复。「公车四聘尤鞭一命」记录从叔四度被征召却未获正式任命的遗憾。「忆昔江津庚岁兹辰，相逢命酒峡江之濑」追忆两人在庚午年于江边把酒的旧事，今昔对比格外伤感。文中「双姓呜呼」可能指两族同哀，反映郭氏与从叔家族之间的紧密联系。</p>
+<hr />
+<h2 id="祭林棋餘岳祖文">祭林棋餘岳祖文</h2>
+<blockquote>
+<p><strong>繫年</strong>：丙子（1636） | <strong>體裁</strong>：祭文
+<strong>關聯人物</strong>：<a href="#林棋餘" class="internal-link wiki-link">林棋餘</a>岳祖、先司農（林家先祖）
+<strong>關鍵主題</strong>：<code>#遗恨</code> <code>#林氏家族</code> <code>#临终无言</code> <code>#丙子</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>祭林棋餘岳祖文 丙子年作</p>
+<p>嗚呼○公不及身後一言而遂終也○公宜有所必欲言○公公不能一言而遂略也○公宜有所必欲言○</p>
+<p>終而所必欲言必宜言者○或可以意言之其以此痛公即以此慰公矣○公之疾增積于歲月浸侵于去冬纏綿于春季大漸于夏中迄弗興弗晤之日仍未了未完之喪○所以然者○先司農之厚德純忠垂於其後積於其躬○所以生也榮其死也風綿○四朝之遺展實九列之共祝時頗除於潛躍官亦艱於仕止壽扶位而始長孫配德而未償○故身前之論因歷久而益定身後之名尚有待而宜彰○在今猶臨邦家之色○</p>
+<p>不悔乎忖他○心蔬無茹倍○公生質直○行本無慝○公病濱危言不及私○公処雖客考終而華人亦有言言也○無邪行也○無顛処○死且不朽○汝悔而何処而不悔悲胡不改身雖不及○心其可待振振公姓○营志公痴若奇沉吟○力鮮從○心恫恫相救莫止○煩夏痛公莫巳○靈其來止慰公相招○靈其無遙○</p>
+<p>嗚呼哀哉 尚饗</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>呜呼！公来不及留下身后一言便就此终了。公必有想要说的话；公竟不能说一句话就这样含糊而去，公必有想要说的话啊。</p>
+<p>然而公必欲言、必宜言之事，也许可以心意相通来表达——以此痛惜公，即以此安慰公。公的病，积累于岁月、浸侵于去冬、缠绵于春季、在夏季中加剧，终至不能起身、不能相见之日，仍是未了未完之殇。这是因为先司农（林家先祖）的厚德纯忠留给后人、积累在公的身上，所以公生前荣耀、死后名声绵延。四朝遗老，实为九卿所共同祝颂；宦途虽多起伏，官位虽难止于所愿，但寿命延至长孙辈，配德之愿尚未完全偿还。因此，公身前的论定因时间而更加确定，身后的名声尚有待彰显。</p>
+<p>公生而质朴正直，行事本无邪曲。病至危殆，言不及私。虽客居他乡而考终正寝，古人也曾言：「言无邪、行无颠，死且不朽。」悔而不悔、悲而不改——身虽不及，心可有待。振振公族，营谋公志。我虽力微从之不及，但心痛相救之情莫能自止。炎夏之中痛悼公不已，愿灵魂来此安息，愿灵魂不要远离。</p>
+<p>呜呼哀哉！伏惟尚飨。</p>
+<h3 id="题解_5">题解</h3>
+<p>本篇祭祀友人<a href="#林棋餘" class="internal-link wiki-link">林棋餘</a>的岳祖，作于丙子年（1636）。全文以岳祖「临终不及一言」为贯穿线索，开篇反复咏叹其遗恨，继而以「意言」代其表达未竟之志。「先司农之厚德纯忠」点明林家先世为朝廷重臣（司农即大司农，管国家财政），其德泽延及后人。「四朝之遗展实九列之共祝」更以「四朝遗老」的高度评价林家世望。本篇与第4篇（祭林仰晋岳祖文）遥相呼应，共同构成郭之奇与林氏家族往来的完整画卷。</p>
+<hr />
+<h2 id="祭邑尉陶鴻鄉都司鄭祖紹文">祭邑尉陶鴻鄉都司鄭祖紹文</h2>
+<blockquote>
+<p><strong>繫年</strong>：崇禎十一年（1638）秋八月八日 | <strong>體裁</strong>：祭文（騷體·仿九歌國殤）
+<strong>關聯人物</strong>：邑尉<a href="#陶鴻" class="internal-link wiki-link">陶鴻</a>、鄉都司<a href="#鄭祖紹" class="internal-link wiki-link">鄭祖紹</a>、邑侯<a href="#張公" class="internal-link wiki-link">張公</a>
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>封邑、<a href="#德橋鄉" class="internal-link wiki-link">德橋鄉</a>
+<strong>關鍵主題</strong>：<code>#殉难</code> <code>#国殇</code> <code>#骚体</code> <code>#崇祯</code> <code>#流贼</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>崇禎十一年秋八月八日○流賊數百驟踐揭封邑之……</p>
+<p><strong>騷體段</strong>（z313a_l）：
+何日能舒孝子之腸○況孤踪之冥躑○嗟獨力其何輔○憂深淺其浮沉○情于上而呑吐○值輕薄之頻趨竟煩覓而自苦○及夫神昇莫治鷙抱長之病每廊廊処淚盈○願雖所言不可識而所意皆可思○思盈膝之芝蘭○瞭泉眼而絕看○思伶丁之孤寒処幽燧而末單○河之漠漠雖碾徃而寬寒○思身世之忽忽既形銷而影殘○兒此皆所謂欲言宜言之○可意而奇所謂可以意言之一端也○迺若痛公而言其所在○慰公而求其</p>
+<p><strong>敘事段</strong>（z313b_l）：
+西二十里為德橋鄉○居人保聚於寨○賊遂據而其蕩逃者呼於邑○邑候張公親督鄉勇而前○以於焚溺○而鄉都司鄭君與邑尉陶君奮勇先驅○迫寨徘与賊○常以身殉為民○嗚呼○陶不慊官○鄭既不與賊俱生○終於盡為民一死○如二君者誠可○春生其等謀布市傾艓招聚精魂而言以告之○西顯之沉碭際秋氣之蕭○渡塗乘○前虎後狼○中原餘赤○之飄猙吾間大束局西鶴○</p>
+<p><strong>騷體末段兼亂曰</strong>（z314a_l）：
+腥○水激激兮蒲革○寬魄結兮神鬼驚○日慘悸兮墓○光醒月凌蕭兮雲深生噓嗟○処其官兮処其鄉嗟○二君今全國敢將一言而寵七兮繫九歌之一章○</p>
+<p>亂曰：沉沉二君兮沂流川○蕭若雲兮共爭先○傷哉二君兮○莽原野兮天時點兮威靈怒○邑人謂二君兮胡超遠出不入○今往不反德橋之人義當祀二君兮作鄉屏身○既処兮神以靈吾上○于千載催雅陽之三百兮與二君之一攀兮其処同○瑰魄兮毅兮皆鬼雄○</p>
+<p>嗚呼哀哉 尚饗</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>崇祯十一年（1638）秋八月初八日，数百流贼骤然闯入揭阳封邑……</p>
+<p>〔骚体段〕何日才能舒展孝子之肠？况且孤踪冥行、独力无援，忧虑深浅浮沉，心事欲吐还吞。频遭轻薄之徒纠缠，心神不宁而自苦。及至精魂飞升、长病难医，每每空对走廊而泪盈满眶。愿虽言语不可辨识，而心意皆可体会。思念那满膝芝兰之子，遥望泉下而再不可见；思念伶仃孤寒者，处于幽暗之中而未必孤单；思念身世之忽忽，形销影残。这些都是「欲言宜言」、「可以意言」之一端。若是痛悼公而说其所在，安慰公而寻其所归——</p>
+<p>〔叙事段〕揭阳西二十里为德桥乡，居民聚保于寨中。贼据寨而焚荡，逃出者呼救于邑城。邑侯张公亲自督率乡勇前往，以火攻水淹之法抵御。而乡都司郑君与邑尉陶君奋勇先驱，逼近贼寨搏战，终以身殉、为民而死。呜呼！陶君不以小官为嫌，郑君既不与贼俱生——二君终于为民尽了一死。如此壮烈之人，实在可敬！谨招聚英灵精魂而告之：西风萧瑟之际、秋气肃杀之时，前有虎、后有狼，中原赤地千里……</p>
+<p>〔骚体末段〕腥风血雨，水流激荡！壮魄凝结而神鬼为之震惊！日色惨淡、月光凄寒、云深雾生——二君啊，守其官、守其乡，今日为全国而壮烈，敢以一言颂扬之，系于《九歌》之一章！</p>
+<p><strong>乱曰</strong>：沉沉二君兮上溯流川，萧若浮云兮共争先。伤哉二君兮！莽莽原野，天时将变，威灵震怒。邑人说二君何以远征不归？如今去而不返，德桥之人当义祀二君以为乡里屏障。身既殉国，神灵在上，千载之后与揭阳三百年英魂同在——瑰丽壮魄，刚毅不屈，皆为鬼雄！</p>
+<p>呜呼哀哉！伏惟尚飨。</p>
+<h3 id="题解_6">题解</h3>
+<p>本篇以<a href="#楚辞" class="internal-link wiki-link">楚辞</a>《九歌·国殇》为体例，祭祀崇祯十一年（1638）八月初八在德桥乡抵御流贼时殉难的两位地方官员——邑尉<a href="#陶鴻" class="internal-link wiki-link">陶鴻</a>和乡都司<a href="#鄭祖紹" class="internal-link wiki-link">鄭祖紹</a>。全文采用骚体句式（兮字句），以「乱曰」作结，明确表示有意接续屈原《九歌》传统。叙事段交代了事件始末：流贼数百攻入揭阳封邑德桥乡，邑侯张公亲督乡勇，陶、郑二君奋勇先驱，迫近贼寨搏战而殉难。「一言而宠七兮系九歌之一章」点明本篇的文学自觉——以楚辞国殇的崇高体裁来纪念地方上的小官殉难，赋予其不朽的精神意义。结句「瑰魄兮毅兮皆鬼雄」化用屈原「身既死兮神以灵，子魂魄兮为鬼雄」，与国殇主题遥相呼应。</p>
+<hr />
+<h2 id="祭宋熙文文">祭宋熙文文</h2>
+<blockquote>
+<p><strong>繫年</strong>：不詳 | <strong>體裁</strong>：祭文
+<strong>關聯人物</strong>：<a href="#宋熙文" class="internal-link wiki-link">宋熙文</a>（鄉紳/隱士）
+<strong>關鍵主題</strong>：<code>#隐逸</code> <code>#进退</code> <code>#宋氏家族</code> <code>#知足</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>秋颷初迎逢失先生鄉落而無友生闃帳而私自憐○自先生之亡此茂與稱士年之友物外之朋也世曾○布六七十翁足未嘗覆市○井身未嘗握郡邑吏遊傲○嫠歲如小兒狀然身逸子賢罄滿眾○口可不謂榮焉○喈嘻○先生其摶情性之表○知進退之鴣與時推移有得於道而自樂其樂者乎○方其下帷課督三年不履</p>
+<p>圜舍先生日吾以訓子征為樂○過此未能营惟○亦不暇及夫嶔渡魠成梅賦爭○綺猾子扶搖於諸嗣汗血千里○當是時也盅無膏腴○我棄人於無錐刀○人竟我進○先生日吾以訓子往為樂不存○惟其不存○故所務棋酒為樂○外此則所樂不存○故所分噓嗟○先生少而能勤○老而能息○無諾無驕日逆可謂性不屬而情無颇○進觀生而退得我今之人為今之俗紛紛離都有求無足或盛氣者</p>
+<p>亞而目毒蕙交加○心勞世促○之樂其樂○先生存而樂與人同也○先生沒而去所樂以歸也○安能不感蕭琴搖落○氣為予心之憶悲</p>
+<p>〔尾段待精校〕</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>秋风初起，遽然失去先生。乡里寂寞而无友，生涯空寂而私自悲怜。自先生亡故，这些年所称颂的士人之友、物外之朋，都已消逝了。先生年已六七十，足不曾踏入市集，身不曾结交郡邑官吏，傲然自处。虽然年迈如孩童般简朴，却身心安逸、子孙贤达，众口一辞称其为荣。嗟呼！先生大概是那种能体悟情性之本真、知进退之时宜、随时推移而有得于道、自乐其乐的人吧。</p>
+<p>当他闭门课督子弟、三年不出时，先生说：「我以教训儿子、培养后人为乐，此外无所营谋，也无暇他顾。」等到儿子们出类拔萃、汗血千里之时，先生已无膏腴之求、无锥刀之利——人弃我取，人竞我退。先生说：「我以教训儿子为乐，往事不复存在；既然不复存在，所务者唯棋酒为乐，此外则无所乐。」先生少时能勤，老而能息；无诺无骄，性不偏颇而情无倾斜。</p>
+<p>反观当今之人、当今之俗：纷纷离乡赴都，有求而无足，或盛气凌人而心劳于世。先生在世时乐与人同，先生去世后带着他的快乐归去了。怎能不感伤这萧瑟琴声、摇落秋景？悲气充盈，为我心中永远的追忆。</p>
+<h3 id="题解_7">题解</h3>
+<p>本篇祭祀<a href="#宋熙文" class="internal-link wiki-link">宋熙文</a>先生。宋氏为郭之奇主要社交圈之一（同卷有祭宋绳坊文、宋绳勖墓志铭）。先生年七八十岁高龄，一生不入市集、不交官吏，以教子为乐、以棋酒为友，是典型的明代乡绅隐逸形象。文中以「知进退之时与时推移有得于道而自乐其乐」概括先生品格，又以「少而能勤，老而能息；无诺无骄」作为人格总结。结尾将先生的淡泊与当今之人的纷竞作对比，感慨世风日下。全篇以「秋风」起兴、以「萧琴摇落」收束，情景交融，是一篇精致的悼念散文。</p>
+<hr />
+<h2 id="宋繩勖封官墓誌銘">宋繩勖封官墓誌銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：墓誌銘（長篇） | <strong>主角</strong>：<a href="#宋繩勖" class="internal-link wiki-link">宋繩勖</a>（名彌勤，字志彥，號繩勖）
+<strong>卒年</strong>：崇禎庚午（1630）七月 | <strong>葬</strong>：癸酉（1633）春三月
+<strong>關聯人物</strong>：兆諭（長子·進士）、兆裕（次子）、家大人（郭之奇之父）
+<strong>關鍵主題</strong>：<code>#墓志铭</code> <code>#宋氏家族</code> <code>#姻亲</code> <code>#五柳先生</code> <code>#封官</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>墓誌銘（節標題）</p>
+<p>宋繩勖封官墓誌銘</p>
+<blockquote>
+<p>注：人名確認為<strong>宋繩勖</strong>（名彌勤，字志彥，號繩勖），非宋繩昌——2026-03-19視覺訂正。</p>
+</blockquote>
+<p>宋繩勖考終正寢于崇禎庚午之秋七月以殁○酉春三月[葬]○兆輪手公行實淥請銘墓○余自惟與公於姻親則奉晉之好○於年簿則子住之謎○於累世交謀則家大人</p>
+<p>於公余於公長公莫逆欒期俱間出尋常形迹之表○志墓之辭其敢以不敏謝○且余之於公既若斯則其所以鈴公者非余言世人之知公者亦必若斯○余既銘公若斯則世人之知公者亦以為必若斯始可以銘公也○余既不至汙所以好阿於公又安可不求一言以有當於公</p>
+<p>按狀○公謹法翼原名彌勤字志彥號繩勖○其先世派自邢州縣廣平之莆縣而來揭者為將仕公八傳為清逸公○上築鳳圜次子筆山公○再傳至佰文○公即公父也○公兄弟三人○居伯生而垂髫能日記數千言○天性長而慷慨與人多率直○遇事義不忘孝友于</p>
+<p>公素放曠不等事家人庄○緣是資業日淡夷然○為意縱情詩酒垣屋再颳于本子業亦厭棄不經○途旁及醫天文地理諸家言皆有所得○而不欲以精術見○花晨月下每愁坐客不滿樽酒易空○而故客以之視一二刺輒不取平為友交父要○於鄉始以衣巾告喪孺人吳氏班衣庭舞菽水立○事督學使者三十年如遊戲○戊午秋闈公長公傳青</p>
+<p>蒿如也○為孝廉翁十年未嘗一問邑中珂屠事以故食貧如故○間遇客至不得供○不慣典衣而取醉滋益○留心古人風雅管詩磨睐常○一避海寇入城就余○宿夜坐取唐人十二家詩摘一二語叩之輒能誦其首尾○自是復多及河雜六王有秘軼遜甲子歲猶人○逐常坐事戊辰之撻○長公第南官成進士公盆留持清操○為邑人先與家大人約其小所知友結社會日顧珍相與砥礪德行○行古之道挽維頹風維</p>
+<p>十有三縣生崇禎一年九月奉封文林郎江西建昌府建昌縣知縣○淑配黃氏○生後公四月而故○男二長男即進士君兆諭次男兆裕○女四○孫六以可壯者長兆裕出次兆諭出○益未有艾○殁夫胎穗之休○世得見直道而行棄雅不群為不壽○而人猶謂進士君生...</p>
+<p>時長公得假省觀訓○甲數知令宰趣庭告語惟是淡泊寧靜牧民勵治為諄諄○比長公謀選得廣昌○所郵書若詩訓戒不少○輕故長公落治未恭痛縑刀○擼摩馴服頻起周疲而依化○訓政成如斯其速○邑人今已尊祀之則省公之教也</p>
+<p>龍飛覃恩長公○得此典捧章草服以將而不詞○公已厭絕塵世去矣○易筆之日傾蕪至不能辦後事○知與不知咸皆嗟嘆○至有淚下者○公生于某年某月某日某時卒得年六[十餘]</p>
+<p>何奉之若斯其速○余以為公之所有盡者身也○宛如當前嘗試方諸古人惟性曾五柳先生來帶風○每一憑則高尚招而輒折腰○讀書不求難字○無酒每愁菊開醉眠○如相矚如類相招而○進而以子貴封廣昌令○令名位亦署相等○總之難○退多直少○阿皆隱若子之卓然可風者也</p>
+<p><strong>銘曰</strong>：</p>
+<p>之逸民○今之直道○以古期今○直矻為導信於所知不知謂傲○行歌白雲盃酒自勞天試之窮○公從所好処柒無休○迺徵其操云○胡棄人歸真友造我銘我藏表○茲相告水長山高清風時到○百年有興三代之號誰獨慶流日公之報</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>宋繩勖于崇祯庚午年（1630）秋七月考终正寝，翌年癸酉春三月下葬。其子兆论持其行实前来请铭。我自忖与公之间：论姻亲，则有奉晋之好；论年辈，则如子侄之谊；论世交，则与家父……</p>
+<p>我与公及公之长子为莫逆之交，超出寻常交往之外。墓志之辞，岂敢以不敏推辞？况且我与公既如此深交，那么铭述公之人非我莫属——世人之知公者，也必以为非如此交情不足以铭之。我既不至于谄媚阿谀，又怎能不求一言以有当于公呢？</p>
+<p><strong>按其行状</strong>：公讳法翼，原名弥勤，字志彦，号绳勖。其先世出自邢州广平莆县，迁至揭阳者为将仕公，八传为清逸公，上筑凤园，次子笔山公，再传至佰文——即公之父。公兄弟三人，居长。幼时垂髫即能日记数千言，天性慷慨率直，遇事尚义不忘孝友。</p>
+<p>公素来放旷，不拘于家事庄务，因此资产日渐淡薄，夷然不以为意。纵情诗酒，本业虽荒废也不在意。旁及医术、天文、地理诸家学说，皆有所得，而不愿以精术显名。花晨月下，常愁座客不满、樽酒易空。为友交往看重真诚，于乡里以衣巾守礼。侍奉督学使者三十年如游戏般洒脱。戊午秋闱，长子传青……</p>
+<p>为孝廉翁十年，不曾过问邑中俗务，因此安贫如故。偶有客至却无以款待，便典衣换酒，更加沉浸于古人风雅。留心诗学，一次避海寇入城住在我处，夜坐取唐人十二家诗，随意摘一二语，便能诵其首尾——由此可见其博学强记。长子得中进士，公犹持清操，与家父及几位知交结社砥砺德行、行古道以挽颓风。</p>
+<p>崇祯元年九月奉封文林郎、江西建昌府建昌县知县。配黄氏，先公四月而故。男二：长子兆谕（即进士君），次子兆裕。女四。孙六。</p>
+<p>长子得假归省时，公叮嘱唯以「淡泊宁静、牧民励治」为谆谆之训。长子谋选得广昌县令，公所寄书信、诗篇训诫不少。长子治政卓有成效，邑人尊祀之，这都是公教化之功。</p>
+<p>龙飞覃恩，长子得典捧章服以将。而公已厌绝尘世而去。辞世之日，事务纷繁以至不能料理后事，知与不知皆嗟叹流泪。</p>
+<p>我以为公所尽者身也，方之古人——其性情恰如五柳先生：高尚不肯折腰，读书不求甚解，无酒每愁、菊开醉眠。进而以子贵封广昌令，名位亦大致相当。总之退多进少，隐多显少，其子之卓然可风者，皆公之教也。</p>
+<p><strong>铭曰</strong>：古之逸民，今之直道，以古期今，直道为导。信于所知，不知者谓傲。行歌白云，杯酒自劳。天试之穷，公从所好。征其操守：弃人归真，友造我铭。水长山高，清风时到。百年兴起，三代之名——谁独庆此？是公之报也。</p>
+<h3 id="题解_8">题解</h3>
+<p>本篇为郭之奇为姻亲<a href="#宋繩勖" class="internal-link wiki-link">宋繩勖</a>所作的墓志铭，是卷27中篇幅最长的作品。宋繩勖（名弥勤，字志彦，号绳勖），崇祯庚午年（1630）七月逝世。其先世由邢州广平迁至揭阳，经八代传承。公性情放旷，纵情诗酒，博涉医术、天文、地理而不求闻达。文中以晋代<a href="#陶渊明" class="internal-link wiki-link">陶渊明</a>（五柳先生）为比——「高尚不肯折腰，读书不求难字，无酒每愁菊开醉眠」——赞其高蹈自守。长子兆谕中进士、治广昌有政声，皆归功于公之教诲。铭文以「古之逸民，今之直道」定评，「水长山高，清风时到」为全篇画龙点睛之句。本篇同时是了解揭阳宋氏家族世系的重要文献。</p>
+<hr />
+<h2 id="江女墓誌">江女墓誌</h2>
+<blockquote>
+<p><strong>繫年</strong>：丁丑（1637） | <strong>體裁</strong>：墓誌（短篇）
+<strong>關聯人物</strong>：江女（<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>親女·夭折234日）
+<strong>關聯地點</strong>：<a href="#江都" class="internal-link wiki-link">江都</a>（揚州）萬安舟、<a href="#岐山" class="internal-link wiki-link">岐山</a>蓮峰寺
+<strong>關鍵主題</strong>：<code>#悼女</code> <code>#夭折</code> <code>#父爱</code> <code>#佛教超度</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>江女墓誌 丁丑年作</p>
+<p>月之夠女耶○八月之中○余方笑笑靡至未能拊汝顏○汝於朝々也屈指幾何○余甫性都而汝病余前聞汝病○而汝処失噓嗡是耶非耶○急歸視汝不見汝之嗡笑○就懷而見汝之処睥偍也○能不痛癖能不痛癖嗡○汝生於丙子季冬廿六之夜○卒於丁丑孟秋廿五之晨○其在世僅二百三十○有四日○其病不先不後余外出不及五日而汝逝○噓噓有壽耶無壽耶○余實使之○誰與汝之難若彼誰奪汝之速若此耶</p>
+<p>江都萬安舟次○故名汝以江女○令藏汝于岐山蓮峰寺之嚴側○謹齋僧誦金剛經○而言以告之○曰哀哉汝○年蚺蚺其然○殀壽彭○天胡不勝○汝生胡來○汝死胡○旋痠寬漠漠安知○我嗾傷心尺土○依佛教邊水超塵○胡作汝真緣</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>八月之中，我还满面笑容地赶来，不及抚摸你的脸庞。你啊，屈指算来才多少日子？我刚从外地归来，听闻你病了——你在那里失去了笑声，是真的吗？急忙赶回来看你，却再看不到你的咿呀嬉笑，只见你在怀中已经面目呆滞。怎能不心痛，怎能不心痛啊！</p>
+<p>你生于丙子年（1636）季冬二十六日之夜，卒于丁丑年（1637）孟秋二十五日之晨，在世仅仅二百三十四天。你的病不早不晚，恰恰在我外出不到五天时你就走了。唉，有寿命吗？没有寿命吗？实在是我害了你。谁给了你如此多的苦难？谁又如此迅速地夺走了你？</p>
+<p>你在江都（扬州）万安船上出生，所以取名「江女」。如今将你安葬在岐山莲峰寺旁边，恭请僧人诵《金刚经》超度，并以此言告慰你：</p>
+<p>哀哉你啊，年纪蚺蚺（蹒跚幼小）。殇寿与彭祖相比，天道何以不公？你从何处来，又向何处归？浩渺茫茫谁能知晓？我伤心地以尺土掩埋你，依佛教水边超度尘世——愿此为你的真正因缘。</p>
+<h3 id="题解_9">题解</h3>
+<p>本篇是明代士大夫为夭折幼女所作的极为罕见的真情文字。江女为<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>之女，因在江都（扬州）万安船上出生而得名。生于丙子年（1636）季冬二十六日，卒于丁丑年（1637）孟秋二十五日，在世仅234天。文中最令人动容的细节是：父亲外出不到五天，女儿便已夭折——「急归视汝不见汝之嗡笑」一句，从满心期待到惊见噩耗的落差，尽在「嗡笑」二字之中。「能不痛癖能不痛癖」的反复呼喊，是一个父亲最本真的悲恸。「余实使之」更有深深的自责——认为是自己的外出导致了女儿之死。逝后葬于岐山莲峰寺侧，请僧诵《金刚经》超度，体现了郭之奇对佛教的信仰（与本卷第2篇「遘和尚墓祭文」的禅思主题一脉相承）。在明代文学中，士大夫为幼女作墓志的例子极少，本篇因此具有特殊的文献价值和情感力量。</p>
+<hr />
+<h2 id="庠生鄉寶靜湖公行略">庠生鄉寶靜湖公行略</h2>
+<blockquote>
+<p><strong>繫年</strong>：戊寅（1638）前後代作 | <strong>體裁</strong>：行略
+<strong>關聯人物</strong>：靜湖公（庠生·字鄉寶·號靜湖）、封儀部大人（其子）
+<strong>關鍵主題</strong>：<code>#行略</code> <code>#积德</code> <code>#家风</code> <code>#庠生</code> <code>#揭阳</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>庠生鄉寶靜湖公行略 戊寅年代作</p>
+<p>先君子之寶慈寶倫○寶不為人○先以守無名之璞者○盆六十八年如一日○今沒淪三紀○既百年而先君子</p>
+<p>之名酒盆彰於邑人之口裨云○不孝應試弱顴○終鮮兄弟實構多難嗟嗟而睡...越二十餘年牆户初定式克至今治宜九○以藏先君子鋤草歌藜收淚為狀果仁人君子之名於茲日也其在○隱於應試以不慣先君子</p>
+<p>元亨公縣海陽遷居揭邑○子三人長為剛直公謹善三傳至先君子定居東門中○其在斯子先君子謹明作字朝臾號靜湖四世相傳</p>
+<p>治舉子業屢試弗售○迤概然自矢日吾三世至揭未有以儒顯者○揣審附丘舍本治未計之倒也○於是下帷攻苦每持斗米入山經旬迤返○年五十始為諸生○日月逾征風雲卒阻○顏力學不已○喜人為學亦不已○漳泉之學者擁篋至揭○轍分席與之○詔安進士林公而興當未遇時館穀於家○如已出為其獎拔士類皆如所鑑○其自欲折頤以禪貌升雲者眾失先君子○既不獲志於諸生念門祚單薄觀侮不少○盆幅然太</p>
+<p>茂庭蓬乗華迴然不攻日○吾約于已而始能豐○歲之德也○以是推吾宗其親而貧疏而賢者與食○以是推吾宗聯蔭學之屬各飽所欲○窮以是推吾鄉守望相救○急之義遺吾後而已○盆終先君子之身未嘗以俗氣及人之言○自虛処未嘗以俗氣接物○時有益有時○道開子孫人之言日種德畜養不見其益有時</p>
+<p>息日福根禍門○老且稔之○吾蓋吾行以垂吾家畫吾○徹以接吾人橫逆自及盅不訓乎○唾而自乾古之人不有行之者乎○故其言呐呐然如不出諸其口其中○退然如不勝衣○雖所持人亦化之不較之犯或有○屢門謝者既乃專志於堪輿之術其自勵直公南峰○公衆柯氏皆先君子手封坐域于今人楠吉兆間以○其餘力治産業誠一所致亦幾素封非關智爭時也○苟合苟美如古人之所謂善居室者而已然衣羽進</p>
+<p>積德累行不知其善有時而用○靜湖君雖懷琬[...]○宛在堂座其後必有連者○今仲孫既成進士讀○典禮長亦厠鳳池○諸孫若曾孫遊泮者四○以成先君子所樹未竟之志○若迺幾日督以繼紹聞德言懿行○不彰顯先君子之名大為是以○摭略故事整齊生平○益歲久時埋無遺美稱○甚蓋著光於名公不朽之鉅筆以誌</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>先君子以慈爱为宝、以伦常为宝，不以世俗之物为宝，先以守持无名之璞玉的品格，六十八年如一日。如今逝世已过三纪（三十余年），将近百年，而先君子之名声在邑人口中更加彰显。</p>
+<p>不孝子应试时尚年少体弱，终鲜兄弟、实在多难。历经二十余年才初步安定门户。如今为先君子锄草除莱、收泪为状，仁人君子之名至今犹在。</p>
+<p>世系：元亨公由海阳县迁居揭邑，子三人，长子为刚直公，三传至先君子，定居东门中。先君子讳谨明，字朝臾，号静湖，四世相传。</p>
+<p>先君子治举子业，屡试不售。于是慨然自誓说：「我家三世至揭，未有以儒学显达者。」便下帷苦读，每次携一斗米入山，经旬始返。年五十始为诸生。虽日月流逝、风云阻隔、科场不遂，但勤学不已，也乐于奖掖后学。漳泉之学者千里来揭求学，先君子必分席以待；诏安进士林公未遇时，先君子馆谷于家，视如己出，所奖拔之士类皆不负所鉴。</p>
+<p>先君子既不获志于科场，又念及门祚单薄，便幡然回首说：「我自约于己而始能丰。」于是推及宗族中亲而贫、疏而贤者皆与之共食；推及宗族中读书求学者各饱所欲；推及乡里守望相救之义。终先君子之身，未尝以俗气示人、以俗气接物。人们说：「种德蓄养，不见其益，有时而用。」</p>
+<p>先君子常说：「福根祸门，老来深谙。我当以行为垂范家门，以坦诚接待世人。横逆之来，唾面自干——古人不也有这样做的吗？」所以先君子言语讷讷，仿佛说不出口；举止谦退，仿佛不胜衣。所持之人亦为之感化，冒犯者多次登门谢罪。晚年专志堪舆之术（风水学），亲手为数处墓域择定吉地。其余力治理家产，诚实致富而几近素封（不靠官位的富裕），并非凭借智巧或投机。如古人所说「善居室者」而已。</p>
+<p>积德累行，不知其善有时而用。静湖君虽怀璞玉之质……宛在堂（郭之奇书斋名）之后必有继承者。如今仲孙已成进士，典礼长亦位列凤池；诸孙及曾孙游学于泮者（入县学者）有四人，终于完成了先君子未竟之志。为了不让先君子的德言懿行湮没无闻，故撮略故事、整齐生平，期望百世之后仍有美名流传——借名公不朽之巨笔以志之。</p>
+<h3 id="题解_10">题解</h3>
+<p>本篇为郭之奇代人所作的行略（生平简述），主角为庠生静湖公（字乡宝，号静湖），其子封仪部大人。文中记述了一个揭阳地方望族四世传承的故事：自元亨公由海阳迁揭，历刚直公等三代，至静湖公定居东门。静湖公屡试不售，年五十始为诸生，此后弃科举而转向教育后学、治理家产、行善济人。「持斗米入山，经旬始返」写其苦读之状；「终先君子之身，未尝以俗气示人」总结其人格；「唾面自干」引古语以明其忍让之德。结尾「仲孙既成进士」呼应了全文「三世至揭未有以儒显者」的开篇，形成完整的家族奋斗叙事弧线。</p>
+<hr />
+<h2 id="先母太安人徵齊林氏行略">先母太安人徵齊林氏行略</h2>
+<blockquote>
+<p><strong>體裁</strong>：行略（長篇·本卷最珍貴文獻）
+<strong>關聯人物</strong>：太安人<a href="#林氏" class="internal-link wiki-link">林氏</a>（郭之奇之母）、家大人（郭之奇之父）、用章（郭之奇之兄）
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>
+<strong>關鍵主題</strong>：<code>#孝思</code> <code>#家族史</code> <code>#母德</code> <code>#风木之痛</code> <code>#仕途与家庭</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>先母太安人徵齊林氏行略</p>
+<p>不孝用章之奇、奔跳而南、□□何待○入則靡至墓妨○彿音容庭燎中夜○迩思母德○輓相對泣下者數○而不能竟語○噍夫○風木之痛○畢此生矣○惟是幽微未□○負母於生○忍復負母於死○是以破淚□管○狀母德之薀○而待□述而難□者○以乃仁人君子之来言于不志也○</p>
+<p>遡太安人之歸家大人○年十五耳○即已仕為人○婧○婧金○蒡藿酒食○井臼□○如也○先大父賦性謹約○母身為□作○供內職○惟勤○如大父○心年十七○産第○一女嫁○大母見背二十一○一産不孝用章○未産之前五○</p>
+<p>〔月〕先大父見背○相家大人當二大事○□□無遺帳維○時門祚單薄○凶海延□○家大人弱齡○□□東北□○實煩有徒○既免喪與家大人謀○曰人之耽耽利我餘也○邊緣微急富者輸材○不稍有上式○故事乎○於是家大人扶策人都輸為郎○得州貳守○母持家益獨當其難○</p>
+<p>矣○二十二○三産不孝之奇○既而家大人守選入都○用章之奇巳就小學○課嬛督念○益機杼○紡績與□能相終○始家大人歸視○母督不孝等學○颇有緒○是絕意仕進○惟患不孝等之業不能精○而行不能成也○母年三十七○産之奇○</p>
+<p>及丁卯○之奇舉于鄉○戊辰聯捷成進士○選翰林院庶吉士○母益四十也○以恩○家大人與母皆給封○是年産之□○其明年之奇得言歸觀○視母所以相家大人者○</p>
+<p>家大人於人倫厚○與人○忠○母○體以教□○家大人好行仁義○周急□因○母助○以解推家大人○泊于自奉○淡聲華○少嗜欲○而母能棲○約食勤益○非獨琴瑟靜好也○其相濟良多○視母所以自治治家者○則荊布蔬素○如故○明而動□而休○無日以息○</p>
+<p>如故門以內○有嗑嗑○無嘻嘻○故男女效績朝夕○處事諸弟妹倍其業○諸子婦忸其家○而後郎安數十○百指周○不□□○若夫歲時伏臘○酒漿饋遺恩意周治○及於妯娌○及於宗屬○及於儕里○下及藏獲○人不聞於</p>
+<p>其言○内則之師○週年以来○巳之漸而化者○户得而指○</p>
+<p>又四年○歲癸酉○之奇以假□○滿趨○□○用章俱北○上行○之奇散館得奉曹間○報○□然○日○兒之行志而不能○于時也○吾□也○雖母以○彼易此○是歲家大人晉承德郎○母為太安人○用章亦援例加勳○署明年○</p>
+<p>甲戌之奇奉○□□便道歸省○是歲母已病○□□既至病亦稍起○使命而行○</p>
+<p>丙子春○用章亦此趨抵都○與之奇作歸計○亡何虜迫近○</p>
+<p>中外族哭于家○鄉間之貴賤近遠○全誌之日徽□林太安人受太安人○哭搶地顧百其身○贈太安人之母○也哭以是重為母傷○逹母生平所以母○辛○當大事於門○喪祭薄之以是以○推諸子之所當盡者○[聸?]任溫恭且惠者○母有為親疏上</p>
+<p>縈○私情終抑○初秋用章抵任○中翰之奇于役中土初冬○命諒所以歸省○而凶計已至○</p>
+<p>母年五十有二耳○母卒于初秋○一切欲奔省而省盡以○累封大人呼號○蹣跚惟黏諸弟妹耳○不孝等既蹉歸○家大人撫而哭○</p>
+<p>嗟夫○日○自而母之逝也○余茫與孟而家大人不孝二人○何以為人子哉○</p>
+<p>太安人産男子八人○成人者四○女子七人成人者三○母有至性諸弟妹多不育○傷心珎珎○殆無虛歲○終其身○中外族附之上下人宜之沒之日○</p>
+<p>若□嫠○毋亦中年而寡○身具而寒○而子之仱丁孤若○以及于成立○也○而子之力居多為十五而嫁○每大父之日淺為恨○故事今之[陳]大○失配○相依者十餘載○力持向○至於家事雜逄必射必親○以勞○倚問有望○以思而傷其心○母勞而不孝等不能合○母德所遺</p>
+<p>摟管○益流然欲絕者再○以幾見哀於○錫類者之一○言則不孝等倉息鳥視○可勝閉越祈禱之至○</p>
+<p>先慈行略○既與伯氏破淚同紀念○不孝負母最深哀○張腹心有懷未寫○中道而號○固已失其常聲終于罔○極矣先慈一十三生○不孝生而不接他人乳母○嗻而自乳之五歲病病幾死○不能茹苦藥○母朝夕不食于是不孝強茹藥○以活不死○十五病疹不能食母</p>
+<p>今而蘭玉相將○二十年之風雨漂○二十年之人情世態○江河不返○今從諸人士之後○若夫鮮怒胝人高耳○提戒之後惟耳提則身先之日夕○變修以不隆也○不孝奉所入棒日○學粗助膠庠○值歲歉則助封大人棒○樵積以倆不能存活者○其救人之外族居隔里○鄉黨莫不稱所謂郭[之]</p>
+<p>亦不食于是不孝強食以活不死○十九病[憊?]轉側需人者數月○母書夜調護以活不死○嗟夫母之生不孝○豈獨強圓協治庚辰吾降之日哉○其自槁抱至成人○一衣一履○皆母手緘手紉○自小學至登賢書篝燈督○課刀尺昿聲相間也○不孝已成進士○母始一破顏○日不貞在之所期於此兒也○既而選讀中秘○遊子方復增倚間之望矣夫○其明年得○青歸觀○班衣在○胝而後茲可知也○顧母所喜者二十年之形影相弔</p>
+<p>滿○將奉母比趙而藹于弟妹婚嫁○而弟而此也○而弟之邀于天也○早其視而弟之不足者○而謖之○天也及罟○其知子固莫母若矣○其明年奉○道歸省○而母已病奄奄床褥間○執湯藥既數月粗復○其明年三月迫依依○蓋有大不忍割者○嗟夫不謂○絕手中線也○不孝行數月○而母病</p>
+<p>謁伯氏曰○而其與而弟謀所以歸也○明年春伯氏抵○都傳毋謠○相對法然曰○方寸亂矣○維時太宗伯少宗○伯為吾鄉○黃陳二先生不孝乙代之○詞五上而宗伯以貢丈在館○一則日○勉柳子情靖供臣職○再則日○柔防重任○救水難卸○少宗伯憐之○顛不孝思吾母因念茍母○其鋸勉蹙事○徐為子歸計也○嗟夫吾二先生錫類之仁○裁成之義○言猶在耳○感登忘心亡○何而廬薄近○[慈親]不在側○烏鳥之情何敢達于至</p>
+<p>笇既而于役中土○試事已竣○目險抵都○速圓歸計夫何日而凶計已閒○嗟夫母卒于初秋○子閒于初冬萬里精魂○死生間絕不孝何以為人子哉○匍匐而南辯蹈稍定○則封大人語不孝以太安人之衣衾楺梲無遺恨○一姐二弟三妹語不孝以彌留之前其奉奉思遠之言大漸之際其依依待睞○嗟夫不孝何以為人子茲湧興未奉○溫祁終絕傷心○林鳥求泣○樹風嗚呼不孝終何能湔死跡○母生平備三十載之瞿瞿○</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>先母太安人林氏行略。</p>
+<p>不孝子用章、之奇，奔波南下，有何颜面？入则无以至墓前致祭，恍惚中仿佛见到母亲音容，庭前灯火映照半夜，近而思母之德，挽手相对而泣下数行，却不能说完一句话。嗟乎！风木之痛（树欲静而风不止，子欲养而亲不待），此生难以释怀。只因幽微之处尚未表明，生前已负母恩，忍心在死后再辜负母亲吗？所以含泪执笔，叙述母亲的德行蕴藉，而有待仁人君子来为之不朽。</p>
+<p><strong>母亲嫁入郭家时年仅十五岁</strong>，即已操持家务。先祖父性情谨严俭约，母亲亲身劳作，供内职唯勤。十七岁生第一女，嫁后祖母见背（去世）。二十一岁生不孝用章（长兄）。</p>
+<p>未及生产之前五个月，先祖父便已去世。母亲辅佐父亲料理两桩大事（丧葬与生产），家门单薄，忧患频仍。父亲年少力弱，母亲与父亲商议说：「人人觊觎我家余产，若不稍加振作，何以维持？」于是父亲赴京谋官，得州贰守（州佐），<strong>母亲独力持家，益加艰难</strong>。</p>
+<p><strong>二十二岁时三生不孝之奇</strong>（即郭之奇本人）。此后父亲入京守选，用章和之奇已入小学。母亲课督念书，兼营机杼纺绩。等父亲归来视察，见母亲督促学业颇有条理，于是绝意仕进，唯忧子女学业不精、品行不成。<strong>母年三十七生之奇</strong>。</p>
+<p><strong>及丁卯年（1627），之奇举于乡（中举）；戊辰年（1628）联捷成进士，选翰林院庶吉士</strong>。母亲时年约四十。以恩荫，父亲与母亲皆获封诰。翌年之奇得归省亲。</p>
+<p>母亲辅佐父亲之德：父亲于人伦厚道、待人忠信，母亲以身教相配；父亲好行仁义、周急济困，母亲助之推行；父亲淡泊自奉、少嗜欲，而母亲能安于约食勤俭——非独琴瑟静好，其相济之功良多。母亲自治治家：荆布蔬素如故，黎明而动、日暮而息，无一日休歇。门以内有谆谆教导，无嬉笑荒嬉，男女朝夕效力，弟妹倍加其业，子媳安于其家，百余指口周全供给。</p>
+<p>岁时伏腊，酒浆馈遗恩意周到——及于妯娌，及于宗属，及于乡里，下及仆从——人不闻其苛责之言。真可谓内则之师。</p>
+<p>又四年，癸酉（1633）岁，之奇假满趋朝，用章亦北上。之奇散馆后得授奉曹间（礼部或吏部官员）。<strong>是岁父亲晋承德郎，母为太安人</strong>，用章亦加勋。甲戌年（1634）之奇便道归省，<strong>是岁母已病</strong>，既至病稍起，又奉命而行。</p>
+<p><strong>丙子年（1636）春</strong>，用章亦抵京都，与之奇商议归省之计——<strong>不料敌寇逼近</strong>（清军入关之患）。</p>
+<p>母亲年仅五十二岁。<strong>母卒于初秋</strong>。一切想要赶回探省的计划都已来不及，只有父亲呼号蹒跚，唯有弟妹在侧。不孝等错过归期回来后，父亲抚我而哭。</p>
+<p>嗟乎！自母亲去世之日起，我与父亲二人，何以为人子哉？</p>
+<p><strong>太安人生男子八人，成人者四；女子七人，成人者三</strong>。母亲至性深情，诸弟妹多不育（夭折），伤心切切，几乎无虚岁。终其身，中外亲族依附、上下人等称宜。</p>
+<p>〔追忆段〕先慈行略，既与兄长用章含泪同纪。不孝负母最深。先慈十三次生产，不孝自出生便不接受他人乳母哺育，母亲亲自哺乳。<strong>五岁时几乎病死</strong>，不能吞服苦药，母亲朝夕不食——于是不孝强行吞药而活。<strong>十五岁出疹不能进食</strong>，母亲亦不食——不孝强食而活。<strong>十九岁病疲</strong>，翻身需人扶持数月，母亲日夜调护——不孝又活。嗟乎！母亲生不孝，岂独庚辰降生之日？从襁褓到成人，一衣一履皆母亲手缝手纫；从小学到登贤书（中举人），篝灯督课、刀尺（缝纫）声与读书声相间。</p>
+<p><strong>不孝已成进士，母亲才第一次露出笑容</strong>，说：「我所期望于这个孩子的，不过如此。」继而选入翰林读中秘书，游子方行，倚闾之望更增。翌年归省，班衣（彩衣娱亲）在堂。母亲所喜者，二十年形影相吊之苦终有回报。</p>
+<p>后来归省时，<strong>母亲已病卧床褥</strong>，亲执汤药数月方稍复。翌年三月依依惜别——盖有大不忍割者。嗟乎！不料这竟是「游子身上衣，慈母手中线」的最后一别。不孝行数月，而母亲便已……</p>
+<p>兄长说：「你该与弟弟商议归家之计。」翌年春兄长抵京传来母亲凶讯，相对泣下，方寸大乱。当时太宗伯、少宗伯为我乡的黄、陈二先生。不孝五次上书请归，而宗伯以「贡士在馆」为由挽留，说：「勉励柳子（之奇），恬靖供臣职」，又说：「柔防重任，救水难卸。」少宗伯怜之，知不孝思母之情，劝勉说：「暂且克己奉公，徐为子归之计。」嗟乎！二位先生锡类之仁、裁成之义，言犹在耳——可是庐帐近前，慈亲已不在侧，乌鸟之情何敢推辞至此！</p>
+<p>既而于役中土（出差中原），试事已毕，匆匆抵京，急谋归计——<strong>而凶讯已至</strong>。嗟乎！母卒于初秋，子闻于初冬，万里之隔、精魂死生间绝——不孝何以为人子哉？匍匐南归，脚步稍定，则父亲告以太安人衣衾棺椁无遗恨；一姐二弟三妹告以弥留之前思念远方之子、大渐之际依依待望之状。嗟乎！不孝何以为人子！温清奉养终成永绝之恨，林鸟失巢而泣，树风不止——不孝终何能洗涤此死罪？母亲一生备尝三十载之操劳辛苦……</p>
+<h3 id="题解_11">题解</h3>
+<p>本篇是<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>为亡母<a href="#林氏" class="internal-link wiki-link">林氏</a>太安人所作的行略，是全卷乃至整部《宛在堂文集》中情感最深挚、家族史料价值最高的篇章。文中由郭之奇与兄长用章「破泪同纪」，以「风木之痛，毕此生矣」开篇，「负母于生，忍复负母于死」贯穿全文。</p>
+<p>母亲十五岁嫁入郭家，十七岁生女，二十一岁生长子用章，二十二岁时祖父去世、母亲三生不孝之奇（郭之奇本人），此后独力持家、课督二子学业。全文最感人的段落是回忆母亲三次救子性命：五岁病危时母亲以不食逼迫幼子服药、十五岁出疹时同样以不食相胁、十九岁大病数月日夜调护——每一次都以「以活不死」作结，简朴而有千钧之力。</p>
+<p>文中记录了若干重要的生平年表数据：丁卯（1627）中举、戊辰（1628）联捷成进士并选翰林院庶吉士、癸酉（1633）父晋承德郎母为太安人、甲戌（1634）归省时母已病、丙子（1636）计划归省而遇清军逼近。母亲五十二岁卒于初秋，而之奇远在京城或中原出差，直到初冬才闻凶讯——「万里精魂，死生间绝」是全文最痛切的一句。</p>
+<p>篇末五次上书请归而被太宗伯、少宗伯以国事挽留的细节，深刻反映了明末知识分子在忠孝难两全处境下的无奈与悲哀。太安人生男八人仅四人成人、女七人仅三人成人的记录，则是了解明代家庭人口与婴幼儿存活率的珍贵数据。</p>
+<hr />
+<h2 id="彭處士墓誌銘">彭處士墓誌銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：墓誌銘 | <strong>主角</strong>：<a href="#彭處士" class="internal-link wiki-link">彭處士</a>（諱彬，字文支）
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>、<a href="#丹霞山" class="internal-link wiki-link">丹霞山</a>、紫金山
+<strong>關鍵主題</strong>：<code>#墓志铭</code> <code>#隐居</code> <code>#济世</code> <code>#力农</code> <code>#揭阳乡贤</code></p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>彭處士墓誌銘</p>
+<p>支骨骼望○是以繼伯季之後而遞○之獄有五而高居其中○漬有四而河○之中莫尊盛于此矣○淩及南鄭之○皁原史稱南[陽?]夏人之居夏人政○遺風試登丹霞紫金之山望百花○淹所作漁家傲詞○意其人應潤逹○儒隱亦多氣謹君子百世聞興代在</p>
+<p>余觀文天中猶能獨抱珪瑨○合聚雲霞秀○既得士八十有六○則見南陽彭子于箋氣涌清霄神飛紫極○私竊卜之日斯所謂騏驥蹀躞向天路○以無疑鵾鵠臆入○秋雲而不返矣○士何余雞骨南旋子箋亦豹隱○余荷土波樣獲裹先茲委室及上卒執徐之歲機衙廷邪匹秦明則子箋已葉珠煩顥○名隆隆中原耳矢需次當分長民之符○頗汝然造余日賴師之教○以始其才於所事而不獲師之言以酬其身於所出</p>
+<p>也○所奉數十年○不得為子之訓何○今即伏式結軏○馳而歸○歸治先處士之一○杯磬石以需師荀命之茫○復有他焉余感其言慮其心而索其狀則曰先處士○處世二十九年耳菟諾之孤也○及其生平行事不能親自親記○記間里長老所傳述及每氏所佩訓於家者約契數端○以當鄉支勝谷止戈之遺令也○按狀彭處士諱彬字文支字其先尊人年踰強而輸於息顏○力行善事不中馳近里有某夷河者為唐弼剿裹要</p>
+<p>聖明吾又不欲談天雕龍效虛恢○軟弱歲時無祭祀進醨欲食被服惊○不惷耻則無所此矣○吾聞南山之興得傷手百耕絍立辦於是蓋邇薄飲食忍嗜欲節衣服與用其力以大致其畜藏閒以其牛落田獵騎射之遊有閒公子之賜日○吾之力農裝畜本事也○不寬市井○不</p>
+<p>收者有日矣○其以是非食擊鍾為閒里雄己乎棚一○獲一○樹一○獲百何以樹焉○士何豫南裕荒比間之衆○復些蔬倫安○無積聚為生計逐至鳥窩煙寒甚者骨肉相慕○盧虛土幅幡然曰○天其以我樹德之日也我誠不能學任氏窮栗鉤囊傑之金玉於是書發累年積聚取千百之口腹而日哺果之屜而餓者既大有起色○而羁羁不均之徒相隨雜剝割人作翁民之長有弗能制獨相戒裹足不入彭氏村曰此寔生吾吾迺...</p>
+<p>得○其力而武震○所不知何人者衆來悽而入○亦悽而出於其身為○若迺虛處士之尊人濟人惟水處士之身救歲惟殼事雖不同○皆能裹府事之不足○助生成之有傾夫○隱居○歲穴之匹○大能○其身○思補益於天地○此人祿○寔薄而宴寔之中摩所封植○之以少立而多觀古今斷斷○必無之理也○吾聞之樹深根者以厚基醇澤者以釀味○處士暨其尊人含光弗輝嵲翼弗舉</p>
+<p>者數十年于茲矣○聚作述衣德之公一○心者英景趨民儀響慕大而昌之公子箋乎○處士生於其年月日○卒於其年月日子其人孫以其年以其人葬以当其口○地即其人所○山對其足谷當其口○億而永父○玉樹紀言於域後○余不</p>
+<p><strong>銘曰</strong>：</p>
+<p>體體處士世儲德心○蒸蒸金封域舉傳兮德高深○</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>彭处士墓志铭。</p>
+<p>〔序引〕骨骼清奇、望重一方，继兄弟之后而递相传承。登上丹霞、紫金二山远望百花，遗风犹存。儒隐之中多有气节君子，百世闻名，代代相传。</p>
+<p>我观文天（地名）犹能独抱珪璋之质，云霞聚秀。曾经在得士八十六人之中，见南阳彭子于文辞间气涌清霄、神飞紫极，私下揣度：这就是所谓骐骥蹀躞向天路、鹍鹏之志入秋云而不返的人才啊。后来我羸弱南归，彭子亦归隐不出。我负土波折、委曲求全之际，子笺（彭子之字）已功名显赫、中原有声。其后子笺来访，说：「多年来受老师之教以展其才，却不能得老师之言以酬其身于所出之处。」于是数十年后，伏式结辕、驰归故里，来办先处士丧事，杯磬之间恳请为其父作铭。</p>
+<p>我感其言、虑其心，索其行状。则说：先处士在世不过二十九年，孤儿之身。其生平行事无法亲自记录，只能据乡里长老传述及族人所佩训于家者约略数端。</p>
+<p><strong>按状</strong>：彭处士讳彬，字文支。其先尊人年过壮岁而投身力行善事。处士自言：「圣明之世，吾不欲谈天雕龙、效法虚恢；吾闻南山之兴，得乎百耕百织。于是薄饮食、忍嗜欲、节衣服，以全力致其蓄藏。闲暇以田猎骑射为乐。<strong>吾之力农蓄牧，乃本分之事</strong>，不涉足市井。」</p>
+<p>栽一树得一果，树一树获百果。何以种植？乃因豫南（河南南部）一带比邻之众，蔬食安生，无积聚为生计，以至于乡间烟寒、骨肉离散。处士幡然醒悟说：「天以此为我树德之时！我虽不能学任氏之穷困钩囊，但可以发累年积聚，取千百之口粮每日哺之。」于是饥者大有起色，而那些不安分的游民也相戒裹足不入彭氏村，说：「此处乃生我活我之地。」</p>
+<p>处士之尊人济人唯水（以水利济人），处士之身救岁唯谷（以粮食救荒年），事虽不同，皆能弥补官府之不足、助天地生成之功。隐居岁月，大能善其身，思补益于天地。此乃人之福禄实薄而宴实之中，自有所封植。</p>
+<p>我听说：树深根者以厚基，醇泽者以酿味。处士暨其尊人含光不辉、敛翼不举，数十年于兹矣。积德述功，英华趋民，后人仰慕而昌大。</p>
+<p>处士生于某年某月某日，卒于某年某月某日。子某孙某，以某年某月葬于某地——山对其足，谷当其口，亿年永安。</p>
+<p><strong>铭曰</strong>：堂堂处士，世代储德于心。蒸蒸祖业，金石封域，传之后人——其德高且深。</p>
+<h3 id="题解_12">题解</h3>
+<p>本篇为卷27末篇，为揭阳乡人<a href="#彭處士" class="internal-link wiki-link">彭處士</a>（讳彬，字文支）所作的墓志铭。彭处士在世仅二十九年，以力农蓄牧为本业，不涉足市井。其最突出的事迹是在荒年以累年积蓄赈济饥民，使「千百之口腹日哺」，乃至流民游匪相戒不入彭氏村——「此实生吾吾乃」。文中将处士之尊人（父亲）「济人惟水」与处士本人「救岁惟谷」并举，赞其父子两代虽事不同而皆能弥补官府不足。「树深根者以厚基，醇泽者以酿味」为全文最精要的比喻。铭文以「体体处士世储德心，蒸蒸金封域举传兮德高深」作结，以叠字起兴，韵律铿锵。本篇前接「先母太安人行略」，后为卷27终篇，从亲人之情转入乡贤之德，为全卷画上圆满句号。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="人物索引">人物索引</h3>
+<table>
+<thead>
+<tr>
+<th>人物</th>
+<th>身份</th>
+<th>出現篇章</th>
+<th>備注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#郭之奇" class="internal-link wiki-link">郭之奇</a></td>
+<td>作者</td>
+<td>全卷</td>
+<td>字仲常，揭嶺人</td>
+</tr>
+<tr>
+<td>家大人</td>
+<td>郭之奇之父</td>
+<td>1、9、12</td>
+<td></td>
+</tr>
+<tr>
+<td>用章</td>
+<td>郭之奇之兄</td>
+<td>12</td>
+<td></td>
+</tr>
+<tr>
+<td>太安人<a href="#林氏" class="internal-link wiki-link">林氏</a></td>
+<td>郭之奇之母</td>
+<td>12</td>
+<td>年十五嫁，五十二卒</td>
+</tr>
+<tr>
+<td>江女</td>
+<td>郭之奇之女</td>
+<td>10</td>
+<td>在世234天</td>
+</tr>
+<tr>
+<td><a href="#宋繩坊" class="internal-link wiki-link">宋繩坊</a></td>
+<td>摯友·進士</td>
+<td>1</td>
+<td>庚午年卒</td>
+</tr>
+<tr>
+<td><a href="#宋繩勖" class="internal-link wiki-link">宋繩勖</a></td>
+<td>姻親</td>
+<td>9</td>
+<td>名彌勤，字志彥，號繩勖</td>
+</tr>
+<tr>
+<td>兆諭</td>
+<td>宋繩勖長子·進士</td>
+<td>9</td>
+<td>廣昌縣知縣</td>
+</tr>
+<tr>
+<td><a href="#宋熙文" class="internal-link wiki-link">宋熙文</a></td>
+<td>鄉紳</td>
+<td>8</td>
+<td>六七十翁，隱逸型</td>
+</tr>
+<tr>
+<td><a href="#林仰晉" class="internal-link wiki-link">林仰晉</a></td>
+<td>友人</td>
+<td>4</td>
+<td>其岳祖為祭文對象</td>
+</tr>
+<tr>
+<td><a href="#林棋餘" class="internal-link wiki-link">林棋餘</a></td>
+<td>友人</td>
+<td>6</td>
+<td>其岳祖為祭文對象</td>
+</tr>
+<tr>
+<td>先司農</td>
+<td>林家先祖</td>
+<td>6</td>
+<td>四朝遺老</td>
+</tr>
+<tr>
+<td><a href="#陶鴻" class="internal-link wiki-link">陶鴻</a></td>
+<td>邑尉</td>
+<td>7</td>
+<td>崇禎十一年殉難</td>
+</tr>
+<tr>
+<td><a href="#鄭祖紹" class="internal-link wiki-link">鄭祖紹</a></td>
+<td>鄉都司</td>
+<td>7</td>
+<td>崇禎十一年殉難</td>
+</tr>
+<tr>
+<td>張公</td>
+<td>邑侯</td>
+<td>7</td>
+<td>親督鄉勇</td>
+</tr>
+<tr>
+<td>靜湖公</td>
+<td>庠生</td>
+<td>11</td>
+<td>字鄉寶，號靜湖</td>
+</tr>
+<tr>
+<td><a href="#彭處士" class="internal-link wiki-link">彭處士</a></td>
+<td>鄉人</td>
+<td>13</td>
+<td>諱彬，字文支</td>
+</tr>
+</tbody>
+</table>
+<h3 id="地名索引">地名索引</h3>
+<table>
+<thead>
+<tr>
+<th>地名</th>
+<th>出現篇章</th>
+<th>備注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#揭陽" class="internal-link wiki-link">揭陽</a>（揭嶺）</td>
+<td>全卷</td>
+<td>郭之奇故里</td>
+</tr>
+<tr>
+<td><a href="#雙塞寺" class="internal-link wiki-link">雙塞寺</a></td>
+<td>2</td>
+<td>浮洲和尚墓所在</td>
+</tr>
+<tr>
+<td><a href="#廣灣" class="internal-link wiki-link">廣灣</a></td>
+<td>3</td>
+<td>祭海神之地</td>
+</tr>
+<tr>
+<td><a href="#德橋鄉" class="internal-link wiki-link">德橋鄉</a></td>
+<td>7</td>
+<td>揭陽西二十里，陶鄭殉難處</td>
+</tr>
+<tr>
+<td><a href="#江都" class="internal-link wiki-link">江都</a>（揚州）</td>
+<td>10</td>
+<td>江女出生地</td>
+</tr>
+<tr>
+<td><a href="#岐山" class="internal-link wiki-link">岐山</a>蓮峰寺</td>
+<td>10</td>
+<td>江女安葬處</td>
+</tr>
+<tr>
+<td>廣平莆縣</td>
+<td>9</td>
+<td>宋氏先世發源地</td>
+</tr>
+<tr>
+<td>建昌府建昌縣</td>
+<td>9</td>
+<td>宋繩勖封官之地</td>
+</tr>
+<tr>
+<td><a href="#丹霞山" class="internal-link wiki-link">丹霞山</a></td>
+<td>13</td>
+<td>揭陽一帶</td>
+</tr>
+</tbody>
+</table>
+<h3 id="版本说明">版本说明</h3>
+<p>本卷富版本据2026-03-19视觉逐页转录编订，原始来源为《四库未收书辑刊》第六辑第27册PDF影印本第309a_l至324页。全卷共13篇（8祭文 + 5墓志铭/行略），2026-03-19完成逐页精细转录。</p>
+<p>主要校订事项：贊三篇（傅奇蓁学士像赞、林仰晋司农像赞、诸名家书赞）经视觉确认属卷26，已移除。宋繩昌订正为宋繩勖（名弥勤，字志彦）。江女墓志年份订正为丁丑（1637），在世天数订正为234日。彭处士墓志铭止于pg324（非原估pg328）。</p>
+<p>原文中「□」标记字迹不清或缺损处，「○」为古文句读符号。部分段落标注〔待精校〕，有待进一步核实。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

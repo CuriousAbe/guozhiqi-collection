@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷三十一 · 奏疏 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" class="active">卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷三十一-·-奏疏">卷三十一 · 奏疏</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之三十一</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+<strong>宛在堂文集卷之三十一</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著</p>
+</blockquote>
+<p>本卷收奏疏五道（含附堂疏二道）。郭之奇任禮部主客清吏司署員外郎、提督兩館事期間（崇禎六年至九年）及後擢福建布政使司右參議時所上。五道奏疏涉及中央財務、外交使館、教育改革三大領域。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>為兩館額費當清占用當禁謹明職掌攸關以助前省萬一事</td>
+<td>崇禎八年七月</td>
+</tr>
+<tr>
+<td>2</td>
+<td>為兩館該管銀兩照例奏繳以明職掌事</td>
+<td>崇禎九年二月</td>
+</tr>
+<tr>
+<td>3</td>
+<td>為貢夷不類宜勅廠臣察核事</td>
+<td>崇禎九年</td>
+</tr>
+<tr>
+<td>4</td>
+<td>為儲才莫先於學較崇化莫要於鄉約弭盜莫急於保甲等事</td>
+<td>崇禎十三年</td>
+</tr>
+<tr>
+<td>5</td>
+<td>為離任自陳請宥事</td>
+<td>崇禎十三年</td>
+</tr>
+<tr>
+<td>附</td>
+<td>附堂疏二道</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="一、為兩館額費當清占用當禁謹明職掌攸關以助前省萬一事">一、為兩館額費當清占用當禁謹明職掌攸關以助前省萬一事</h2>
+<p><strong>essay_id</strong>: 01_two_embassy_expenses</p>
+<blockquote>
+<p>📍 scan363–365右頁 | 崇禎八年七月二十六日具奏</p>
+</blockquote>
+<h3 id="奏摺信息">奏摺信息</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>具奏日期</strong></td>
+<td>崇禎八年七月二十六日</td>
+</tr>
+<tr>
+<td><strong>奏疏主題</strong></td>
+<td>清理兩館額定經費，禁止占用挪用</td>
+</tr>
+<tr>
+<td><strong>郭之奇職銜</strong></td>
+<td>禮部主客清吏司署員外郎事主事</td>
+</tr>
+<tr>
+<td><strong>回覆聖旨</strong></td>
+<td>本月二十九日奉聖旨：「郭之奇亦見鑒別刮銀」，著該衙門查收</td>
+</tr>
+<tr>
+<td><strong>主要財務數據</strong></td>
+<td>館夫347名；四府工食2498兩；現存餘銀366兩3錢2分；三河縣拖欠57兩6錢</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文">原文</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　謹</p>
+<p><strong>奏</strong>為兩館額費當清占用當禁謹明職掌攸關以助前省萬一事。</p>
+<p>〔世宗聖旨〕</p>
+<blockquote>
+<p><strong>世宗皇帝聖旨</strong>造兩館事務夫役情獎俱聽提督官管理兵部該司如何侵挽姑不查究今後只守舊規行其大使等官及別衙門官敢有占用夫役弁逃脫負欠情獘都聽提督官用心查究若有容隱一體究治欽此欽遵謹查兩舘額設舘夫三百四十七名派取順永保河四府工食二千四百九十八兩四錢藏久事遷在舘人役多寡不一歷代成規大率以半給舘夫以半給皂隸守庫水夫諸</p>
+</blockquote>
+<p>後為貼差為公費供有舊則載之前部臣李廷機所刊奏官要覽詳於歷年收支簿可考也間有夫後事故或未補或已補故每歲存留餘銀亦多寡不一細查要覽及堂簿或置買堂司官房或倍葺司舘漸壞致日難以悉舉就臣六年經管除三河縣拖欠五十七兩六錢外則尚存餘銀三百六十六兩三錢也自臣於去夏奉</p>
+<p>〔正文闡述〕</p>
+<p>諸臣從此破除私意節節輸公則內而部院卿寺外及司府州縣邊腹軍兵無名之籍大小冗員不怠之需總計裁減存留者其為數亦多矣臣非言職不敢深言臣非計曹不敢深計只就職掌所關諹不敢嗫嚅者為<strong>皇上</strong>陳之臣以六年廉掌殷授禮屢猥承提督兩館之後前後兩載當此法久成玩蔫則易不避勞怠荊藩副使及今報竣查閱收支近簿則見諸額費中有舊本無而今新增者矣有近汰而今旋復者矣一人之身前行汰華而今自取盈者矣以為額設而受之者循可言也明知新增而取之者不可言也</p>
+<p>即今外解壓欠正梗塞腹冗冒占用安望存留以臣所見涓涓滴滴何莫非民間骨血朝廷金錢當此軍需頻興明詔尚節與其相率冒濫何如歸補度支臣小臣也不宜自異招尤然語有之智守不假器謝小心非諂則癡臣六年經管除三河縣拖欠工食五十七兩六錢外現存餘銀三百六十六兩三錢二分前已造清冊呈堂今將餘銀</p>
+<p>百一十二兩八錢前後堂司官行文勒催竟置高閣此項銀兩在官在民終不得而問焉不得不請言真諡本處撫按以徹底稽查者也臣嶺外孤蹤所<strong>皇上</strong>故某從前所不方言今日所不敢言者一一揭聖明之前以為一署如此百署可知禮屬一署如此百署如此</p>
+<p>舊章所列主客司主事提督舘內一廳事務當處置者徑自處置當具奏者徑自具奏值茲貪欠之秋復見占用諸寶非奏者徑自具者奏終積獘相仍既深容隱究治之懼並遵徑天語申飭終積獘相仍</p>
+<p>〔奏繳與祈旨〕</p>
+<p>奏解助飾緣臣去夏於後外解未前故至今秋奏繳伏乞<strong>皇上</strong>勅該衙門查收仍諭六年以後責令提督官每歲節省餘銀多寡得以徑自奏繳或亦節財長策中之萬一也臣又查四府額解工食三河縣一十六名自萬曆三十六年起止解八名計至崇禎八年歷年拖欠共一千六</p>
+<p>奏本月二十九日奉<strong>聖旨</strong>這所奏兩館見餘銀兩郭之奇亦見鑒別刮銀著該衙門炒數查收以後每歲節省餘銀提督官徑行奏繳其二三河縣節次額解是否在官在民該撫按查明其奏禮部知道</p>
+<p><strong>崇禎八年七月二十六日具</strong></p>
+<h3 id="白話全译">白話全译</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　恭敬地</p>
+<p>上奏　為了清理兩館（會同館、四夷館）的額定經費，禁止占用挪用，謹明職掌所關，以助朝廷節省一二之事。</p>
+<p>〔世宗聖旨背景〕</p>
+<blockquote>
+<p>根據世宗皇帝的聖旨：兩館事務的夫役待遇都由提督官負責管理。兵部該司如何侵占擾亂暫不查究，今後只守舊規。大使等官及別的衙門官員如敢占用夫役、逃脫或虧欠，都由提督官認真查究，若有隱瞞一律究治。</p>
+</blockquote>
+<p>詳細查閱，兩館額定設置舘夫347名，從順永保河四府徵取工食費2498兩4錢。由於歷代相傳，舘夫人數多少不一，一般規則是一半用於給舘夫，一半用於給皂隸、守庫、水夫等雜役。</p>
+<p>此後因為貼差和公務支出，有舊規則記載於前部臣李廷機所編的《奏官要覽》中，詳情在歷年的收支簿中都可查考。有時因為舘役自然損耗，有的沒有補充，有的已經補充，所以每年存留的餘銀也有多有少。我仔細查看了要覽和堂簿，發現有的是用來置辦堂司官房，有的是用來修葺司舘，司舘逐漸破敗，現在每天都難以舉計。就我六年來的經管而言，除了三河縣拖欠57兩6錢以外，現在還存有餘銀366兩3錢。</p>
+<p>〔財務清廉的倡議〕</p>
+<p>從我開始，各位官員應該破除私心，節節歸公。那麼對內的部院卿寺，對外的司府州縣、邊遠軍隊，那些沒有名義的編制、大大小小冗員不必要的開支，總計要裁減的數目也是不少的。我不是言官，不敢多說；我也不是戶部官員，不敢深計，只是就我的職掌所關、不敢隱瞞的地方向皇上陳述。</p>
+<p>我從六年開始廉潔管理，屢次受到禮部的褒獎，猥承提督兩館的職責。在這前後兩年中，當這套法規已經變成了虛設的時候，改革就容易了。不怕麻煩與怠惰，並且親自督促。現在報告已完成，查閱收支簿我看到那些額定的經費中，有舊本不設而今日新增的，有近日裁減而現在又恢復的，有一個人之前行為廉潔而現在卻自己取盈的。認為是額定設置的人就可以問心無愧，但明知道新增的還去領取就說不過去了。</p>
+<p>現在外地拖欠還在堆積，腹地冗官冒充占用。既然都占用了，怎麼還能期望有存留？按我所見，那點點滴滴的銀子，哪裡不是民間的血肉、朝廷的金錢？當這軍事費用頻頻發生的時候，聖諭還在強調節約，與其大家一起冒濫挪用，不如歸補到度支（戶部）？我是小官，不應該自做異議招來非議。但古人說「智者不需要特殊工具」，而「小心眼的人不是諂媚就是癡傻」。</p>
+<p>我六年經管的成果是：除了三河縣拖欠的工食57兩6錢，現在存有餘銀366兩3錢2分。前面已經造清冊呈堂，現在將這個餘銀數目（以及我當時送交的112兩8錢），前後堂司官發文催促，卻被擱置了。這筆銀子無論在官還是在民，終究成了問不出來的、沒有著落的。不得不請示本處的撫按，以徹底稽查。</p>
+<p>我是嶺外的孤官，所以有些話從前不敢說，現在也不敢說，但都要在聖明面前一一陳述，好像一個署系如此，百個署系就可以類推；禮部是一個署系如此，百個署系也就可以推想。</p>
+<p>根據舊的規章，主客司主事要提督舘內一廳的事務，應該處置的就直接處置，應該具奏的就直接具奏。現在值此貪污虧欠的時代，又看到占用各種寶貴資源。這不是直接具奏的事項，最終積累的弊害還是相承不絕。既然深切擔心容隱和究治之後的問題，就遵循皇帝的口令申飭，終究積累的弊害還是相承不絕。</p>
+<p>〔奏繳和祈求〕</p>
+<p>我要奏繳的原因是：由於去年夏天我還沒有外放，所以到今年秋天才奏繳。伏乞皇上勅該衙門查收，並仍然降旨，要求從六年以後，責令提督官每年節省的餘銀無論多少都可以直接奏繳，這也許也是節省經費的妙策之一。</p>
+<p>我又查了四府額定撥下的工食，三河縣一共16名，從萬曆36年開始，卻只解了8名，計算到崇禎八年，歷年拖欠的共1600多兩…</p>
+<p>奏本月（七月）29日奉聖旨：「你奏的兩館現有的餘銀，郭之奇也算是認真鑑別了。著該衙門查收核對。以後每年節省的餘銀，提督官可以直接奏繳。至於三河縣分次額定下撥的工食是否在官是否在民，該撫按查明後奏告禮部。」</p>
+<p><strong>崇禎八年七月二十六日上奏</strong></p>
+<h3 id="題解">題解</h3>
+<p>本奏疏是郭之奇任禮部主客清吏司署員外郎事主事、提督兩館期間所上的第一份重要奏疏。其核心議題是：清廉理財、杜絕占用、建立定期奏繳制度。</p>
+<p><strong>背景</strong>：两館（會同館接待朝鮮、琉球等藩國使節；四夷館接待西番、烏思藏等遠方進貢者）是明代外交和外事管理的樞紐。館務費龐大，年常經費達2498兩以上，雜役347人。郭之奇上任前，經費管理混亂，占用挪用成風。</p>
+<p><strong>創新舉措</strong>：郭之奇建議建立「定期奏繳制」——每年的節省餘銀由提督官直接奏繳朝廷，不再由堂司官層層審批（這往往導致經費被擱置）。這一創新提高了財務透明度和效率。</p>
+<p><strong>財務成就</strong>：六年任期內，共節省餘銀366兩3錢2分，另在貢夷進貢期間又節省820兩（見下文第三疏）。</p>
+<p><strong>政治寓意</strong>：奏疏開頭引述世宗舊旨，背景是<a href="#崇禎帝" class="internal-link wiki-link">崇禎帝</a>上台後推行的「財政整肅」和「反腐倡廉」新風。郭之奇將小處的館務管理升華為「一署如此，百署可知」的宏觀治理論述，呼應了崇禎初期的改革精神。</p>
+<hr />
+<h2 id="二、為遵旨奏繳兩館餘銀兼陳前後接管日期以朔臣心以明臣職事">二、為遵旨奏繳兩館餘銀兼陳前後接管日期以朔臣心以明臣職事</h2>
+<p><strong>essay_id</strong>: 02_treasury_submission_and_handover</p>
+<blockquote>
+<p>📍 scan365左–367右頁 | 崇禎八年十二月二十一日具奏（含附堂疏）</p>
+</blockquote>
+<h3 id="奏摺信息_1">奏摺信息</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>具奏日期</strong></td>
+<td>崇禎八年十二月二十一日</td>
+</tr>
+<tr>
+<td><strong>奏疏主題</strong></td>
+<td>遵旨奏繳兩館餘銀，陳述交接管理的日期和過程</td>
+</tr>
+<tr>
+<td><strong>郭之奇職銜</strong></td>
+<td>禮部主客清吏司署員外郎事主事</td>
+</tr>
+<tr>
+<td><strong>前任提督</strong></td>
+<td><a href="#朱祚昌" class="internal-link wiki-link">朱祚昌</a></td>
+</tr>
+<tr>
+<td><strong>接管日期</strong></td>
+<td>六年九月到任，七年五月冊封歸來後八年六月初二日重新接管</td>
+</tr>
+<tr>
+<td><strong>奏繳金額</strong></td>
+<td>六年節省餘銀366兩3錢2分；八年四府領解工食2498兩，放過2108兩4錢，淨餘待繳</td>
+</tr>
+<tr>
+<td><strong>聖旨回覆</strong></td>
+<td>本月二十四日奉旨：「該部查獘具奏」</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_1">原文</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　謹</p>
+<p><strong>奏</strong>為遵旨奏繳兩舘餘銀兼陳前後接管日期以朔臣心以明臣職事。</p>
+<p>臣去夏於後外解未前故至今秋奏繳伏乞緣臣去夏於後外解未前故至今秋</p>
+<p>奏繳其二三河縣節欠額解是否在官在民該撫按查明其奏禮部知道行奏繳其二三河縣節欠額解是否在官在民該撫按查明其奏禮部知道</p>
+<p>奏為兩舘領費當清占用當禁謹明職掌攸關以助前省萬一事本月二十九日奉<strong>聖旨</strong>這所奏兩舘見餘銀兩郭之奇亦見鑒別刮銀若該衙門炒數查收以後每歲節省餘銀提督官徑行奏繳其二三河縣節欠須解是否在官在民該撫按查明其奏禮部知道欽此欽遵隨將六年節省餘銀三百六十六兩三錢二分解户部邊飼司助飼詑除七年餘銀已經前任提督<a href="#朱祚昌" class="internal-link wiki-link">朱祚昌</a>奏</p>
+<p>今將八年所收四府領解會同館工食二千四百九十八兩放過二千一百八兩四錢四錢備造清冊呈堂臣已陛任去……外解未前故至今秋奏繳伏乞助前省萬一事本月二十九日奉</p>
+<p>食共一十五名統候陸續解到交納助飼如逾止解八名計至崇禎八年歷年拖欠共一千六……</p>
+<p>奏繳其二三河縣節欠額解是否在官在民……</p>
+<p>奏本月二十四日奉<strong>聖旨</strong>該部查獘具奏</p>
+<p><strong>崇禎八年十二月二十一日具</strong></p>
+<h3 id="附遵堂疏">附遵堂疏</h3>
+<p>禮部尚書兼翰林院學士加俸一級　<a href="#黃" class="internal-link wiki-link">黃</a>　謹</p>
+<p><strong>題</strong>為遵有察獘　堂疏</p>
+<p>為遵有查獘此奏事主客清吏司案呈崇禎八年十二月二十六日奉本部送禮科抄出禮部主客清吏司署員外郎事主事郭之奇奏為遵……有奏繳兩舘餘銀兼陳前後接管日期以朔臣心以明臣職等事本月二十四日奉奏繳</p>
+<p>（臣已得代似無可言）</p>
+<p>郭之奇自六年九月到任……入貢朝夕不逾半載如一日又發過西番駝籠烏思藏大乘輔教二起朝鮮……至七年五月奉命冊封於八年六月初二日復命冊封於八年六月初二日復接管舘務目擊朝鮮館垣低額倒場逼近民居惡好地坪等族番人焦吉巴等苟家坪等族番人七起烏思藏大乘輔教二起朝鮮一起有底簿時日可查……節省餘銀八百二十兩有户部庫收可查</p>
+<p>奏為兩舘領費當清等事　本月二十九日奉<strong>聖旨</strong>郭之奇既經查獘著吏部量與敘錄</p>
+<p><strong>崇禎九年二月初九日具</strong></p>
+<h3 id="白話全译_1">白話全译</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　恭敬地</p>
+<p>上奏　為了遵照皇帝的旨意奏繳兩館的餘銀，並陳述前後接管舘務的日期，以澄清我的心思，以說明我的職責所在。</p>
+<p>我去年夏天還沒有外放（調離），所以到今年秋天才奏繳。伏請皇上。緣於我去年夏天還沒有外放的緣故，所以到今年秋天才奏繳。</p>
+<p>至於三河縣分次額定下撥但尚未解到的工食，是否留在官府還是在民間，該撫按查明後奏告禮部。 我之前上奏的「為兩館領費當清占用當禁」等事，在本月（七月）29日奉到聖旨說：「你奏的兩館現有的餘銀，郭之奇也算認真鑑別了。著該衙門查收核對。以後每年節省的餘銀，提督官可以直接奏繳。」欽此欽遵。隨後我將六年節省的餘銀366兩3錢2分解交到戶部邊飼司作為邊地軍事的補助。至於七年的餘銀，已經由前任提督朱祚昌奏繳過了。</p>
+<p>現在將八年所收的四府（順永保河四府）領下來的會同館工食2498兩中，已放過（發放）2108兛4錢，還有差額，已經備造清冊呈堂。我已經陛位到新職去了…外放還沒有完成，所以到現在秋天才奏繳，伏請皇上…</p>
+<p>（三河縣的）15名工役，統共等待陸續解到後交納給邊飼部門。如果逾期，就只解了8名，計算到崇禎八年，歷年的拖欠共1600多兩…</p>
+<p>〔堂疏支持〕</p>
+<p><strong>禮部堂疏</strong>——禮部尚書兼翰林院學士<a href="#黃" class="internal-link wiki-link">黃</a>敬上</p>
+<p><strong>題</strong>為遵察獘之事的堂疏</p>
+<p>就郭之奇這份奏疏，主客清吏司呈報，崇禎八年十二月26日，本部根據禮科的抄出，特此回應。郭之奇在六年九月到任…入貢朝朝暮暮不超過半年，始終如一日。又發過西番駱駝駄籠、烏思藏大乘輔教兩起、朝鮮…到了七年五月，奉命冊封，到八年六月初二日又奉命冊封，重新接管舘務。親眼看到朝鮮館的牆垣低矮、場地倒坍、逼近民居…好地坪等族番人焦吉巴等、苟家坪等族番人七起、烏思藏大乘輔教二起、朝鮮一起，都有底簿和記錄時日可查…節省的餘銀800多兩，有戶部庫的收據可查。</p>
+<p>關於「為兩館領費當清」等事，本月29日奉聖旨：「郭之奇既然經過查核，著吏部量與敘錄（給予升遷或獎賞）。」</p>
+<p><strong>崇禎九年二月初九日上奏</strong></p>
+<h3 id="題解_1">題解</h3>
+<p>本奏疏是郭之奇對第一份奏疏的進一步報告與落實。它同時展示了他在管理兩館期間的行政勤奮和財務廉潔。</p>
+<p><strong>關鍵履歷信息</strong>：
+- 六年九月到任提督兩館
+- 七年五月奉命出使冊封（任務為期半年）
+- 八年六月初二日回任重新接管舘務</p>
+<p><strong>財務績效</strong>：
+- 六年節省366兩3錢2分，已解戶部邊飼司用作邊事補助
+- 八年重新接管後，四府工食2498兩中放過2108兛4錢，帳目清楚
+- 貢夷進貢期間進一步節省800多兛（見堂疏）</p>
+<p><strong>政治背景</strong>：郭之奇因為「既經查獘」而獲得「著吏部量與敘錄」的獎勵，這預示了他之後的升遷——從主事升為郎中，最後升為福建布政使司右參議。</p>
+<p><strong>堂疏價值</strong>：禮部尚書的堂疏記錄了郭之奇的具體成就：入貢館務朝朝夕夕沒有懈怠、發過多起重要的遠方進貢（西番、烏思藏、朝鮮等）、親自整修破敗的館舍、建立詳細的底簿記錄。這份堂疏是對他工作的重要認可。</p>
+<hr />
+<h2 id="三、為察覈貢夷進貢事宜事">三、為察覈貢夷進貢事宜事</h2>
+<p><strong>essay_id</strong>: 03_scrutiny_tributary_missions</p>
+<blockquote>
+<p>📍 scan368右–368左頁 | 崇禎八年至九年間</p>
+</blockquote>
+<h3 id="奏摺信息_2">奏摺信息</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>奏疏主題</strong></td>
+<td>察核進貢蕃國的進貢事宜和管理</td>
+</tr>
+<tr>
+<td><strong>郭之奇職銜</strong></td>
+<td>禮部主客清吏司署員外郎事主事</td>
+</tr>
+<tr>
+<td><strong>進貢國家</strong></td>
+<td>西番、烏思藏、朝鮮、好地坪、苟家坪等共11起</td>
+</tr>
+<tr>
+<td><strong>資金節省</strong></td>
+<td>兩次節省餘銀共820兩，有戶部庫收可查</td>
+</tr>
+<tr>
+<td><strong>主題延伸</strong></td>
+<td>論述勞績敘錄對官員激勵的重要性</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_2">原文</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　謹</p>
+<p><strong>奏</strong>為察覈貢夷進貢事宜。</p>
+<p>九月起至七年五月止發過駝籠好地坪番人永市等他龍吟古等族番人悊秀等鋒鏃城鶴焉坪等族番人焦吉巴等苟家坪等族番人七巴等嘉石草坡博峪等族番人阿幫等入起烏思藏大乘輔教二起朝鮮一起有底簿時日可查獘也兩次節省餘銀八百二十兩有户部庫收可查獘也</p>
+<p>夫潔己奉公固臣子分誼之當然而敘勞紀績尤</p>
+<p>收可查獘也兩次節省餘銀八百二十兩有户部庫收可查獘也</p>
+<p>虞分後官勞績可稍隨蒙敘錄几接管受事者必不敢傳舍其官而感激圖報職業益備矣取因查獘之明旨而并及之伏候獘之聖裁</p>
+<p>緣係奏旨查獘具奏事理未敢擅便謹上查　題請</p>
+<h3 id="白話全译_2">白話全译</h3>
+<p>禮部主客清吏司署員外郎事主事　臣郭之奇　恭敬地</p>
+<p>上奏　為了察核進貢蕃國的進貢事宜。</p>
+<p>從六年九月開始，到七年五月停止，共發放過駱駝駄籠給好地坪番人永市等、他龍吟古等族番人、悊秀等、鋒鏃城鶴、焉坪等族番人焦吉巴等、苟家坪等族番人等，共七起；還有烏思藏大乘輔教兩起、朝鮮一起，共11起，都有詳細的底簿和時日記錄可以查核。兩次節省的餘銀共820兩，有戶部庫的收據可以查核。</p>
+<p>一個官員潔身自好、奉公守法固然是做臣子應有的品德，但是記錄和敘述他的功績也很重要。</p>
+<p>有戶部庫的收據可查。兩次節省的餘銀共800多兛，有戶部庫的收據可查。</p>
+<p>我擔心後來的官員如果功績沒有得到敘錄，就不敢再把職務當回事，甚至可能會放鬆對官位的感激之心，而職業的履行就會懈怠了。根據查核的明確旨意，我還涉及這一點，伏請聖上決定。</p>
+<p>由於這是奉旨查核的事項，我不敢擅自決定，謹恭上呈，請題示。</p>
+<h3 id="題解_2">題解</h3>
+<p>這份奏疏簡潔有力，核心主旨有二：</p>
+<p><strong>其一</strong>：詳細列舉了郭之奇任期內管理的進貢事務。提到的11起進貢包括西番（駱駝駄籠）、烏思藏（大乘輔教）、朝鮮以及各種少數民族番人。這反映了明代外交體系的複雜性和主客清吏司作為外交樞紐的重要性。</p>
+<p><strong>其二</strong>：郭之奇提出了一個重要的行政管理原則：<strong>敘績激勵制度</strong>。他認為，潔己奉公是官員的基本義務，但記錄和獎賞他們的功績同樣重要。這樣才能激勵後繼者更加盡職。這種思想在當時「吏治不修」的背景下格外難能可貴。</p>
+<p><strong>財務亮點</strong>：在進貢應酬費用上節省820兩，足見郭之奇的精打細算。</p>
+<hr />
+<h2 id="四、為儲才莫先於學較善俗莫先於鄉約弭盜莫先於保甲實行三者上理立臻事">四、為儲才莫先於學較善俗莫先於鄉約弭盜莫先於保甲實行三者上理立臻事</h2>
+<p><strong>essay_id</strong>: 04_education_village_compact_baojia_system</p>
+<blockquote>
+<p>📍 scan368左–372右頁 | 崇禎九年二月二十六日具奏</p>
+</blockquote>
+<h3 id="奏摺信息_3">奏摺信息</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>具奏日期</strong></td>
+<td>崇禎九年二月二十六日</td>
+</tr>
+<tr>
+<td><strong>奏疏主題</strong></td>
+<td>教育改革：學較、鄉約、保甲三項並舉，構建地方治理體系</td>
+</tr>
+<tr>
+<td><strong>郭之奇職銜</strong></td>
+<td>禮部主客清吏司署員外郎事主事，今陞福建布政使司（即將升任）</td>
+</tr>
+<tr>
+<td><strong>聖旨回覆</strong></td>
+<td>本月二十九日奉旨：「奏內事情已有旨了該部知道」</td>
+</tr>
+<tr>
+<td><strong>政策核心</strong></td>
+<td>三項改革並行：①學較（月考文射）；②鄉約（宣講六諺，推舉鄉紳；③保甲（什伍相收，互相監督）</td>
+</tr>
+<tr>
+<td><strong>理論基礎</strong></td>
+<td>參考《太祖教民六諺》、孔孟經義、周漢宋制</td>
+</tr>
+<tr>
+<td><strong>目標</strong></td>
+<td>儲備人才、教化風俗、弭止盜賊，實現社會秩序的根本好轉</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_3">原文</h3>
+<p>禮部主客清吏司署員外郎事主事今陞福建布政使司　臣郭之奇　謹</p>
+<p><strong>奏</strong>為儲才莫先於學較○善俗莫先於鄉約○弭盜莫先於保甲○實行三者上理立臻事。</p>
+<p>臣備員禮屬○歲餘一考○幾日之内○故事相循○能勸懲立親臣愚以為教導士子固教官專職○而府州縣名為提調造士尤其首務斷當責令</p>
+<p>戶素自愧○至於禮讓教化之本篤嘗悉心講求○蓋諦法孔孟朋逢○堯舜以為几刑名法術鎮急小補○名為救亂實以傷○治者不欲為○<strong>皇上</strong>陳○几希順接合危詞聳聴始于生心○卒于害事者又不敢陳○无也則日實行學較</p>
+<p>〔學較改革〕</p>
+<p>較非不猶故然名存而實亡矣○卧碑之訓洋洋孔彰而士子實未經目卯導士子者○亦絕不置口矣博諸生蒼無幣珍自重然官師○之鼓舞奬進者未必在斯人至為由梭擾神之○輩係官保民包糧包訟名日學霸合為死當鮮○不按贄有司○拜稱門士○以結納之術行武斷之○权故官師明知終置不問盖或畏其諮而不欲○言或𣃁其嬀而不肯言上好下甚亦於士何尤</p>
+<p>乎督學諸臣歲餘一考○幾日之内○故事相循○能勸懲立親臣愚以為教導士子固教官專職○而府州縣名為提調造士尤其首務斷當責令○學臣嚴士子干謁之禁絕州縣餿拜之私令○之○非公不見私衙勿延蓋士子一體善逢迎者厚○為門生員氣節者必見擁落惟無私然後能鑒○衡能鑒衡然後能奬慻退而抑奔競遺朔望行○香必令聚師生○闡聖訓○釋</p>
+<p><strong>皇言</strong>務使人人有瘦至射以觀德亦以通武各學倶○有射圍斷當自今舉行每月府州縣官親向膠○庠考文一次智射一次分別驗列就為明天人○通今古經文緯武之大儒就為澡身力行順親○敬長恂恂禮讓之謹儒可以盡天下○奇英華特達之秀儒進此三儒○敬○才賢隨地多寡開報學臣其不端不謹者另冊○開送候考較日合文行而叅伍優劣之如教官</p>
+<p>分導不力○許府州縣揭報府州縣課督不公許○學臣課行不効○臣課行不効○臣課行不効</p>
+<p><strong>太祖教民六諺</strong>○責官不肯教導民不知適從大哉○<strong>聖諺</strong>以○鄉約孔子曰○五覲於鄉而知王道之易易</p>
+<p>〔鄉約〕</p>
+<p><strong>皇言</strong>直嗣治本顧宣○論則必行約○府州縣各有鄉約所○然未有有實肯行○者益約行則善彰惡糾奸無所容訟無繁生風○俗之幸而奸民墨吏所大不欲也顧行約徒虛○文民未可以名變臣遠稽古制近遵典則按周○禮向鄉外遂鄉置比長閭贊族師黨正遂邸○長里宰鄰長郊漢為亭長三老薔夫廢為里○正坊正宋為保長者長今天下在城為坊長廟</p>
+<p>長在外為里長社長保長○又於每里推一年老○有德者為老人○一切小事付之聽決○又有木鐸</p>
+<p><strong>聖諺六語</strong>振之警衆制轅古容然而陵遲失故○鱗次以供户賦之後坊廟社保老人○幾○錯驫之區着民多屈流民多禆則當令合為通衢○弱則為之頌訓誄之條同鄉并之約以一其耳○義未有不名○職其事也至於山民多梗水民多○游逐民多禑未始不可警也市井坊里之內有游手○食無所職事</p>
+<p>玩野民多頑未始不可警也○特宜行約之日合○<strong>聖諺</strong>論則必行約○府州縣各有鄉約所</p>
+<p>聚紳士留心容詢考行察藝○月可得而書○一天○下之倫類誠重選坊○里諸長○次第倡率○則</p>
+<p>〔保甲〕</p>
+<p>一鄉善土月得而書進于學較幷聯之可以察○如是則孝弟力田可與學較並聯之○不可察也市井比聚使之什伍相收○各受教○中而寵異之而或謂流氣未掃○民志惶惑○身家未安○任○恤之苞可得知也○近民多游逐民多禑未始不可警也臣另疏即追</p>
+<p>稱驟之土○正坊正宋為保長者長今天下在城為坊○長廟長在外為里長社長保長……</p>
+<p>者置之于後役即有餘財倖物而不能敢長懼弧○取沓好○讓居○事力者○列之○奧隸則民皆食力好○香必令聚師生……錯驫之區着民多屈流○民多禑則當令合為通衢○弱則為之頌訓誄之條同鄉并之約以一其耳</p>
+<p>又分隸于各約居有授出有節以登其衆賔函八</p>
+<p>其嗤惡使來徒不嘗歸樂土導此十民可以○同市民多○合無頌行各地在城在鄉問在廩居卑者若○干人在官儒者若干人搙未邦遠服賈者若干○千人在官儒者若干人搙未邦遠服賈者若干</p>
+<p>〔保甲〕</p>
+<p>狂徒○可得而散○傷殘户口○可得而復○然後鄉約○亦絕不置口矣博諸生蒼……</p>
+<p>可行學較可舉盜賊○化而風俗美風俗美而賢○皇上有過化存神之實臣子亦何必爭痛哭流涕之○名在斯世睦親樂利之休當事亦何必求政</p>
+<p>祖宗新棲所迩○孔孟詩書所教之士至有華無賢或○皇上綱羅所收○孔孟詩書所教之士至有華無賢或○君而無臣也不令</p>
+<p>舉一暫百徒供訴廣良可深盖但使澤磨有方○○實行學較盖</p>
+<p>〔收尾陳言〕</p>
+<p>勅禮部頒之學臣○鄉約保甲二款○勅都察院行撫按頒之司道○共責府州縣官○歲課其○結靃報銓部分行黜陟○其於治平之要似不必○他求也○緣係條陳字數逾額弁乞○原宥○臣無任悚息待</p>
+<p><strong>命之至</strong></p>
+<p><strong>崇禎九年二月二十六日具</strong></p>
+<p>奏本月二十九日奉<strong>聖旨</strong>奏內事情已有旨了該部知道</p>
+<h3 id="白話全译_3">白話全译</h3>
+<p>禮部主客清吏司署員外郎事主事　今陞福建布政使司　臣郭之奇　恭敬地</p>
+<p>上奏　關於儲備人才沒有比實行學較更重要的，教化風俗沒有比推行鄉約更重要的，弭止盜賊沒有比建立保甲制度更重要的。要求實行這三項措施，使上層的治理能夠迅速建立的事。</p>
+<p>我在禮部任職，監察使每年考核一次，卻只有幾天的時間，舊例相沿，無法真正褒貶獎懲。我認為教導士子雖然是教官的專職，但是府州縣官被稱為「提調造士」，那才是首要職責，理應使他們嚴格承擔起來。</p>
+<p>至於禮讓與教化，這是根本，我一直在認真研究。因為我觀察到，許多人標榜遵循孔孟之道，學習堯舜之治，認為律令刑罰不過是當前急需的小補藥，名為救亂其實是傷治。如果統治者不願意去做這些，向皇帝陳述，我就容易被懷疑為說空話、危言聳聽、心術不正，最後反而會成為害事的東西，我又不敢說。因此最好的辦法就是實行學較。</p>
+<p>〔學較的改革〕</p>
+<p>考校（學較）確實不是沒有先例，但名義存在而實質已經消亡了。孔子的教誨依然閃閃發光，但士子們卻沒有真正體驗過。教導士子的人也很少提及。想要讓士子們尊重知識，但官師們的鼓舞和獎勵卻未必致力於此人，反倒因為紛擾而導致神靈（道德）退去…那些官保民賦的人，包糧包訟，名為「學霸」卻實為欺騙，很少不按規則欺弄官府、跪拜門人、用結納的手段進行武斷權謀的。因此官師們即使明知，也終於置之不理，有的是因為畏懼這些人而不願意說，有的是因為被拉攏而不肯說。上級喜歡（這套）下級就效仿，對於士子又有什麼怪責呢？</p>
+<p>督學的各位官員每年考核一次，卻只有幾天的時間，舊例相沿，無法真正褒貶獎懲。我認為教導士子雖然是教官的專職，但府州縣官名為「提調造士」，那才是首要職責，理應使他們嚴格承擔起來。學政官員應該嚴禁士子到衙門拜謁，杜絕州縣官接受私人饋贈的陋習，使只有公事才能見面，私衙不得延留。因為士子們一體都善於逢迎的就得到厚待，有氣節的必然被壓制。唯有無私才能鑒別，有鑒別力才能獎勵與貶抑，從而遏止奔競之風。在朔望之日聚集師生，闡講聖人的訓誨…</p>
+<p>要求縣官親身到學校考試文章一次、考射一次。分別驗證並列報，以選拔三種人才：明通天人、古今經文緯武的大儒；澡身修德、恭敬父母、尊敬長輩、謙虛禮讓的謹慎儒者；以及英華特達的傑出秀才。進這三種人才，人才就多了。各地的多寡就開報學臣。其中不端正、不謹慎的人，另外造冊送出，等到月考時合并文行而參與優劣比較。如果教官分導不力，許可府州縣揭報；如果府州縣課督不公，許可學臣彈劾；如果學臣課行不效，臣會彈劾。</p>
+<p>〔鄉約與教化〕</p>
+<p>太祖的「教民六諺」強調官員要有責任教導民眾，否則民眾就不知道怎麼做。太祖的聖諺說「重視鄉約」。孔子說「國君每五年巡視鄉間，就能知道王道是多麼容易推行」。</p>
+<p>〔鄉約的實施〕</p>
+<p>聖人的話說，治理國家的根本在於宣講。既然要行鄉約，府州縣各自應該有鄉約所。然而從來沒有真正願意實行的。一旦鄉約實行了，善的就會彰顯，惡的就會受到糾正，奸詐就無處躲藏，訴訟就不會繁殖，風俗就會改善，這是最幸運的事。然而奸民和貪污官吏卻大不願意。但光是虛做鄉約的文章，民眾的行為還是不會改變。</p>
+<p>我遠遠追溯古制，近近遵守典則。根據《周禮》，向鄉以外的遂鄉設置比長、閭贊、族師、黨正；遂邸長、里宰、鄰長。郊外漢代設置亭長、三老等，後來廢除改為里正、坊正。宋代為保長、弦長。現在天下，在城市為坊長、廟長，在鄉外為里長、社長、保長。另外在每里推舉一位年老、有德行的人為「老人」，一些小事就交付給他裁決。還有敲鼓的人（木鐸）。</p>
+<p>太祖的聖諺六條用來警醒民眾…古代確實如此，但已經衰落失效了。現在各地為了供應戶賦而任命的坊廟社保和老人，卻成了互相錯雜的區域。民眾多有被欺壓的，流民很多，應該把他們合並成通衢（大社區），弱的地方就給予獎勵…用鄉約把同鄉並合起來，統一他們的耳目（資訊）。義理沒有不成立的…至於山區民眾性情粗獷，水邊民眾好游蕩，外來民眾善於躲避，這些都不是不能教化的。市集和坊里內有游手好閒、沒有職業的人…</p>
+<p>〔保甲制〕</p>
+<p>一鄉的善人每個月都應該記錄，報送給學較，並與學較聯繫起來。這樣就可以察核…如果孝道、悌道、務農的人都能與學較聯繫起來…市集中把人民什伍組織起來，相互監督…流氣還沒有完全掃除，民眾的意志還惶惑不安，身家還沒安定，任…安撫他們…最近民眾多有游蕩的，多有躲避的…</p>
+<p>臣另外會上疏說明…應該設置…曾經有多餘的財富和僥倖得到的物資，而不敢冒長懼弧…善待…盤踞…勞動的人…列入…奧隸，那麼民眾都會去務農…好香必令聚集師生…人多多…錯雜…民眾多屈…流民…應該把他們合並成通衢…</p>
+<p>分別隸屬於各個鄉約，定居有撥賦，外出有節制，這樣就能登記民眾…</p>
+<p>這樣嫌惡的人就會離開，就不會回到樂土…引導這十種民眾，可以…市民也多…不妨試著推行各地，無論在城在鄉…</p>
+<p>〔保甲的進一步說明〕</p>
+<p>狂妄的人就可以加以控制，受傷而流離失所的人就可以恢復…之後鄉約就絕不會被虛置…</p>
+<p>只要能實行學較，就能舉報盜賊。化而風俗就會改善，風俗改善了就會出現賢人。皇上有教化存神的實際成效，做臣子的又何必爭著說痛哭流涕的話呢？在這個世代睦親樂利的成果就在眼前，怎麼還需要求政於祖宗呢？</p>
+<p>祖宗的新棲所近在咫尺，孔孟詩書所教的士子中有華而無實的，皇上的網羅所收…孔孟詩書所教的士子中有華而無實的，或君而無臣…</p>
+<p>舉一而知百，不過是徒供言論…只要讓澤潤磨平有方…實行學較…</p>
+<p>〔收尾陳言〕</p>
+<p>勅令禮部向學臣頒佈鄉約、保甲的二款內容；勅令都察院行文撫按向司道頒佈，共同責成府州縣官，每年考課其…結果上報吏部，分別實施升遷或降黜。這對於治理和平的要求似乎不必向別處尋求了。由於這是條陳，字數超過規定，懇請原宥。臣恭敬地等待…</p>
+<p>聖上的命令。</p>
+<p><strong>崇禎九年二月二十六日上奏</strong></p>
+<p>本月二十九日奉聖旨：「你奏的事情已經有旨意了，該部知道。」</p>
+<h3 id="題解_3">題解</h3>
+<p>這是卷31中最長、也最富政治思想的一份奏疏。郭之奇即將升任福建布政使司，借此機會系統地闡述了他對晚明社會治理的總體構想——「三事並舉」（學較、鄉約、保甲），形成了一套從教育、教化、社會組織到基層管理的完整體系。</p>
+<p><strong>四個層次的政策主張</strong>：</p>
+<ol>
+<li><strong>學較改革</strong>（教育）</li>
+<li>月考文武：每月考文一次、射一次</li>
+<li>三儒甄選：大儒、謹儒、秀儒</li>
+<li>監督機制：教官無力則縣令彈劾；縣令不公則學臣彈劾</li>
+<li>
+<p>目標：甄選人才，激勵士子</p>
+</li>
+<li>
+<p><strong>鄉約推行</strong>（教化）</p>
+</li>
+<li>理論基礎：《太祖教民六諺》、孔子「五覲於鄉」</li>
+<li>組織結構：里正、坊正、保長、老人</li>
+<li>機制：舉賢能，整風俗，減訴訟</li>
+<li>
+<p>目標：「善彰惡糾，奸無所容」</p>
+</li>
+<li>
+<p><strong>保甲制度</strong>（社會組織）</p>
+</li>
+<li>組織形式：什伍相收（十人為一什）</li>
+<li>功能：互相監督，相互扶助</li>
+<li>對象：流民、游民、盜賊等邊緣人口</li>
+<li>
+<p>目標：「狂徒可得而散，傷殘戶口可得而復」</p>
+</li>
+<li>
+<p><strong>垂直監督系統</strong></p>
+</li>
+<li>禮部+都察院聯動</li>
+<li>學臣+撫按聯動</li>
+<li>府州縣為執行中樞</li>
+<li>三年一大課，結果報銓部（人事部）</li>
+</ol>
+<p><strong>理論創新</strong>：郭之奇將傳統的各項制度（學校、鄉約、保甲）重新整合，形成了一個有機的社會治理網絡。他強調這三項制度不是割裂的，而是相互支撐的——學較選拔人才，鄉約教化風俗，保甲組織民眾，三者結合才能實現「上理立臻」（上層的治理迅速建立）。</p>
+<p><strong>政治背景</strong>：這份奏疏上於崇禎九年（1636），距離崇禎帝上台已經7年。郭之奇的改革方案反映了當時官僚集團對晚明社會危機的深度思考——盜賊猖獗、風俗敗壞、人才凋零，根本原因不在於刑罰太輕，而在於教化不足、社會組織鬆散。</p>
+<p><strong>郭之奇的升遷預示</strong>：「今陞福建布政使司」——郭之奇在京城的政績已經得到認可，準備升任地方。這份奏疏實際上是他為將來的地方任職預先準備的施政綱領。</p>
+<hr />
+<h2 id="五、為請宥察獘事">五、為請宥察獘事</h2>
+<p><strong>essay_id</strong>: 05_request_for_exoneration</p>
+<blockquote>
+<p>📍 scan372左–374頁 | 崇禎十三年八月十七日具奏（含附遵堂疏）</p>
+</blockquote>
+<h3 id="奏摺信息_4">奏摺信息</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>具奏日期</strong></td>
+<td>崇禎十三年八月十七日</td>
+</tr>
+<tr>
+<td><strong>奏疏主題</strong></td>
+<td>請求皇帝察核、寬宥，以安心赴新任</td>
+</tr>
+<tr>
+<td><strong>郭之奇職銜</strong></td>
+<td>禮部主客清吏司署郎中事主事、今陛福建布政使司右參議兼按察司僉事</td>
+</tr>
+<tr>
+<td><strong>回覆聖旨</strong></td>
+<td>本月二十日奉旨：「該部察獘其奏」</td>
+</tr>
+<tr>
+<td><strong>關鍵成就</strong></td>
+<td>六年清廉管理兩館，任怨職重；奏繳銀兩共計超過9000兩；發過貢夷11起，節省餘銀820兩</td>
+</tr>
+<tr>
+<td><strong>心理狀態</strong></td>
+<td>疵抽過篤、遇事認真，但深感功績可能被誤解或遺忘，故祈求明編敘錄</td>
+</tr>
+</tbody>
+</table>
+<h3 id="原文_4">原文</h3>
+<p>禮部主客清吏司署郎中事主事今陛福建布政使司右參議兼按察司僉事　臣郭之奇　謹</p>
+<p><strong>奏</strong>為請宥察獘事。</p>
+<p>〔自陳功績〕</p>
+<p>有察獘事○臣嶺海孤蹤值○龍飛首科選讀中秘書者六年發西散舘收授春書○</p>
+<p>二百七十餘年來惟臣一人而已○履職之後很○承提督兩舘之役任怨清久積之姦觸忌裁新○增之費○於八年七月二十六日奏為兩舘額費○當清等事本月二十九日奉</p>
+<p><strong>聖旨</strong>這所奏兩舘見餘銀兩郭之奇亦見鑒別刮銀着○該衙門炒數查收以後每歲節省餘銀提督官徑○行奏繳○其二三河縣節次額解是否在官在民該撫○按查明具奏禮部知道欽此感激</p>
+<p>明編蕪蕞課業前後三年○發過貢夷十一起○自指倖薪修理舘牆一帶節省餘銀八百二十兩○經臣已陞任去</p>
+<p>承提督兩舘之役任怨清久積之姦觸忌裁新增之費○於八年七月二十六日奏為兩舘額費當清等事……增之費於八年七月二十六日奏……</p>
+<p>奏繳過年遠應繳銀九百五十六兩○千二百八十九兩六錢俱領發</p>
+<p>臣已陞任去奏繳立薄存炤今臣已陞任去</p>
+<p>〔請旨定奪〕</p>
+<p>不敢不仰竭報稱此○臣疵抽過篤遇事認真○六○年庶常蹈凉自矣○八葛春署芬怨獨當攸攸奉○職惟思稍答</p>
+<p><strong>聖明</strong>○雖部曹小吏○前後屢荷○明編許以蕞剔優以敘錄每蹲犬馬之力○尚深顛越○之誅伏惟</p>
+<p><strong>皇上</strong>勅下施行○臣無任悚息待</p>
+<p><strong>命之至</strong></p>
+<p><strong>崇禎十三年八月十七日具</strong></p>
+<p>奏本月二十日奉<strong>聖旨</strong>該部察獘其奏</p>
+<p>〔附遵堂疏〕</p>
+<p><strong>宥察獘　堂疏</strong></p>
+<p>禮部尚書兼翰林院學士　臣<a href="#林" class="internal-link wiki-link">林</a>　謹題</p>
+<p><strong>為遵宥察獘有察獘其奏事主客清吏司案呈本月二十二日奉本部選禮科抄出</strong></p>
+<p>禮部主客清吏司署郎中事王事今陛福建布政使司右參議兼按察司僉事提調學政郭之奇奏為請宥察獘事</p>
+<p><strong>聖旨</strong>奏內事情已有旨了該部知道</p>
+<p>兩清冊可備察也○開領</p>
+<p>内庫至三十七起○日月稿○容催督撫至三十五起日月稿</p>
+<p>手獨勞懼逺年易生乾沒之弊○故奏繳徹底一○清○蓋臣部漂奉</p>
+<p><strong>聖論</strong>嚴戒諸司而之奇遂能朝夕飲冰以五閏月之○交痕○頒發功賞踰萬踵蠙書絕規條可守所稱</p>
+<p>臣○非若察獘既明僱臣得安心新職頂踵髮膚○不可均也○稽坊井之內有游手食無所職事</p>
+<p>〔 尾補記 〕</p>
+<p>事提調學政部之奇奏為謹遵</p>
+<p>宥察獘其奏事本月二十二日奉</p>
+<p><strong>聖旨</strong>該部察獘具奏欽此欽遵抄出到部送司</p>
+<p>到部○該臣等臨將本官收支奉繳過銀數目逐一磨○對○自崇禎十三年四月初十日起至八月二十○日止收過銀一萬一千二百八十九兩六錢○發過銀一萬三千三十三兩六錢發過銀九百五十六兩○俱有印信支移○過圖書領狀可察對也○奏繳過銀九百五十六兩○及圖書領狀可察對也○奏繳過年遠應繳銀九百五十六兩三十三兩六錢○俱有印信支移</p>
+<p>官倶有紋勞之例○所以示勸也○合無頌行各地○緣係條陳字數逾額弁乞原宥……結靃報銓部分行黜陟</p>
+<p><strong>崇禎十三年八月某日具</strong></p>
+<p>九年七月奉</p>
+<h3 id="白話全译_4">白話全译</h3>
+<p>禮部主客清吏司署郎中事主事　今陛福建布政使司右參議兼按察司僉事　臣郭之奇　恭敬地</p>
+<p>上奏　為了請求皇帝察核、寬宥我的事。</p>
+<p>〔自述功績〕</p>
+<p>現請皇帝察核的事項。我是嶺海邊遠地區的孤官，恰好值得龍飛初期（皇帝初立）入選，被選為讀中秘書的人員…</p>
+<p>（這樣的人）二百七十多年來只有我一個人。我接手這份職務以後…承擔了提督兩館的職責。任怨職重，清廉廉潔，解決了長期積累下來的姦弊，觸犯了一些人的利益，裁減了新增的冗費。於六年七月二十六日我上奏「為兩館額費當清」等事，本月（七月）二十九日奉到聖旨說：「你奏的兩館現有餘銀，郭之奇也算認真鑑別了。著該衙門查收核對。以後每年節省的餘銀，提督官可以直接奏繳。」感受到皇帝的恩典和認可。</p>
+<p>認真地進行課業管理，前後三年，發過進貢的蕃國共十一起，自己指揮修理舘牆一帶，節省的餘銀共820兩。</p>
+<p>承擔了提督兩館的職責，任重怨多，廉潔清廉，解決了長期積累下來的姦弊…</p>
+<p>奏繳的銀兩中，應該繳的共900多兩，長期以來應繳銀1200多兩6錢，都已領發。</p>
+<p>我已經升任去了，奏繳有簿冊存檔。現在我已經升任去了…</p>
+<p>〔請皇帝決定〕</p>
+<p>我不敢不恭敬地竭力報效皇帝。我的脾氣性格很仔細、較真，六年來…常常踏凍冰，八葛（？）…春天署簽，埋怨獨當一面…恭敬地奉職，只是想稍稍報答聖明。雖然是部曹的小吏，前後屢次蒙受…明編…許以…優獎以敘錄。每一個微小的動作…都在擔心被反復…的誅罰。伏請皇上勅令…施行，臣恭敬地等待…聖上的命令。</p>
+<p><strong>崇禎十三年八月十七日上奏</strong></p>
+<p>本月二十日奉聖旨：「該部察核這個奏疏。」</p>
+<p>〔附遵堂疏〕</p>
+<p>禮部堂疏——請求寬宥察核</p>
+<p>禮部尚書兼翰林院學士　臣<a href="#林" class="internal-link wiki-link">林</a>　敬上</p>
+<p><strong>為遵寬宥察核有察核其奏事項，主客清吏司呈報，本月二十二日，本部根據禮科抄出</strong></p>
+<p>禮部主客清吏司署郎中事…現陛福建布政使司右參議兼按察司僉事、提調學政的郭之奇，為了請求寬宥察核而上奏。</p>
+<p><strong>聖旨</strong>：「你奏的事情已經有旨意了，該部知道。」</p>
+<p>兩份清冊可以備查…領取…</p>
+<p>內庫至三十七起…日月稿…准許催督撫至三十五起日月稿…</p>
+<p>手獨自操勞，恐懼遠年易生乾沒（虧缺）之弊，所以奏繳徹底清楚。蓋臣部奉…</p>
+<p>聖論嚴厲告誡各司，而郭之奇卻能朝朝夕夕飲冰（苦節），以五閏月交接…頒發功賞超過一萬…有書有規條可守…</p>
+<p>臣…不同（於那些人），既然察核已經明白，讓臣得以安心就職新職，頭頂（？）…不能平均…查…坊里之內有游手好閒、沒有職業的人…</p>
+<p>〔尾部補記〕</p>
+<p>事項提調學政部郭之奇奏為恭敬地遵</p>
+<p>寬宥察核其奏事，本月二十二日奉</p>
+<p>聖旨：「該部察核具奏。欽此欽遵。」抄出到部送司…</p>
+<p>到部…該臣等臨時把本官的收支奏繳銀數目逐一核對，自崇禎十三年四月初十日起至八月二十日止，收過銀1萬1千2百89兩6錢，發過銀1萬3千33兩6錢…發過銀956兩…都有官印支移、文書領狀可查核…奏繳過銀956兩…及文書領狀可查核…奏繳過年遠應繳銀956兩…33兛6錢…都有官印支移。</p>
+<p>官員都有紋勞（記功）的例子，所以是為了示范激勵。合無試著推行各地…由於這是條陳，字數超過規定，懇請原宥……結果上報銓部分別實施升遷或降黜。</p>
+<p><strong>崇禎十三年八月某日上奏</strong></p>
+<p>九年七月奉…</p>
+<h3 id="題解_4">題解</h3>
+<p>這是郭之奇在崇禎十三年（1640）離開禮部、升任福建布政使司右參議兼按察司僉事前夕所上的最後一份奏疏。此時距他開始擔任提督兩館已經七年，距第一份「為兩館額費當清」的奏疏已經五年多。</p>
+<p><strong>身份變化的見證</strong>：
+- 崇禎八年七月：署員外郎事主事
+- 崇禎八年十二月：署員外郎事主事（準備升遷）
+- 崇禎九年二月：署員外郎事主事、今陞福建布政使司
+- 崇禎十三年八月：署郎中事主事、今陛福建布政使司右參議兼按察司僉事</p>
+<p>郭之奇的升遷速度在當時官僚系統中頗為迅速，這充分說明了他的能力和政績得到了中央高層的認可。</p>
+<p><strong>心理層面的轉變</strong>：第一份奏疏（為兩館額費當清）充滿了意氣風發的改革精神；第四份奏疏（為儲才莫先於學較）展現了宏大的治國理想；到了第五份奏疏，郭之奇的語氣開始帶有某種焦慮和自我保護的色彩——他反復強調自己的廉潔、認真、功績，並「怨獨當」，這暗示在他的任期內可能存在某些來自同僚的不理解或打擊。</p>
+<p><strong>堂疏的補充證言</strong>：禮部尚書的堂疏特別強調郭之奇「朝夕飲冰」（苦節自持）、「奏繳徹底清楚」，說明在官僚系統內確實存在某些對郭之奇的質疑或攻擊。堂疏的作用就是為他辯護，證明他的廉潔和勤奮是無懈可擊的。</p>
+<p><strong>財務数字的完整統計</strong>：
+- 六年奏繳餘銀：366兩3錢2分
+- 八年四府工食：2498兩中發過2108兛4錢
+- 貢夷進貢期間節省：820兩
+- 十三年四月至八月收繳：1萬1千2百89兛6錢</p>
+<p>這些數字都有「圖書領狀」（官方文書和領取憑證）可以查證，足見郭之奇對財務管理的謹慎態度。</p>
+<p><strong>離職時的感慨</strong>：「不敢不仰竭報稱此」（不敢不恭敬地竭力報效）、「每蹲犬馬之力，尚深顛越之誅」（每一個細微的努力，都在擔心被反復彈劾）。這反映了晚明官場的複雜和危險——即使是廉潔的官員，也無法完全避免被攻擊的可能。</p>
+<hr />
+<h2 id="附録">附録</h2>
+<h3 id="人物索引">人物索引</h3>
+<table>
+<thead>
+<tr>
+<th>人物</th>
+<th>身份</th>
+<th>關聯</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#郭之奇" class="internal-link wiki-link">郭之奇</a></td>
+<td>1607-1662，揭陽（今廣東揭陽）人，號仲常甫</td>
+<td>本卷作者，奏疏上奏人</td>
+</tr>
+<tr>
+<td><a href="#崇禎帝" class="internal-link wiki-link">崇禎帝</a></td>
+<td>明最後一位皇帝（1628-1644在位）</td>
+<td>所有奏疏的接收者，頒發聖旨</td>
+</tr>
+<tr>
+<td><a href="#朱祚昌" class="internal-link wiki-link">朱祚昌</a></td>
+<td>郭之奇前任提督兩館官員</td>
+<td>第二疏提及，七年餘銀已由其奏繳</td>
+</tr>
+<tr>
+<td><a href="#李廷機" class="internal-link wiki-link">李廷機</a></td>
+<td>禮部前臣</td>
+<td>編著《奏官要覽》，被第一疏引用</td>
+</tr>
+<tr>
+<td><a href="#黃" class="internal-link wiki-link">黃</a></td>
+<td>禮部尚書，兼翰林院學士</td>
+<td>第二疏附堂疏作者，為郭之奇辯護</td>
+</tr>
+<tr>
+<td><a href="#林" class="internal-link wiki-link">林</a></td>
+<td>禮部尚書，兼翰林院學士</td>
+<td>第五疏附堂疏作者，最終肯定郭之奇的功績</td>
+</tr>
+</tbody>
+</table>
+<h3 id="機構索引">機構索引</h3>
+<table>
+<thead>
+<tr>
+<th>機構</th>
+<th>職能</th>
+<th>涉及奏疏</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>禮部</td>
+<td>禮儀和外事管理部門</td>
+<td>全部奏疏</td>
+</tr>
+<tr>
+<td>主客清吏司</td>
+<td>禮部下屬，管理外交使節和外事</td>
+<td>全部奏疏</td>
+</tr>
+<tr>
+<td>會同館</td>
+<td>接待朝鮮、琉球等藩國使節</td>
+<td>第一、二、三、五疏</td>
+</tr>
+<tr>
+<td>四夷館</td>
+<td>接待西番、烏思藏等遠方進貢者</td>
+<td>第一、二、三、五疏</td>
+</tr>
+<tr>
+<td>戶部</td>
+<td>財政部門</td>
+<td>第一、二疏</td>
+</tr>
+<tr>
+<td>都察院</td>
+<td>監察部門</td>
+<td>第四疏</td>
+</tr>
+<tr>
+<td>吏部</td>
+<td>人事部門</td>
+<td>第三、四、五疏</td>
+</tr>
+<tr>
+<td>邊飼司</td>
+<td>戶部下屬，管理邊地軍事補助</td>
+<td>第二疏</td>
+</tr>
+</tbody>
+</table>
+<h3 id="地名和民族索引">地名和民族索引</h3>
+<table>
+<thead>
+<tr>
+<th>地點/民族</th>
+<th>說明</th>
+<th>涉及奏疏</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>朝鮮</td>
+<td>藩國，派遣使節進貢</td>
+<td>第二、三疏</td>
+</tr>
+<tr>
+<td>西番</td>
+<td>西部少數民族地區</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>烏思藏</td>
+<td>今西藏地區</td>
+<td>第二、三疏</td>
+</tr>
+<tr>
+<td>好地坪</td>
+<td>蠻族地名</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>苟家坪</td>
+<td>蠻族地名</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>焉坪</td>
+<td>蠻族地名</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>嘉石草坡</td>
+<td>蠻族地名</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>博峪</td>
+<td>蠻族地名</td>
+<td>第三疏</td>
+</tr>
+<tr>
+<td>三河縣</td>
+<td>明代縣名</td>
+<td>第一、二疏</td>
+</tr>
+<tr>
+<td>福建</td>
+<td>郭之奇升任地</td>
+<td>第四、五疏</td>
+</tr>
+</tbody>
+</table>
+<h3 id="版本說明">版本說明</h3>
+<p><strong>底本來源</strong>：
+- 原始文獻：《宛在堂文集》卷三十一（奏疏）
+- PDF掃描源：耶魯大學古籍數字化項目
+- 掃描頁碼：363–374（共12頁）
+- 轉錄方法：逐頁視覺識別與校讀</p>
+<p><strong>轉錄規範</strong>：
+- 繁體原文：完整保留，包括異體字和俗字
+- 斷句符號：原文使用「○」號作為停頓符，全部保留以示原貌
+- 損傷頁面：第365-367頁部分文字因掃描或年代久遠而不清晰，已標注
+- 圈點符號：原文無圈點，本轉錄亦無添加</p>
+<p><strong>標點與分段</strong>：
+- 按照現代標點習慣進行分段
+- 奏疏正文內保留【】以示重點內容
+- 聖旨、堂疏等正式文件用引文框示</p>
+<p><strong>簡體翻譯原則</strong>：
+- 白話全譯採用簡體中文，便於現代讀者理解
+- 保留關鍵官職、地名、人名的信息
+- 古文語序和倒裝均按現代漢語習慣調整
+- 推敲古義：重視原文的邏輯和意圖，而非逐字逐句機械翻譯</p>
+<p><strong>題解撰寫標準</strong>：
+- 背景交代：說明奏疏上奏的具體時間、身份、原因
+- 內容梗概：列舉主要觀點和政策建議
+- 政治評析：分析該奏疏在當時官僚系統和政治環境中的地位
+- 史料價值：指出對理解晚明財務、外交、教育等方面的意義
+- 文獻參考：引用同時代的相關文獻或政策</p>
+<p><strong>校讀說明</strong>：
+- 第一疏「為兩館額費當清等事」：原文多有「○」號表示停頓，已全部保留
+- 第二疏「為遵旨奏繳等事」：附堂疏，出自禮部尚書黃氏，文字存在重複，已按邏輯梳理
+- 第三疏「為察覈貢夷進貢等事」：篇幅較短，內容精簡有力
+- 第四疏「為儲才莫先於學較等事」：全卷最長，涉及教育改革、鄉約、保甲等三大主題，文字密集，有多處因掃描質量而難以辨認的地方
+- 第五疏「為請宥察獘事」：最後一份奏疏，離職前的總結與自陳</p>
+<p><strong>Obsidian 格式適配</strong>：
+- Wiki 鏈接：所有人名、地名、機構名均用 [[]] 標記，便於構建知識圖譜
+- YAML 前置元數據：記錄卷數、文體、作者、時間等基本信息
+- Markdown 標題等級：按照邏輯層次劃分，便於大綱視圖
+- 表格形式：對比複雜信息時採用 Markdown 表格</p>
+<hr />
+<p><strong>轉錄完成日期</strong>：2026-03-20
+<strong>校讀確認</strong>：Claude 4.5 (Haiku Model)
+<strong>文獻引用</strong>：《宛在堂文集》卷31，郭之奇 著</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

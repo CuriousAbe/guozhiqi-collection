@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>郭之奇年谱 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" class="active">郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="郭之奇年谱">郭之奇年谱</h1>
+<h2 id="基本信息">基本信息</h2>
+<p><strong>讳名</strong>: 之奇
+<strong>字号</strong>: 字仲尝，号寂子，一号正夫，又号玉溪
+<strong>籍贯</strong>: 广东潮州府揭阳县东口人
+<strong>生卒</strong>: 万历三十五年丁未（1607）八月十八日庚辰 → 永历十六年壬寅（1662）八月十九日己未殉节
+<strong>享年</strong>: 五十六岁</p>
+<p><strong>谥号</strong>: 忠节（乾隆四十一年追谥）</p>
+<hr />
+<h2 id="家族世系">家族世系</h2>
+<h3 id="父系">父系</h3>
+<ul>
+<li><strong>祖父</strong>: 明作公，号静湖，庠生，秉德礼让，祀乡贤。生于嘉靖十八年（1539），卒于万历三十三年（1605），年六十九。</li>
+<li><strong>父</strong>: 首鸿公，名应试，字国征，万历十二年（1585）生，隆武二年丙戌（1646）卒，年六十。配林氏（海阳人，林尚书熙春长孙女）。</li>
+</ul>
+<h3 id="父系兄弟">父系兄弟</h3>
+<ul>
+<li>长兄用章，字伯尝，号俊夫，武英殿中书科中书舍人</li>
+<li>三弟之章，字叔尝，号文夫，隆武丙戌登明经，九月战死</li>
+<li>四弟之廉，字季尝，号介夫，永历中奉敕兵部员外郎</li>
+<li>五弟之宰，字立夫（庶出）</li>
+<li>六弟之产</li>
+<li>七弟之蕙，字显夫，增生，迁居棉湖</li>
+<li>八弟之音，国学生</li>
+</ul>
+<h3 id="妻室">妻室</h3>
+<ul>
+<li><strong>元配</strong>: 林氏，海阳人，林尚书熙春长孙女，年三十三。</li>
+<li><strong>继室</strong>: 周氏，澄海冠陇人，年六十九，再加锡命一品夫人。</li>
+<li><strong>继室</strong>: 张氏，直隶顺天府人，中极殿大学士张翼凤长女，年十六来归，十九岁卒于石井。</li>
+<li><strong>侧室</strong>: 陈氏，海阳人，年八十六。</li>
+</ul>
+<h3 id="子女">子女</h3>
+<ul>
+<li><strong>长子天赖</strong>（天顺），字尔兴，号二则，康熙九年岁贡，荫尚宝司丞，年六十一。</li>
+<li><strong>次子天提</strong>，字尔肃，号慈庵，康熙十七年岁贡，荫尚宝司丞。</li>
+<li><strong>三子天社</strong></li>
+<li><strong>四子天稠</strong>，字尔甸，号潜园，早卒。</li>
+<li><strong>义子天祉</strong>，从先生至桂林，荫国子监生。</li>
+<li>女八人，多不育。一女名玉，年十三死于壬辰（1652）贼风之变。</li>
+</ul>
+<p><strong>墓葬</strong>: 先生与林夫人合葬揭阳蓝田都。周夫人、张夫人墓葬官溪都盐垣滕吊岭。</p>
+<hr />
+<h2 id="年谱">年谱</h2>
+<h3 id="万历三十五年丁未（1607）">万历三十五年丁未（1607）</h3>
+<p><strong>先生出生</strong>，八月十八日庚辰生。</p>
+<h3 id="崇祯元年戊辰（1628），先生二十二岁">崇祯元年戊辰（1628），先生二十二岁</h3>
+<p><strong>上进士第</strong>，殿试以孟夏一日。时总裁首相施凤来，次辅张瑞图。房师雷跃龙得先生卷，惊叹以为异才，与何吾驺同荐为元卷。
+<strong>选授翰林院庶吉士</strong>。</p>
+<h3 id="崇祯六年癸酉（1633），先生二十七岁">崇祯六年癸酉（1633），先生二十七岁</h3>
+<p><strong>假满</strong>。偕兄用章晋京。坐失权贵，散馆左迁礼部主客清吏司主事、提督会同馆。
+祖母谓之曰："儿之邀于天下者早，是必不能援手于人；儿若行所志而不能干时也，吾知之稔矣；确然。宁为此，勿为彼。"</p>
+<h3 id="崇祯九年丙子（1636），先生三十岁">崇祯九年丙子（1636），先生三十岁</h3>
+<p><strong>主试河南</strong>。事竣，转郎中。</p>
+<h3 id="崇祯十年丁丑（1637），先生三十一岁">崇祯十年丁丑（1637），先生三十一岁</h3>
+<p>五弟之宰生（庶出）。闰四月初二日，继室张氏生。</p>
+<h3 id="崇祯十七年甲申（1644），先生三十八岁">崇祯十七年甲申（1644），先生三十八岁</h3>
+<p><strong>擢太仆寺少卿</strong>。抚院萧奕辅、张肯堂，按院李祸京、陆清源先后荐举，秩满以廉卓升太仆寺少卿。</p>
+<h3 id="弘光元年乙酉（1645），先生三十九岁">弘光元年乙酉（1645），先生三十九岁</h3>
+<p>先生在揭阳。四月，清兵南下。二十五日攻扬州，史可法殉难。</p>
+<h3 id="隆武二年丙戌（1646）">隆武二年丙戌（1646）</h3>
+<p>十二月一日，先生脱虎口，依林铭球家。郑芝龙以福州降清。
+<strong>父首鸿公卒</strong>，十二月十五日，年六十。</p>
+<h3 id="永历元年至十三年（1647-1659）">永历元年至十三年（1647-1659）</h3>
+<p><strong>跟随永历帝南明朝廷</strong>，历任詹事府少詹事、礼部侍郎等职。后升任武英殿大学士、礼兵二部尚书。</p>
+<h3 id="永历十三年己亥（1659），先生五十三岁">永历十三年己亥（1659），先生五十三岁</h3>
+<p><strong>行畿路绝</strong>，由思忠至上石西州二十余日，越数日入南交之文渊州。清师入滇，音问隔绝。与光泽王伊铁、总兵杨祥亡命交趾，入文渊州，州官备舍居之。</p>
+<h3 id="永历十五年辛丑（1661），先生五十五岁">永历十五年辛丑（1661），先生五十五岁</h3>
+<p><strong>春，诗集编纂完成</strong>。自丁卯秋至是年春凡二十五载，编诗共十八集，得诗二千八百四十首，赋三篇，铭四首，词十四首，琴操三阕，总曰《宛在堂集》。</p>
+<p>《宛在堂诗集自序》结衔：赐进士第光禄大夫行在少保、兼太子太保、武英殿大学士、礼兵二部尚书，臣郭之奇谨叙。</p>
+<p><strong>八月四日，被执</strong>。与光泽王伊铁、总兵杨祥为交夷永福诱执，献于两广若使。</p>
+<p>时次子天提被夷人政击几毙，犹扶创追随，越数日至明江，创甚，乃留仲弟于明江，独与义子天祉就道。</p>
+<h4 id="《八月四日作纪事诗》二首（绝命诗）">《八月四日作纪事诗》二首（绝命诗）</h4>
+<p><strong>其一</strong>：</p>
+<blockquote>
+<p>十载艰虞为主思，居夷避地两堪论。
+一时平地氛尘满，几叠幽山雾雨翻。
+晓涧哀泉添热血，暮烟衰草送朽魂。
+到头苦节今方尽，莫向秋风洒目痕。</p>
+</blockquote>
+<p><strong>其二</strong>：</p>
+<blockquote>
+<p>成仁取义化前贤，异代同山几自鞭。
+血此长弘新化碧，魂依望帝久为鹤。
+曾无尺寸静高犀，惟有孤丹照简篇。
+万卷诗书随一炬，千秋霜管俟他年。</p>
+</blockquote>
+<h4 id="被执至桂林审讯">被执至桂林审讯</h4>
+<p><strong>八月廿五日</strong>，出南关。十四日至太平，廿一日至当江（南宁）。</p>
+<p><strong>九月五日</strong>，过乌蛮滩，谒伏波祠。十三日泊藤县。十五日抵签梧。廿二日抵端水。</p>
+<p>既抵肇庆，两广李栖凤礼待有加；先生不为少屈，手书示天侦，曰：</p>
+<blockquote>
+<p>"予负国重恩，义当死成吾志尔；事之废兴，天也。"</p>
+</blockquote>
+<p><strong>十一月一日</strong>，冬至。</p>
+<p><strong>九日</strong>，诸当事集庙中询避地始末，诗代供曰：</p>
+<blockquote>
+<p>"明室孤臣抱苦忠，十年通播此微躬，截桑无地堪休否，歌麦何人许共同。《稽古》漫留《洪范》在（避地著《稽古篇》百卷），生今那得冒冠终，便教扶亡我安适，谁念西山薇尽空。"</p>
+</blockquote>
+<p><strong>询问所愿</strong>，先生应之曰：</p>
+<blockquote>
+<p>"余何愿哉？余登籍三十四年，身为大臣，尺寸未立，生有余愧，死有余责，流诚诛趣，引头似俟，早一日则一日之赐也，余何愿哉？"</p>
+</blockquote>
+<p><strong>被诬"伪相国"</strong>，先生曰：</p>
+<blockquote>
+<p>"明有天下几三百年，二祖十五宗之郝业，焊辟照天地间，何谓伪？诸人咸食旧德，一旦臣事新朝，遽以伪相加，可乎？天下后世，其谓之何？"</p>
+</blockquote>
+<p><strong>除夕</strong>，先生羁馆，读《易》。</p>
+<h3 id="永历十六年壬寅（1662），先生五十六岁">永历十六年壬寅（1662），先生五十六岁</h3>
+<p><strong>正月十三日</strong>，吴三桂以帝还滇都。</p>
+<p><strong>春</strong>，在羁。定《道德经》为六十四章，系诗八首。又变括《南华经》。</p>
+<p><strong>清明</strong>，赋《悼亡》二首。先生序云：</p>
+<blockquote>
+<p>"予自己丑秋鳄江解缆，遭时多故，未能合严滨于慈母，四尺有待，雨泪终垂。由是泛泛东西。壬辰秋，五节没于珠滨；乙未秋，内子丧于石井，并一子弗育；己亥秋，阙儿没于文渊；庚子冬，辰女藏于禄平。诸丧分叠一方，各未归浅土，虽魂气无不至而山川绝阻，死而有知，不知其聚怨何所也。"</p>
+</blockquote>
+<h4 id="《悼亡》其一：">《悼亡》其一：</h4>
+<blockquote>
+<p>死别生羁倍黯然，佳江格浦共朝烟，
+松楸在目三千里，戈戟藏身十四年。
+故国方诛驼马料，荒茔孰挂鬼神钱？
+眼看数日残春了，五月书邮竟绝传。</p>
+</blockquote>
+<h4 id="《悼亡》其二：">《悼亡》其二：</h4>
+<blockquote>
+<p>晦晦明明此日天，生生死死孰相怜？
+余身久作青编汗，诸痛谁分白打钱？
+绝壤魂迷风雨外，故丘目断水云边。
+肠回九曲千轮转，消潜三春万点连。</p>
+</blockquote>
+<p><strong>四月十五日</strong>，吴三桂缢帝于云南。</p>
+<p><strong>先生闻永历帝在滇被害，作《滇云叹》三首吊之</strong>：</p>
+<blockquote>
+<p>"日落风飘万里京，天阴雨坠百城氛，
+金戈铁马威灵怒，白骨青磷怨恨纷。
+野哭安知九夏鬼，战场谁吊古今文？
+泛泛暮暮伤魂处，姓灭名销那可论？"</p>
+</blockquote>
+<h3 id="八月十九日，先生殉节">八月十九日，先生殉节</h3>
+<p>帝入缅甸，光泽王伊铁、总兵杨祥亦亡入其地，交人惧祸及，并执送广西。两司以下官多先生旧下士，委曲谕降，先生不屈，攸酒赋诗而死。</p>
+<p>杨祥，蜀人，不识字而以忠义自许，同日遇害，望西叩头谢恩，危坐就刑，神色不变，观者无不流涕焉。</p>
+<hr />
+<h2 id="身后追封">身后追封</h2>
+<ul>
+<li><strong>乾隆四十一年（1776）</strong>: 朝定《殉节录》，复先生原官，赐谥<strong>忠节</strong>。</li>
+<li><strong>嘉庆二年（1797）</strong>: 奉旨崇祀忠庙，兼祀乡贤。</li>
+</ul>
+<hr />
+<h2 id="参考文献">参考文献</h2>
+<ul>
+<li>饶宗颐《郭之奇年谱》，《新亚学报》第十六卷上，香港，1991-1993</li>
+<li>《明清史料》</li>
+<li>《小腆纪年》</li>
+<li>温睿临《南疆逸史》卷四</li>
+<li>《殉节录》</li>
+<li>《揭阳县志》</li>
+</ul>
+<hr />
+<h2 id="注记">注记</h2>
+<p>此年谱由饶宗颐弱冠时草创，抗战中因见郭之奇家乘，于世系能详加排列。饶氏所藏郭之奇著述《稽古篇》与《宛在堂集》，均为第一手资料。后经多次修订，原刊《选堂集林·史林》（香港中华书局，1982）。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

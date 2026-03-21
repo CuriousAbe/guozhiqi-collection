@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷十九 · 詩餘（詞） — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" class="active">卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷十九-·-詩餘（詞）">卷十九 · 詩餘（詞）</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之十九</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+来源：搜韵网校本 | 富版本编订 2026-03-21</p>
+</blockquote>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>行香子 其一</td>
+</tr>
+<tr>
+<td>2</td>
+<td>行香子 其二</td>
+</tr>
+<tr>
+<td>3</td>
+<td>行香子 其三</td>
+</tr>
+<tr>
+<td>4</td>
+<td>行香子 其四</td>
+</tr>
+<tr>
+<td>5</td>
+<td>采桑子 对花</td>
+</tr>
+<tr>
+<td>6</td>
+<td>南乡子 欲别花竞开</td>
+</tr>
+<tr>
+<td>7</td>
+<td>踏莎行 登楼望紫峰</td>
+</tr>
+<tr>
+<td>8</td>
+<td>长相思 听黄鹂</td>
+</tr>
+<tr>
+<td>9</td>
+<td>忆秦娥 雨后川茶</td>
+</tr>
+<tr>
+<td>10</td>
+<td>捣练子 海棠</td>
+</tr>
+<tr>
+<td>11</td>
+<td>忆王孙 白海棠</td>
+</tr>
+<tr>
+<td>12</td>
+<td>如梦令 松竹梅兰四君</td>
+</tr>
+<tr>
+<td>13</td>
+<td>卜算子 五日怀旧</td>
+</tr>
+<tr>
+<td>14</td>
+<td>西江月 六日饮醉华馆</td>
+</tr>
+<tr>
+<td>15</td>
+<td>卷级索引与推荐阅读</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>本卷收词十五首，为全集中唯一的词作专卷。词牌涉及行香子、采桑子、卜算子、忆王孙、踏莎行、长相思、如梦令、西江月、揣练子等。题材以伤春感怀、闺思离情为主。</p>
+<hr />
+<h2 id="行香子-其一">行香子 其一</h2>
+<blockquote>
+<p><strong>词牌</strong>：行香子 | <strong>创作年代</strong>：己巳年（推测）
+<strong>主题</strong>：<code>#春病</code> <code>#隐逸</code> <code>#自遣</code> <code>#闲适</code>
+<strong>小序</strong>：春病自遣四首之一</p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>懒著乌纱。羞带青花。笑书生、弹铗空嗟。焚香久坐，拱手高叉。叹官无守，言无职，客无家。　晓睡初觉，日影窗斜。问今朝、暂恕諠哗。松头怯理，痒背慵爬。倖免参朝，免揖阁，免排衙。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>上阙：我懒得戴上乌纱帽，羞于系上官服上的青色装饰。我嘲笑那些书生，弹着琴却为无官可做而空自叹息。我焚起香来久久坐着，拱起双手悠闲地交叉盘腿。我叹息官位没有规矩可守，言论没有职权来执行，身体则没有家可归。</p>
+<p>下阕：早晨才从睡眠中刚刚觉醒，太阳的影子已经斜过窗户。我问一下今天早晨，能不能暂时不用去应付那些嘈杂的公务。松针上我怯于打理，背上痒痒的我又懒得去挠。我幸运地能够免去参加朝会，免去向官阁行礼，免去排队站班的麻烦。</p>
+<h3 id="题解">题解</h3>
+<p>这首词是郭之奇"春病自遣"组诗的开篇。"春病"可能指春天的慢性疾病，也可能是诗人用以自遣的一个托词——实际上是对官场生活的厌倦。</p>
+<p>上阕通过对官衣官帽的厌弃，表现出诗人对官僚身份的消极态度。"弹铗空嗟"出自《史记》中冯谖弹铗的故事，借喻无所作为的不满。但接下来诗人立刻转向积极的一面——通过焚香、盘坐等禅定式的动作，寻找精神上的安顿。"叹官无守，言无职，客无家"三个短句，用排比手法强化了一种四海为家、无所拘束的自由感。</p>
+<p>下阕则是对具体生活细节的描写。早晨苏醒、窗外日影、松头、痒背，这些细节都显示了诗人在病中的闲散状态。最后三句"倖免参朝、免揖阁、免排衙"更是一种调皮的自嘲——本来应该是官员的责任，诗人却把它们当成了可以逃脱的烦恼。这反映了郭之奇内心的矛盾：既做着官，又想逃离官场。</p>
+<hr />
+<h2 id="行香子-其二">行香子 其二</h2>
+<blockquote>
+<p><strong>词牌</strong>：行香子 | <strong>创作年代</strong>：己巳年
+<strong>主题</strong>：<code>#春病</code> <code>#生活困顿</code> <code>#自遣</code> <code>#天涯</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>斗室如蜗。疏帘半遮。笑春来、万物争芽。一时红绿，几处豪奢。看柳欲黄，李欲白，桃欲华。　三年为客，万里天涯。那更堪、愁病相加。心摇动魄，口热浮牙。且自端居，自煮药，自烹茶。</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>上阙：我的小房间蜷缩得像蜗壳一样。疏松的布帘子半遮半开。我笑着看春天来了，万物都在争先恐后地萌芽。一时间红花绿叶，有几处人家奢华地装饰。我看柳树即将泛黄，李花即将洁白，桃花即将绽放。</p>
+<p>下阕：我已经在异乡为客三年了，旅行在万里之外的天涯。那更加令人难受啊，愁苦和病痛加在一起。心灵摇晃，魂魄动摇，嘴里上火，牙齿浮肿。姑且让我自己安居，自己煮药，自己煮茶。</p>
+<h3 id="题解_1">题解</h3>
+<p>这首词的视角从第一首的居家病中转向了生活的困境。"斗室如蜗"的意象显示了诗人窘迫的生活条件，而"三年为客，万里天涯"则暗示这可能是远离故乡的贬官或流放状态。</p>
+<p>上阕虽然描写春天的萌动，但基调却是冷静的、观察性的。诗人在狭小的房间里，隔着半遮的帘子观看外面的春色。"万物争芽"的生命力形成了与"斗室如蜗"的强烈对比。</p>
+<p>下阕的转折尤其深刻。"三年为客，万里天涯"的孤独，加上"愁病相加"的双重困扰，使得诗人的"自遣"显得更加苍白无力。但是，他最终还是选择了一种自我治疗的方式——"自煮药，自烹茶"。这不仅是生活的必要，更是一种精神的自救。</p>
+<hr />
+<h2 id="行香子-其三">行香子 其三</h2>
+<blockquote>
+<p><strong>词牌</strong>：行香子 | <strong>创作年代</strong>：己巳年
+<strong>主题</strong>：<code>#春病</code> <code>#文人雅兴</code> <code>#债务</code> <code>#山水隐逸</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>酒债权赊。书田谩佘。笑研朱、冻笔先叉。寻行自哂，数墨穴嗟。听云中雁、檐中雀、树中鸦。　春来谁主，人病无家。念此生、水中泛苴。几时归去，相逐烟霞。得寻好山，修好竹，栽好花。</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>上阙：酒债可以暂时赊欠，书田的收入也可以先花用。我笑话自己研朱砂时，冻笔已经先裂开了。我自己寻找行文的规律而又自我嘲笑，数着墨水的洞穴而叹息。我听着云中的雁叫、檐下的雀鸣、树上的鸦啼。</p>
+<p>下阕：春天来了，谁来主持这个季节呢，而我这个病人却没有家。我念想着这一生，就像水中漂浮的稿草。要到什么时候才能回去，去追逐烟霞。我想找到好的山水，修建好的竹林，种植好的花卉。</p>
+<h3 id="题解_2">题解</h3>
+<p>这首词从更广阔的文化视野上来看待诗人的困境。"酒债权赊""书田谩佘"暗示诗人的经济状况并不宽裕，但他仍然坚持文人的雅兴——"研朱""冻笔""寻行""数墨"都是文化活动。这种在困顿中维持雅兴的精神，体现了传统知识分子的坚守。</p>
+<p>"听云中雁、檐中雀、树中鸦"是对外界声音的细致捕捉。这三种鸟的鸣叫各有不同的高度和质感，诗人似乎通过这些声音在寻找一种精神的寄托。</p>
+<p>下阕的"水中泛苴"是一个悲凉的自喻——生命漂浮不定。但随即转向了未来的展望："几时归去，相逐烟霞。得寻好山，修好竹，栽好花。"诗人在设想一个理想的未来——回到山水之间，从事园艺和隐逸的生活。这显示了他对明天的期待，尽管这期待最终也可能落空。</p>
+<hr />
+<h2 id="行香子-其四">行香子 其四</h2>
+<blockquote>
+<p><strong>词牌</strong>：行香子 | <strong>创作年代</strong>：己巳年
+<strong>主题</strong>：<code>#春病</code> <code>#及时行乐</code> <code>#山水游历</code> <code>#音乐</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>时光如谺。世事多枷。待乘兴、远去京华。千钟好酒，一叶游艖。看歌竹枝，吟杨柳，拨琵琶。　湖山好处，即是卿家。又何须、驷马好车。且从馀好，不与人誇。便逐桃花，随流水，问仙槎。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>上阙：时光就像回声一样转瞬即逝啊，世间的事物多像枷锁一样束缚。我要乘着兴致，远远地离开京城华美。有千钟的好酒，一叶的游船。我看着竹枝歌舞，吟诵杨柳，拨动琵琶。</p>
+<p>下阕：湖山最美好的地方，就是我的贵人啊。又何必需要四匹马拉的好车呢？我姑且从我的余好，不向人夸耀。我就跟随桃花流水，去问仙人的槎（木筏）。</p>
+<h3 id="题解_3">题解</h3>
+<p>这首词是"春病自遣"四首中最具积极性的一首。从前三首的困顿、思乡、贫窘，诗人终于转向了积极的行动宣言。</p>
+<p>"时光如谺"是对时间无常性的一种形象表达——回声正反反复，时光也在不断流转。"世事多枷"则是对社会束缚的直接指责。但在这个悲观的前提下，诗人提出了自己的解决方案：不是抱怨，而是"乘兴远去"。</p>
+<p>"千钟好酒，一叶游艖"显示了诗人对物质享受的爱好，但这种享受的规模并不大——"一叶"的游船和"千钟"的酒都是相对而言的奢侈，而不是炫耀性的排场。</p>
+<p>最后四句是对人生理想的简洁陈述。诗人放弃了官位（"驷马好车"）的象征，转向了自然和艺术："湖山好处，即是卿家"——最好的地方就是我的故乡和精神家园。"便逐桃花，随流水，问仙槎"则显示他最终要做一个像神仙一样漂泊的诗人。整首词从抗争转向了和解——不是与世界和解，而是与自己的命运和解。</p>
+<hr />
+<h2 id="采桑子-对花">采桑子 对花</h2>
+<blockquote>
+<p><strong>词牌</strong>：采桑子 | <strong>创作年代</strong>：不详（推测为春暮时节）
+<strong>主题</strong>：<code>#花</code> <code>#观赏</code> <code>#感伤</code> <code>#衰落</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>捲帘独对庭花满，忽起春思。忽止春思。此意东风莫教知。　多情巧鸟衔花去，零落芳枝。日暮烟垂。正是愁人叹息时。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>上阕：我卷起帘子独自对着满院子的花。忽然生起了春天的思情，又忽然停止了这种思绪。这样的心意，但愿东风不要知道。</p>
+<p>下阕：那多情巧妙的小鸟衔着花飞去了，花枝零落凋谢了。太阳要落下去，烟雾垂垂落下。正是愁人叹息的时刻。</p>
+<h3 id="题解_4">题解</h3>
+<p>这是一首典型的春怨词。短短四十几字，却包含了对季节、对美好、对无常的完整思考。</p>
+<p>上阕的"捲帘独对"显示了一个独处的女性（或者说，处于女性视角的诗人）在欣赏春花。"忽起春思，忽止春思"的反复，表现了一种不稳定的情绪状态——春天的美好不断激发情感，但理性又在不断压制这种情感。"此意东风莫教知"很含蓄地暗示了这种纠结的心态：不想让东风（象征爱情和春情的传统意象）知道自己内心的波澜。</p>
+<p>下阕的转折是悲凉的。"多情巧鸟衔花去"中的小鸟带走了花——这可能是对爱人离去的一种隐喻。"零落芳枝"和"日暮烟垂"共同营造了一个暮色苍茫的场景，而"正是愁人叹息时"则直接点出了这个时刻对于有心人来说的特殊意义。</p>
+<p>整首词以极简的笔触，捕捉了春天的衰落和人心的哀愁之间的共振。</p>
+<hr />
+<h2 id="南乡子-欲别花竞开">南乡子 欲别花竞开</h2>
+<blockquote>
+<p><strong>词牌</strong>：南乡子 | <strong>创作年代</strong>：不详（推测为行役前夕）
+<strong>主题</strong>：<code>#离别</code> <code>#春花</code> <code>#时间</code> <code>#行役</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>积雨令花痴。花正含情人欲离。几度停杯花下立，须知。一寸柔肠百丈丝。　春老促征期。不信人愁花解思。万紫千红争破色，为谁。夜夜东风著意吹。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>上阕：连续的雨让花儿都痴迷了，而花正含着情意时，人却要离开。我在花下停了好几次酒杯而立，你要知道啊，一寸的柔肠却有百丈的思念丝线。</p>
+<p>下阕：春天快要老了，催促着行役的期限近了。我不相信人的愁苦，花儿就能理解我的思想。万紫千红的花争着绽放，但这是为了谁呢？夜夜东风都特别用心地吹拂。</p>
+<h3 id="题解_5">题解</h3>
+<p>这首词将个人的行役离别与春天的衰落同步。诗人在即将出发的前夜，对着花园进行最后的观看。</p>
+<p>"积雨令花痴"显示了连续的雨在改变花的性状，而"花正含情人欲离"则是一个尖锐的对比——在最好的时刻，分离却来了。"几度停杯花下立"说明诗人反复经过这个地方，每次都被吸引。"一寸柔肠百丈丝"是对离愁的夸张化表现——细微的柔肠却被拉成了百丈长的思念之线。</p>
+<p>下阕的"春老促征期"暗示了季节与人事的关联——春天衰落了，征期也逼近了。诗人略带讽刺地说"不信人愁花解思"——我不相信花真的能理解人的愁苦。但"万紫千红争破色，为谁"又显示了诗人赋予花卉特殊的象征意义。最后的"夜夜东风著意吹"可能是对命运的控诉——连东风都在不断推动这个分离的进程。</p>
+<hr />
+<h2 id="踏莎行-登楼望紫峰">踏莎行 登楼望紫峰</h2>
+<blockquote>
+<p><strong>词牌</strong>：踏莎行 | <strong>创作年代</strong>：不详
+<strong>创作地</strong>：某楼阁
+<strong>主题</strong>：<code>#山</code> <code>#远望</code> <code>#宴集</code> <code>#山水</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>烟浸眉头，春深眼底。山容破雨明如水。遥怜□树秀深峰，满城光艳难相拟。　鸟去还来，云飞复止。□曾更上穷千里。忘言独对忽移时，夕阳宵月信堪喜。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>上阕：烟雾浸染着眉头，春日深深地进入了眼底。山容在雨后破晓而明亮，就像水一样清晰。我远远地怜惜着某树在深山中秀出的样子，但满城的光艳都难以与之相比。</p>
+<p>下阕：鸟儿飞去又飞来，云彩飞动又停止。曾经有人更往上走去，穷尽了千里的远望。我忘记了言语，独自对着山景，忽然间时光就移动了。夕阳和宵月都值得欣喜。</p>
+<h3 id="题解_6">题解</h3>
+<p>这首词是对一次登楼观景经历的记录。尽管有两个字缺损（标记为□），但整体的意象仍然清晰。</p>
+<p>"烟浸眉头，春深眼底"是对视觉和感受的一种融合表达。烟不仅是客观的自然现象，也是诗人心理状态的投射。"山容破雨明如水"用"破"字显示了雨后山峦的清晰——云雾散开，山体显露。</p>
+<p>这首词在结构上有一个有趣的设计：上阕主要写山，下阕则写对时间流逝的感受。"鸟去还来，云飞复止"是对自然运动的捕捉，也隐喻了人生的循环。"忘言独对忽移时"则是诗人在观景中进入了某种忘我的状态，这是东方美学中常见的"忘言"境界。</p>
+<hr />
+<h2 id="长相思-听黄鹂">长相思 听黄鹂</h2>
+<blockquote>
+<p><strong>词牌</strong>：长相思 | <strong>创作年代</strong>：不详
+<strong>主题</strong>：<code>#鸟</code> <code>#声音</code> <code>#时间</code> <code>#春情</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>晓黄鹂。暮黄鹂。啼尽烟条第几枝。临风听罢时。　花阴移。柳阴移。细细春情不自持。斜阳散碧丝。</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>早晨的黄鹂，傍晚的黄鹂。鸣啼到烟雾笼罩的树条第几根枝子。靠着风听完时候。</p>
+<p>花的阴影移动，柳的阴影移动。细细的春天感情不能自己控制。斜阳散落出碧绿的丝线。</p>
+<h3 id="题解_7">题解</h3>
+<p>这首词通过黄鹂的鸣叫来标记时间的流逝。"晓黄鹂""暮黄鹂"展示了一整天的跨度，而"啼尽烟条第几枝"则将鸟鸣的进程与树条的数量联系起来——诗人在数着树枝，实际上是在数着时光的消逝。</p>
+<p>"花阴移，柳阴移"进一步强化了时间的概念。影子的移动是最直观的时间指标——这两句几乎就是在看影子钟。而"细细春情不自持"则显示，在这个时间的流动中，诗人的春日感受也在不断变化，最终变成了一种难以自控的情感状态。</p>
+<p>这首词篇幅虽短，但浓缩了对时间、自然、情感的完整思考。黄鹂的鸣叫、花柳的阴影、斜阳的光线，这些都是诗人观察时间的工具，而最终沉淀下来的，是对"春情"的深层体悟。</p>
+<hr />
+<h2 id="忆秦娥-雨后川茶">忆秦娥 雨后川茶</h2>
+<blockquote>
+<p><strong>词牌</strong>：忆秦娥 | <strong>创作年代</strong>：不详
+<strong>主题</strong>：<code>#花</code> <code>#雨</code> <code>#衰落</code> <code>#茶花</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>春袅袅。川花岭国光幽幕。光幽幕。风开绿叶，雨催红萼。　风风雨雨清芬薄。瘦红肥绿朱颜弱。朱颜弱。千枝万朵，牡丹输却。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>春天在袅袅地摇晃，川花和岭国的光辉在幽暗的幕帘中。光辉幽暗的帷幕，风吹开了绿叶，雨催促了红色的花萼。</p>
+<p>风风雨雨把清香吹散了，消瘦的红花和肥厚的绿叶以及朱红的颜色都变得虚弱了。朱红的颜色虚弱了，千枝万朵的花，连牡丹都输给了它。</p>
+<h3 id="题解_8">题解</h3>
+<p>这首词是对茶花在雨后状态的观察。"川花岭国"可能指的是某个具体的地名或者山区的茶花地带。</p>
+<p>"春袅袅"开篇就显示了一种摇晃、不稳定的春日气息。"川花岭国光幽幕"的"幕"字特别关键——光线被幕帘阻挡，显示了雨雾对景观的遮蔽。</p>
+<p>中间的转折"风开绿叶，雨催红萼"显示了自然力量对花的影响——风和雨不是装饰，而是在强行改变花的形状。</p>
+<p>下阕更加悲凉。"风风雨雨清芬薄"中的重复用法，强化了恶劣天气的持续性。"瘦红肥绿朱颜弱"是对花在雨后衰弱状态的精确刻画。最后的转折尤其出人意料——"千枝万朵，牡丹输却"。诗人突然说，即使有千枝万朵的花，牡丹也会输给茶花。这是对茶花的一种高度的评价，但这评价却是建立在花的衰落之上的。这暗示了诗人认为某种价值只有在衰落、在脆弱的时刻才真正显现出来。</p>
+<hr />
+<h2 id="捣练子-海棠">捣练子 海棠</h2>
+<blockquote>
+<p><strong>词牌</strong>：捣练子 | <strong>创作年代</strong>：不详（春晓）
+<strong>主题</strong>：<code>#海棠</code> <code>#春晓</code> <code>#美貌</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>春睡起，晓妆成。尽露临风不尽情。暖色相醺红透颊，酡颜酥腻弄新晴。</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>春日睡眠刚刚起来，早晨的妆容已经完成。完全露出来靠着风吹，但情意还没有用尽。温暖的色彩相互熏陶，红色透过了脸颊，酒醉般的脸色和柔软油腻的肌肤在新晴中嬉戏。</p>
+<h3 id="题解_9">题解</h3>
+<p>这首词用女性的化妆和容貌来比喻海棠花在春晨的状态。"春睡起，晓妆成"把花的绽放比作女子的醒来和妆扮，既生动又充满了人文趣味。</p>
+<p>"尽露临风不尽情"是对花的一种拟人化的描写——花虽然完全展开了，但其中的"情意"仍然无尽。这暗示花（或女人）的美不仅在外表，更在那种无限的内在质感。</p>
+<p>"暖色相醺红透颊"用了"醺"字——酒醉的意象——来描写色彩的融合。"酡颜酥腻弄新晴"则是对整个意象的总结——醉红的脸色和柔软油腻的质感在新晴的天气中嬉戏。这首词虽然篇幅很短，但其语言的密度和想象力都很高。</p>
+<hr />
+<h2 id="忆王孙-白海棠">忆王孙 白海棠</h2>
+<blockquote>
+<p><strong>词牌</strong>：忆王孙 | <strong>创作年代</strong>：不详
+<strong>主题</strong>：<code>#海棠</code> <code>#白花</code> <code>#素雅</code> <code>#衬托</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>一枝黄瘦不胜春。淡洗铅华出素新。晓怯东风落绛唇。似羞人。红紫纷纷莫漫嗔。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>一枝黄瘦的花经不住春风吹拂，被淡淡地洗去了铅粉华彩而显出素雅的新鲜。早晨怯怕东风而落下的红唇。就像害羞的人一样。红花紫花纷纷扬扬，不要随便地嗔怪。</p>
+<h3 id="题解_10">题解</h3>
+<p>这首词以白海棠为对象，通过对比来凸显其独特之美。"一枝黄瘦不胜春"中的"黄瘦"可能指的是花瓣有些微黄，或者是叶子显出了秋日的颜色。无论如何，诗人都在强调这朵花的"瘦"——这种纤细的美。</p>
+<p>"淡洗铅华出素新"用了化妆的意象。铅华象征浓艳的妆容，而白海棠则被比作淡妆的女子——去除了浓重的装饰，反而显出了天然的清新。</p>
+<p>"晓怯东风落绛唇"中的"绛唇"指的是花瓣的深红色。花怯怕东风而容易凋落，这成了一种脆弱的美。"似羞人"则进一步拟人化，把花的脆弱转化为一种内向、害羞的气质。</p>
+<p>最后的转折"红紫纷纷莫漫嗔"很有意思。诗人在为白海棠的素雅品质辩护，同时也在告诫那些红花紫花——你们的绚烂固然有魅力，但不要嗔怪别人选择了素雅的风格。这暗示了诗人本人对素雅品质的偏爱。</p>
+<hr />
+<h2 id="如梦令-松竹梅兰四君">如梦令 松竹梅兰四君</h2>
+<blockquote>
+<p><strong>词牌</strong>：如梦令 | <strong>创作年代</strong>：不详
+<strong>主题</strong>：<code>#四君子</code> <code>#植物</code> <code>#品质</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>梅子寒酸青细。松粉褪脂黄缀。阶下紫茎摇，水面绿猗争曳。相继。相继。春色四君同系。</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>梅子显得寒冷酸涩，青色细小。松针上的粉褪去了油脂显出黄色缀着。台阶下紫色的竹茎摇晃，水面上绿色的柳枝争相拖曳。相继而来，相继而来。春色中四君子都用同样的纽带系住了。</p>
+<h3 id="题解_11">题解</h3>
+<p>这首词是对中国传统的"四君子"（梅、兰、竹、松或梅、兰、竹、菊）的一次现代诠释。诗人选择了梅、松、竹、兰。</p>
+<p>每种植物都被赋予了特殊的形容词。梅是"寒酸"的，暗示其在寒冬中的困顿；松是"褪脂"的，显示其苍老坚硬；竹是"紫茎摇"的，强调其柔软而坚定；兰是"绿猗争曳"的，显示其婀娜多姿。</p>
+<p>"相继相继，春色四君同系"的收尾很巧妙。尽管四种植物各有特质，但它们在春色中被同样的纽带系住了——这可能指的是春天本身、自然的规律，或者诗人的笔墨。整首词在列举植物的同时，暗示了它们之间的某种统一性。</p>
+<hr />
+<h2 id="卜算子-五日怀旧">卜算子 五日怀旧</h2>
+<blockquote>
+<p><strong>词牌</strong>：卜算子 | <strong>创作年代</strong>：不详（推测为某个五日节，可能是端午或其他传统节日）
+<strong>主题</strong>：<code>#怀旧</code> <code>#友谊</code> <code>#时光</code> <code>#分离</code></p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>风动竹阴移，雨过兰芳守。窗下青苔静屐痕，独与幽人偶。
+回首十年尘，频负三生友。不信心心似五□，断续因君久。</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>上阕：风吹动竹子的阴影在移动，雨过后兰花的芬芳停驻着。窗下青苔上静静地有着鞋印，我独自与幽逸的人相遇。</p>
+<p>下阕：回首看十年来的尘埃往事，频频辜负了三生的朋友。不相信心心相印像五□（字缺损），断断续续的联系都是因为你啊。</p>
+<h3 id="题解_12">题解</h3>
+<p>这首词记录了诗人与某位友人的关系——一种在时间中不断被延伸和中断的友谊。"回首十年尘"显示了一段相当长的时间跨度。</p>
+<p>"频负三生友"中的"三生"是佛教的概念，暗示这种友谊超越了一生的时间。诗人承认自己"频频辜负"了这份友情，这显示了他的诚实和内疚感。</p>
+<p>"窗下青苔静屐痕"是对过去相聚场景的一种细节性回顾——青苔上的鞋印是友人来访的证据。而"独与幽人偶"则显示，现在只剩下诗人一个人与"幽人"（友人的幽灵？）相遇。</p>
+<p>最后一句虽然有字缺损，但"断续因君久"清晰地表达了诗人的意思：这种断断续续的联系之所以能保持至今，是因为对方的坚持。整首词是对一段长期而脆弱的友谊的深情回顾。</p>
+<hr />
+<h2 id="西江月-六日饮醉华馆">西江月 六日饮醉华馆</h2>
+<blockquote>
+<p><strong>词牌</strong>：西江月 | <strong>创作年代</strong>：不详
+<strong>创作地</strong>：某华馆
+<strong>主题</strong>：<code>#宴饮</code> <code>#夏日</code> <code>#醉意</code> <code>#花卉</code> <code>#欣喜</code></p>
+</blockquote>
+<h3 id="原文_13">原文</h3>
+<p>袅袅蕖英在水，微微兰气依风。肯教屐赤印苔□。况值荔香浮瓮。
+日落轻凉褪溽，雨余初月烟笼。榴花深夜照池红。惊起碧塘鸳梦。</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>上阕：袅袅摇晃的荷花在水面上，微微的兰草气息依附着风。怎么肯让红色的鞋印留在青苔上呢，何况又正好赶上荔枝的香气飘出酒瓮。</p>
+<p>下阕：太阳落下后，轻凉的温度褪去了湿热，雨后初升的月亮被烟雾笼罩。石榴花在深夜照亮了池塘的红色。惊动了碧色池塘上的鸳鸯的梦。</p>
+<h3 id="题解_13">题解</h3>
+<p>这首词是一场夏日宴饮的记录。时间、地点、感受都被精确地刻画出来。</p>
+<p>"袅袅蕖英在水，微微兰气依风"开篇就设定了一个芬芳的环境。荷花（蕖英）和兰花的气息共同构成了这个空间的嗅觉氛围。"肯教屐赤印苔□"中的"屐"是古代的一种木鞋，这暗示有人在园中漫步。"况值荔香浮瓮"则显示这个季节荔枝也成熟了，其香气飘入了酒瓮——这是一个充满诱惑力的意象。</p>
+<p>下阕描写了夜幕降临时的变化。"日落轻凉褪溽"是对温度变化的精确描写——日落带来了凉爽，湿热消散了。"雨余初月烟笼"则是对光线和天气的综合刻画。"榴花深夜照池红"中的石榴花在夜间仍然闪闪发光，形成了一个局部的光源。最后的"惊起碧塘鸳梦"暗示这突然的光线惊扰了水中的鸳鸯。</p>
+<p>这首词的妙处在于它将一个多感官的宴饮场景呈现出来——视觉、嗅觉、触觉都被调动起来，形成了一个沉浸式的体验。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十五 · 記 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" class="active">卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十五-·-記">卷二十五 · 記</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十五</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第297–303a頁 | 視覺逐頁轉錄 → 富版本編訂</p>
+</blockquote>
+<p>本卷收記文五篇，作於崇禎三年（1630）至崇禎十二年（1639）間。前四篇寫於<a href="#滁州" class="internal-link wiki-link">滁州</a>北上途中，與友人<a href="#馮東淵" class="internal-link wiki-link">馮東淵</a>、黃某同遊；末篇《函元塔記》記故鄉<a href="#揭陽" class="internal-link wiki-link">揭陽</a>鄉紳集資建塔始末，為本卷篇幅最長、史料價值最高的一篇。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+<th>頁碼</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#侣雲菴記" class="internal-link">#侣雲菴記</a></td>
+<td><a href="#崇禎" class="internal-link wiki-link">崇禎</a>三年（1630）</td>
+<td>297a–298b</td>
+<td>悼亡·佛緣</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#醉鄉記" class="internal-link">#醉鄉記</a></td>
+<td>崇禎十三年（1640）</td>
+<td>298b–299b</td>
+<td>治亂·理想</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#改立歐陽文忠公專祠記" class="internal-link">#改立歐陽文忠公專祠記</a></td>
+<td>崇禎十三年前後</td>
+<td>299b–300b</td>
+<td>祠祀·文統</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#龍蟠小記" class="internal-link">#龍蟠小記</a></td>
+<td>同上</td>
+<td>300b–301a</td>
+<td>遊記</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#函元塔記" class="internal-link">#函元塔記</a></td>
+<td>崇禎十二年（1639）</td>
+<td>301a–303a</td>
+<td>鄉建·人物</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="侣雲菴記">侣雲菴記</h2>
+<blockquote>
+<p><strong>繫年</strong>：<a href="#崇禎" class="internal-link wiki-link">崇禎</a>三年庚午（1630）中秋 | <strong>體裁</strong>：記 | <strong>字數</strong>：約800字
+<strong>關聯人物</strong>：<a href="#馮侯" class="internal-link wiki-link">馮侯</a>（丹徒人）、嫺（馮侯妾）、<a href="#朝雲" class="internal-link wiki-link">朝雲</a>（宋·蘇軾侍妾）
+<strong>關聯地點</strong>：侣雲菴
+<strong>關鍵主題</strong>：<code>#悼亡</code> <code>#佛教</code> <code>#情</code> <code>#雲意象</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>天地之情不可見○其迴薄○于人間者○氣而巳○氣之所凝○不得一物焉○以上下其間○則天地亦枯稿孤危○而莫與為侣○故凡風雨露霜雪靄霧霰電霹靄之類○罔非氣之所呵○然而晝夜或遞司其六權○寒暑或錯行其候○其事或關于常變○其徵或繁于往休○要莫能自見其情○以見天地之情○如是故終無以為天地之侣○自者必歸諸雲○雲也○求夫能自見其情以見天地之情者○紘也○云也○地日散其精而搏以貢于上○故雲乎其也○让靡息也○天下其彩而容容以施于下○故雲乎其有章也○于是扶朝以陸離○迴夕焰而晩晩淡綏月其○儒之飾輕○組帝子之憔悴○而騰封姨以騾騾乎四空○條而從神女以窮深乎一室○絲斯而談○則天地之氣○通而天○天地之情○見矣○又安得而侣之○</p>
+<p>雖然○人之不能以侣天地之情○見難天地可侣矣○大抵神閒意眷○資頑質鄙之倫○沒沒塵土○生而顛倒之間○則雖一人情緣皆上下氣機所綱綰呵護而終古不可磨滅者矣○塚無論識與不識○咸皆以容嘆乎慕○慄慄傷○此可不謂千著一大情譜乎已○令馮侯及嫺月容○來茲土○甫四週而嫋己晨朝雲之遊○維時侯憎甚○莫能為情○麦卜地然岐山之陰○杯土殘香莫能已也○而菴以鑫之榜之曰侣雲○未已也○而祀大士其中○侣之為佛弟子指笨置租歲時供薦未已也○而請余言以記之○</p>
+<p>余嘗與侯所禱○午愁此菴○侯帳然有懷○作感舊二律○其一日春山去去遠如著都水同歸已負期○雲鸞數峯其一○白鶴越欄三尺冷○烏絲袱將淡碧留芳草○誰件蒐迷○香有茄枝○歲月泉鳴幽澗外○可捱長作玉琴疑○其二日○羅梧漸褪舊時香不盡春流似客腸○官閣梅殘愁○綱鳳颷塚色青方未了長憑白雪燿光蛺蝴金轆誰當○部江南楓落倩巫陽玉淋空使驚蝸蝶○水可堪淡染嶺南枝○細誰人傳海上留梧何處昭陽袱人去空悲燕○怨疑其二○日橋兔水招楫至京中窺勝不可書者○長恨篇吹莫引風○為問使君他帳裏○嫺嫺可識舊容○光噎噎○</p>
+<p>几此皆侯之情也○而余以為皆嫺之能自見其情而令侯終不忍忘情也○余無以知嫺也○但閑宋朝雲生平事佛甚謹○臨終念佛而逝○嫺之終始大抵髣髴○侯以侣雲名菴○復使之朝夕大士之右○其庵幾慧性日聰○風靈益悟以脫形四大之外○以樓神入坺之表○安在乎雲之不可以侣也○或曰子之所言情耳○佛則忘情而為佛弟子○且若何○余謂天地間有情者惟佛○佛之最多情者惟慈悲大士○大士惟曰見其情○普度一世○而人不見所為情○故作佛弟子者亦惟自見其情而使人終不忍忘情○几此政所謂一日情緣○即上下氣機綱綰呵護終古不可磨滅事也○因為之類推其說而廣及之○侔俗人丹徒謂情緣僅兒女子譜也○</p>
+<p><strong>崇禎三年中秋日記</strong></p>
+<h3 id="白话全译">白话全译</h3>
+<p>天地的真情是看不见的，它在人间所体现的，不过是「气」罷了。气所凝聚的萬物，如果不存在某一事物在天地之间上下周流，那麼天地也不过是枯槁孤危的存在，无物可与之作伴。所以凡风、雨、露、霜、雪、靄、雾、霰、电、霹靂这些现象，无不是气的呼吐变化。然而晝夜交替掌管著阴阳六权，寒暑错行其节候，有的事关乎常态与变化，有的徵兆繁复涉及吉凶——但这些终究不能自己展现其情，也就无法展现天地之情。所以，能展现天地之情的，最终归之于「云」。云这東西，是能够自见其情而呈现天地之情的。大地日夜散发精华向上输送，所以云气永无止息；天空以絢丽光彩向下施佈，所以云有文采。于是朝霞斑斕、夕照辉煌、月色淡柔，装饰帝子的容颜，乘著风姨翱翔四方，随著神女深入幽室——如此看来，天地之气相通，天地之情便得以呈现，而云正是天地的伴侶。</p>
+<p>虽然如此，人虽不能做天地之情的伴侶，但看见「难」字（意指人间之情难）就知道天地是可以有伴侶的。大凡那些心神闲适卻情意眷戀的人——哪怕资质頑愚、品性卑陋之辈——沉沒在尘土中、顛倒于生死之间，其一生情缘都是天地气机所牽系护持、终古不可磨灭的。无论相识与否，都会因容貌而叹慕、因伤感而战慄。这难道不是一部天地间最大的情譜嗎？</p>
+<p>且说馮侯与嫺（月容）来到这片土地，剛满四周而嫺已如朝云般飘然远逝。当时侯悲痛至极，不能自持。他择地于岐山之南，以一杯残土寄托芬芳而不能已。于是建菴，题名「侣云」；又未止，在菴中供奉观音大士；又未止，使嫺成为佛弟子，年年岁时供奉薦祭；仍未止，请我作文以记之。</p>
+<p>我曾与侯一同参拜此菴，侯悵然有怀，作感旧律诗二首。其一写春山远去、归期已负、白鹤欄冷；其二写梧桐渐褪旧香、春流似腸、楓落巫山。这些都是侯的深情。而我以为，这都是因为嫺能「自见其情」，才使得侯终究不忍忘情。我虽不认识嫺，但听说宋代苏東坡侍妾<a href="#朝云" class="internal-link wiki-link">朝云</a>生平事佛甚謹，臨终念佛而逝，嫺的一生大致与之彷佛。侯以「侣云」名菴，又使嫺朝夕侍奉大士之側，其慧性日益聪敏，灵悟日深，足以超脫肉身四大之外、栖神于涅槃之表——怎能说云不可以做天地的伴侶呢？</p>
+<p>或许有人说：你所谈论的只是「情」，佛是忘情的，作为佛弟子，又怎樣呢？我说：天地间有情者惟佛，佛之最多情者惟慈悲大士。大士只是「自见其情」，普度一世，而人不见其所为之情。所以作佛弟子的人，也是自见其情而使人终不忍忘情。这正是所謂「一日情缘，即上下气机纲綰呵护、终古不可磨灭」的道理。因此我为之推广其说——不要像俗人那樣，把情缘仅仅当作兒女私情的小譜。</p>
+<p><strong>崇禎三年（1630）中秋日记于侣云菴</strong></p>
+<h3 id="题解">题解</h3>
+<p>本篇为郭之奇应友人<a href="#馮侯" class="internal-link wiki-link">馮侯</a>（丹徒人）之请所作记文。馮侯之妾名「嫺」（字月容），来此地不满一月即病逝。侯悲痛不已，择地建「侣云菴」，供奉观音大士，使嫺为佛弟子，岁时供薦。文章从天地之「气」与「云」的意象生发，论述「情」与「佛」的关系：云能自见天地之情，正如嫺能自见其情而令侯终不忍忘情；佛非忘情，慈悲大士乃天地间最多情者。此文以「侣云」为核心意象，将悼亡之情、佛理之思、天地之气三者融为一体。篇末特別引用苏軾侍妾<a href="#朝云" class="internal-link wiki-link">朝云</a>（王朝云）事佛臨终的故事作类比，文笔深婉。落款「崇禎三年中秋日」，郭之奇时年二十四岁，为其早期散文代表作。</p>
+<hr />
+<h2 id="醉鄉記">醉鄉記</h2>
+<blockquote>
+<p><strong>繫年</strong>：<a href="#崇禎" class="internal-link wiki-link">崇禎</a>十三年庚午（1640）正月既望 | <strong>體裁</strong>：記 | <strong>字數</strong>：約700字
+<strong>關聯人物</strong>：<a href="#黃帝" class="internal-link wiki-link">黃帝</a>、<a href="#堯" class="internal-link wiki-link">堯</a>、<a href="#舜" class="internal-link wiki-link">舜</a>、<a href="#丹朱" class="internal-link wiki-link">丹朱</a>、<a href="#周公" class="internal-link wiki-link">周公</a>、<a href="#屈原" class="internal-link wiki-link">屈原</a>、<a href="#阮籍" class="internal-link wiki-link">阮籍</a>、<a href="#蘇東坡" class="internal-link wiki-link">蘇東坡</a>、<a href="#馮東淵" class="internal-link wiki-link">馮東淵</a>
+<strong>關聯地點</strong>：<a href="#滁州" class="internal-link wiki-link">滁州</a>（滁陽）
+<strong>關鍵主題</strong>：<code>#桃源</code> <code>#治亂</code> <code>#酒</code> <code>#隱逸</code> <code>#政治理想</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>醉鄉記 庚午作</p>
+<p>源偶入有意問津○遂迷不復得路○總之厭未世之紛置刑奔競于朝市○故號卜居而處于是○亦如所云避秦時亂○率屬來此乃不知有漢何論魏晉者○其土坦然無城郭離華堂屋○與芝蕨苔苔一致同覩○其時侯溫和囧如寒暑雅宜風月○不驚鳧雨雪一○其政不事刑名而律令嚴肅然○多貢儒賢者○故思不省有所特以無恐○其俗嫺歌監真音律○樂酕呼而苦文物之拘率○禮儀之屈曲是以徒類雜處雖賦性矜豪負氣宏逸○要皆直簡真率○終歸于徐之習而稱易治○</p>
+<p>昔者黃帝堯舜○心悅其風○率斯世而與處○故結繩無為○醉以成鼓腹之化○自丹朱淫○義和傾覆迷失厭道○則醉鄉邊徹已從此啓多事之漸矣○道則以成鼓腹之化○自丹朱淫○烏湯墾此不敢復遊○念然特其智力築丘墾池○驅湯墾此不歸谷于醉鄉之治○不得凡酬腊聞○率以大男女裸逐亂○而天下始歸谷于醉鄉○天下而憂之作酒誥于妹土○其語有位日越廟國飲○性祀語小民曰自洗臙○致用酒噎噎○聖王易天下之苦心真可謂循循善誘者矣○</p>
+<p>周公得二秬至於拜○為酒困何有於我○楚屈原以懮謹酒無量猶慕醉鄉○而唱曰稽休享及仲尼惟酒無量○猶莫慕醉鄉○父教之哺糟嚥醸使厭○居原能聽斯言亦何至沈湘泪羅○漁人吟慷慨哉而没身而不及乎山居無事○将從遊于此○偶簡東坡所○嘗與侯所禱午愁此菴侯帳然有懷○僻然與醉鄉如隔世○其臣子之愛道者○竊徑至馬曹○参治齊小試其術○飲言事者以醇酒而齊大治逃陶○阮諸君子○遂獨甘此味不忍告人○卒羣居其國以至山居無事将從遊于此○偶簡東坡○浩浩落落之意與斯世共之則幾矣○</p>
+<p><strong>作醉鄉記以為東坡素不善飲者猶未窮醉鄉之民○務俾舉盃徐引○</strong></p>
+<p>崇禎十三年正月既望○嶺南郭子治裝北上○問道滁陽時大閩正東淵馮先生稱德之餘○雅志復古方○</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>有人偶然进入醉乡，想探问渡口，卻迷路再也找不到归途。大抵是厭倦了末世的纷乱、刑罰爭竞充斥朝廷与市井，所以选择在此定居——就像那些说是「避秦时乱，率家屬来此，竟不知有汉，何论魏晉」的人一樣。</p>
+<p>醉乡的土地坦蕩，沒有城郭宮殿高堂华屋，一切与芝兰蕨草渾然一体。它的气候温和宜人，不分寒暑，适于风月，不像外面世界那樣惊扰于风雨雪霜。它的政治不用刑名法术，然而律令自然严肅，多推举儒贤，所以百姓无所畏惧。它的风俗喜愛歌唱，崇尚真正的音律，以酣暢为乐而苦于文物的拘束、礼仪的屈曲。因此各色人等杂居，虽然性格或矜持豪迈、或意气宏逸，但都归于直简真率，最终形成安徐的风气，号称易治。</p>
+<p>从前<a href="#黄帝" class="internal-link wiki-link">黄帝</a>、<a href="#堯" class="internal-link wiki-link">堯</a>、<a href="#舜" class="internal-link wiki-link">舜</a>心悦醉乡之风，率天下人与之同处，所以结绳而治、无为而化，百姓鼓腹而歌——这就是醉乡之治。自从<a href="#丹朱" class="internal-link wiki-link">丹朱</a>荒淫、义和傾覆、迷失大道，醉乡的边界就从此被打破，多事之端由此而起。后来的君主不敢再重游醉乡，只憑智力筑丘掘池、驱逐百姓，卻不能归复醉乡的太平之治。百姓不得参与年节聚饮，男女裸逐乱行，天下大乱。<a href="#周公" class="internal-link wiki-link">周公</a>忧之，乃作《酒誥》于妹土，其言语諄諄，对官員说「越庶国饮」，对小民说「自洗腆」，「致用酒」——圣王治天下的苦心，真可謂循循善誘了。</p>
+<p><a href="#周公" class="internal-link wiki-link">周公</a>得到二秬之酒而拜受之，何尝为酒所困？<a href="#屈原" class="internal-link wiki-link">屈原</a>以忧国之心，虽酒不过量，猶嚮慕醉乡而唱「举杯」之歌；<a href="#孔子" class="internal-link wiki-link">孔子</a>（仲尼）虽「惟酒无量」，猶不敢自居醉乡之民。倘若屈原的父亲能教他嚼糟饮醸、使其厭煩尘世之事，屈原又何至于沉湘投羅？漁人慷慨一吟，而沒身不及。至于山居无事，将从游于此。我偶然翻阅<a href="#苏東坡" class="internal-link wiki-link">苏東坡</a>的文章，浩浩落落的意趣想与这世道共之，则差不多了。那些愛好此道的臣子，如曹参治齐，小试其术，以醇酒打发上门言事者，而齐国大治；<a href="#阮籍" class="internal-link wiki-link">阮籍</a>诸君子遂独享此味、不忍告人，最终群居其国。</p>
+<p>我因此作《醉乡记》，以为東坡素来不善饮，猶未能穷尽醉乡的妙处。但愿大家举杯徐引，共享太平。</p>
+<p><strong>崇禎十三年（1640）正月十六日，嶺南郭子治装北上，路经<a href="#滁州" class="internal-link wiki-link">滁阳</a>，时大閩正（知府）東渊<a href="#馮東渊" class="internal-link wiki-link">馮先生</a>崇德之余，雅志复古。</strong></p>
+<h3 id="题解_1">题解</h3>
+<p>本篇仿<a href="#陶渊明" class="internal-link wiki-link">陶渊明</a>《桃花源记》之体裁，虛构「醉乡」作为理想政治的隐喻。以「酒」为綫索，追溯自黄帝堯舜至周公、屈原、阮籍、苏東坡的饮酒传统，实则论述治乱之道：醉乡的太平无为之治才是理想政治，而刑名法术、礼乐拘束反使天下大乱。文章写于崇禎十三年（1640），正值明末政局日益紊乱之际，郭之奇北上赴京途经滁州，此文表面谈酒，实寄寓对时局的深沉忧慮。同行者为<a href="#馮東渊" class="internal-link wiki-link">馮東渊</a>（閩人，时任滁州知府）。郭之奇时年三十四岁。</p>
+<hr />
+<h2 id="改立歐陽文忠公專祠記">改立歐陽文忠公專祠記</h2>
+<blockquote>
+<p><strong>繫年</strong>：約<a href="#崇禎" class="internal-link wiki-link">崇禎</a>十三年（1640）前後 | <strong>體裁</strong>：記 | <strong>字數</strong>：約600字
+<strong>關聯人物</strong>：<a href="#歐陽修" class="internal-link wiki-link">歐陽修</a>（文忠公）、<a href="#馮東淵" class="internal-link wiki-link">馮東淵</a>（東浙慈谿人）、黃某（溫陵人）、<a href="#韓愈" class="internal-link wiki-link">韓愈</a>、<a href="#蘇軾" class="internal-link wiki-link">蘇軾</a>
+<strong>關聯地點</strong>：<a href="#滁州" class="internal-link wiki-link">滁州</a>、<a href="#瑯琊山" class="internal-link wiki-link">瑯琊山</a>、<a href="#醉翁亭" class="internal-link wiki-link">醉翁亭</a>、六一泉
+<strong>關鍵主題</strong>：<code>#祠祀</code> <code>#文統</code> <code>#歐陽修</code> <code>#滁州</code> <code>#韓歐並祀</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>改立歐陽文忠公專祠記</p>
+<p>有事於滁山○掬六一泉飲○郭子既畢未及周流深秀○遂低佝醉翁亭上不能去○因思區宇之大○元會之悠○介於江淮之間○而有滁環滁皆山○而於峯迴路轉水清石出之開○有亭翼然於其際○前此百千億算木委霜高山閒○所謂林壑之美及見夫霧開巖穴○膩木秀霜高山閒○間之朝暮四時也○宋有慶曆○慶曆有歐陽○歐陽守滁○而醉翁得名○然則滁山佳勝久矣○其有待於公而後屬也○公名而復記之○記之而推及於豐樂醒心紫薇○六一大抵仰望俯聽○搜幽開遠○掛酌飽滿以付所屬○滁山未聞久而微有幾微快望志也○</p>
+<p>後人憑弔景仰○因基而苔翼故為新○毋使涼煙白草○感嘆遊人足矣○滁山有待而屬之一人○曾不得片席專居愛存○故雩○颌剩水殘山○強摝名氏撫多拾衆遍媚諸賢而於○立專祠毅然為己責也○專祀之因制于舊○舊卽二○貢祠之前堂堂前為醉翁亭○亭左負山石壁刻醉翁立專祠○因制于舊○亭二篆字如斗○</p>
+<p>大意當日智仙所作太守所與客飲○噹交錯蒼顏白髮○類乎其間者其在斯乎其在斯○乎公存而自言醉翁之意在乎山水之間○公沒鼓百年而精神髣髴如公之樓息游衍○登臨窟嘆於此地○也就云當年山水之樂○今日不可以樂公故○樂其樂而先生徒樂公之樂○故以樂公者祀公也○也先生昔今潮地既宗海而祀韓○今正南僕復景山而祀歐○史稱挽百年之類渡息千古之邪說○惟且黎與廬陵而蘇子瞻亦曰歐陽子今之韓愈○挽頹息邪祀之者○其有思乎迺若前後兩舉並出先生官與地符時○與事合待人而行信○</p>
+<p>故走最不敏於韓歐之祀○俱得以左右當與起籌自幸而私志之○不敢以費豐石之琢磨也○</p>
+<p><strong>先生諱某東浙慈谿馮氏○時相率同遊協心是舉者○寺丞溫陵黃君某○嶺南郭子某也</strong></p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>我们到<a href="#滁州" class="internal-link wiki-link">滁山</a>办事，在六一泉边掬水而饮。郭某（即作者自称）事畢之后，还未来得及周览那深秀的山林，便已在<a href="#醉翁亭" class="internal-link wiki-link">醉翁亭</a>上低头沉思，不忍离去。</p>
+<p>想那天下之大、岁月之悠，在江淮之间有<a href="#滁州" class="internal-link wiki-link">滁州</a>，环滁皆山。在峰回路转、水清石出的地方，有亭翼然其间。此前千百年来，林壑之美、朝暮四时之景一直存在。但直到宋代庆曆年间，有了<a href="#欧阳修" class="internal-link wiki-link">欧阳修</a>守滁，「醉翁」才有了名字。可见滁山的佳胜虽然由来已久，但是有待于欧公而后才归屬于文化记憶。欧公为之命名、为之作记，又推及到丰乐亭、醒心亭、紫薇堂、六一居——大抵仰观俯察、搜幽开远、酌饮飽览，将滁山的一切都赋予了文学意义。</p>
+<p>后人憑弔景仰，在旧址基礎上修葺更新，使这里不至于只剩涼煙白草供游人感叹。但滁山有待而归之一人，竟然不能让欧公独佔一席专祠受祀——反而把剩山残水中的祠堂，強行拉攏各方名氏、媚拜诸贤——这不对。因此<a href="#馮東渊" class="internal-link wiki-link">馮先生</a>毅然以建立欧公专祠为己任。专祠的規制依循旧制：以原有二贤祠的前堂为基礎，堂前即为醉翁亭，亭左靠山石壁上已有「醉翁」兩个斗大篆字。</p>
+<p>当年智仙和尚所作此亭，是太守与宾客觥籌交错之地。欧公在世时自言「醉翁之意不在酒，在乎山水之间」。欧公逝世已逾百年，而精神彷佛仍在此地登臨游衍。当年山水之乐，今日以同樣的快乐来纪念欧公——以「乐公者」来「祀公」，这就对了。</p>
+<p>馮先生昔日在<a href="#潮州" class="internal-link wiki-link">潮州</a>宗仰韓公（<a href="#韓愈" class="internal-link wiki-link">韓愈</a>）而立祠，今日在滁州又景仰欧公而立祠。史书称欧阳修「挽百年之頹风、息千古之邪说」，惟昌黎（韓愈）与廬陵（欧阳修）可以並论。<a href="#苏軾" class="internal-link wiki-link">苏子瞻</a>亦曾说「欧阳子，今之韓愈也」。前后兩次立祠，都出自馮先生之手——官职与地方相符，时机与事业相合，真是有待于斯人而后行。</p>
+<p>因此我这个最为駑鈍之人，也有幸在韓欧之祀中左右参与、起身籌劃，私心记之，不敢刻石立碑以费工夫。</p>
+<p><strong>先生姓馮，東浙慈谿人。与之同游、協力办此事者：寺丞温陵黄某、嶺南郭某。</strong></p>
+<h3 id="题解_2">题解</h3>
+<p>本篇记在<a href="#滁州" class="internal-link wiki-link">滁州</a><a href="#瑯琊山" class="internal-link wiki-link">瑯琊山</a>改立<a href="#欧阳修" class="internal-link wiki-link">欧阳修</a>专祠之事。欧阳修庆曆五年（1045）知滁州，留下《醉翁亭记》等千古名篇。但数百年后，当地祠堂把历代各位名人混祀在一起，欧公反而沒有专祠。馮先生（即<a href="#馮東渊" class="internal-link wiki-link">馮東渊</a>，東浙慈谿人，时任滁州知府）毅然主持改建欧阳修专祠。文章的核心论点是「滁山有待而屬之一人」——滁州的山水之美有待欧阳修而后成名，欧阳修也有待后人专祠以彰。馮先生前在潮州祀韓愈、今在滁州祀欧阳修，前后呼应，体现了「韓欧並祀」的文统传承。郭之奇与黄某（温陵人）同行参与。</p>
+<hr />
+<h2 id="龍蟠小記">龍蟠小記</h2>
+<blockquote>
+<p><strong>繫年</strong>：約<a href="#崇禎" class="internal-link wiki-link">崇禎</a>十三年（1640）前後 | <strong>體裁</strong>：遊記 | <strong>字數</strong>：約400字
+<strong>關聯人物</strong>：<a href="#馮東淵" class="internal-link wiki-link">馮東淵</a>（大岡鄉東浙人）、黃某（溫陵人）、曾于開、魏安行
+<strong>關聯地點</strong>：<a href="#龍蟠山" class="internal-link wiki-link">龍蟠山</a>（<a href="#滁州" class="internal-link wiki-link">滁州</a>南）、龍王廟、壽聖寺（宋故址）、懷仙洞、德雲亭、靈芝井
+<strong>關鍵主題</strong>：<code>#遊記</code> <code>#滁州</code> <code>#山水</code> <code>#題壁</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>龍蟠小記</p>
+<p>首南向龍王廟立其巔○東折逾可百至北為腰○春鱗甲隱隱見萬石叢生○作其形也○蛻蜕尾于西○勢益環紛相顛腹居○古劍合鬥殿三宇○前餘遺址係宋故壽聖寺○礎基甚巨○余三人抱振衣千仞○意窮絕頂○周覺能百里螺黛諸峰俱培○龍廟後小石屋交膝小坐○寺僧以茶果獻西余諸生○閒進文藝○余三人志在探奇○遂至鱗甲叢生處覓懷仙諸燕洞○洗壁讀曾于開所題偃月紀事數十言○</p>
+<p>其開幽意大可見洞左德雲亭○久無沒復遞林若蔬出○宋諸遊人姓氏題味劍落吳與劉燕詩一律尚可誦○然不甚佳○不如魏安行小記數語有古致可喜○侶人○西引祀靈芝井水亦清澗○不媲名所云白玉窟琿珀○泉迫於瞯腈未能至○意中窮勝不可盡者應甚多○大抵以傑遠逰踪不甚為時人刻畫○故巖穴烟霞多○古氣雞甞或亦蒼玄窟宅隱現不可時○余三人偶一見其神變之首是蜘蝟之語小民目自法○</p>
+<p><strong>者大岡鄉東浙馮某○岡丞溫陵黃某○其一則紀事遊客嶺南郭某也</strong></p>
+<h3 id="白话全译_3">白话全译</h3>
+<p><a href="#龙蟠山" class="internal-link wiki-link">龙蟠山</a>山頂朝南，龙王庙矗立于巔峰。往東折行约百步到北面山腰，山石如鱗甲隐隐可见，萬石叢生，宛如龙的形狀。龙尾蛻蜕于西側，地势更加环绕纷错。山腹处有古殿三宇，前方余址乃是宋代旧寿圣寺遗迹，礎石基座十分巨大。</p>
+<p>我们三人振衣登上千仞之巔，意在穷尽绝頂。四望百里之內，螺黛色的诸峰都矮伏如培。龙王庙后有小石屋，我们交膝而坐。寺僧献上茶果。旁边有诸生闲谈文艺，而我们三人志在探奇，于是来到鱗甲般的怪石叢中尋覓怀仙洞等胜迹。洗壁而读，见曾于开所题偃月纪事数十言。</p>
+<p>洞幽深开阔，大有意趣。洞左边有德云亭，久已傾頹，林木如疏蔬般叢生。宋代诸游人的题名尚在壁上，吳某与劉某各有诗一律尚可吟诵，但不甚佳；倒不如魏安行的小记数语，有古樸意趣，颇为可喜。寺人引我们到灵芝井，水也清洌如澗。其他如白玉窟、琥珀泉，因路途险峻未能到达。心中觉得穷尽胜景不可尽者应当还很多。大抵此山因为踪迹幽远，不太受到时人的刻画描摹，所以巖穴煙霞多保留古气。或许蒼玄窟宅之间另有隐现不常的奇景吧。我们三人偶然一见其神变之妙——</p>
+<p><strong>三人者：大岡乡東浙馮某、岡丞温陵黄某、其一则纪事游客嶺南郭某。</strong></p>
+<h3 id="题解_3">题解</h3>
+<p>本篇为简短的游记小品，记与<a href="#馮東渊" class="internal-link wiki-link">馮東渊</a>（馮某）、黄某同游<a href="#滁州" class="internal-link wiki-link">滁州</a>南<a href="#龙蟠山" class="internal-link wiki-link">龙蟠山</a>之行。龙蟠山因形如盤龙而得名，山上有宋代寿圣寺遗址和龙王庙。三人登頂览胜、探洞读壁，並訪怀仙洞、德云亭、灵芝井等景点。文中特別提到宋人题壁和魏安行的小记「有古致可喜」，反映郭之奇的審美取向——崇尚简古而非华丽。全文不过四百字，卻写得生动自然，是「小记」体裁的佳作。</p>
+<hr />
+<h2 id="函元塔記">函元塔記</h2>
+<blockquote>
+<p><strong>繫年</strong>：<a href="#崇禎" class="internal-link wiki-link">崇禎</a>十二年己卯（1639）仲冬 | <strong>體裁</strong>：記 | <strong>字數</strong>：約1200字
+<strong>關聯人物</strong>：馮公（前邑侯）、蕭紱、邢鈺、謝應甲、楊廷燦、吳以汀、李時忠、孫應舉、宋大淩、王之班、陳明進、趙義輔、<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>（主持續建）
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>（邑東南龜阜）、函元塔
+<strong>關鍵主題</strong>：<code>#鄉建</code> <code>#揭陽</code> <code>#塔</code> <code>#人文化成</code> <code>#崇禎</code> <code>#集資</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>函元塔記</p>
+<p>惟丁卯王春○前邑侯馮公備辦方正位察日經野○作函元塔於邑東南之龜阜○為石基三尋○級始一○歲饑弛役○侯亦應顯據不及終其舉○距十歲惟丁丑○既膘已人士皆諸父老造郭子而請○日人文之化成於茲塔也○人事之不能遠集於茲塔也○子一日先高之以為式乎○衆人共一日高之○然後可以傳衆力○</p>
+<p>郭子日勉之○眠滌灌及納亭告諸神○誓其工拭日敦○子日告我侯○侯如乎言諸邑人大和○曾日是役也○惟人惟財不漏厄不泥沙○好義終事其不然者○有間不得其齡請少進○郭子日諸君疑吾易乎弗稽○廉不廉能辦能不能辦器○廈成○飲日衆之志也○是則同○雖然聲之易也○吾僭欲行之者有人辦而行之者有人○</p>
+<p>日之塔也○吾往乎寧隆之表○其成也指掌之上度功○子一日告我侯○侯如乎言諸邑人大和○也惟人惟財不漏厄不泥沙○好義終事其不然者○霧矣是惟人惟財坐而論之者有人○能不能辦不廉而廉者告之侯而任于塔則不信○推其能者與其廉者告之侯而任于塔則節力以成之者有人能辦不廉而廉○有蕭君紱○邢君鈺○總諸工之會計而稽其出入以參互政○日成以月要政月成以月要○政則有謝君應甲楊君廷燦○吳君以汀○李君時忠○孫君應舉○宋君大淩○王君之班○陳君明進○趙君義輔○子族人之英分幹諸工之治挾○日而易之句終正月成○則子與諸君同譜○各徴義助于都邑以欲其財用之入○臨頻于會計之宅○各徴義助于都邑以欲其財用之入○</p>
+<p>且之是我侯助以清體○助以關澤○助以蒞嘉石薪城○取雜物于各所出几買者各從○其抵物既備令○一人為之守禁宗○于是購百工○有攻木之工為應架○有攻石之工為其基為搠○有搏垸之工為泥水几○工者各稱其事○工各勸而能大逞○于是乃力役取開閩民轉移事○取役于此居○朝擊拆而齊之夕○擊拆而欲之稍食諸役子○七于是謀合矣之頂則微銅千里户命○奐以改煎不耗然後攞之而通湖黑澗之氣○黃青白之氣至于青紫○而後摶挩于氣之元首○出于嶺之五糾緩○丁女之四牛之六○而後砥柱渤澳○補乾坤于南紀○經綰離靂○揭日月于婆娥○</p>
+<p>而摋總計分幹諸君告侯○及于以塔之成惟已卯仲冬我侯咸勤遞侯○眠滌灌及納亭告諸神誓其工○既郭見其廉方也○几一九一九三九五九七各額其名○出也循術其見其摸也○縫也連觀而察其標見其鋏爾而○侯咸勤遞侯眠滌灌及納亭告諸神○物而進其總蒐莫其録以書掲之几皆足用長財善物○罔有失財用碑名者○不惟諸君至于百工○終其事阻有○百靈出雷發於九地其自時萬億年惟揭之○以塔之成惟已卯仲冬我侯咸勤○日告我侯侯如乎言諸邑人大和曾日是役○也惟人惟財○不漏厄不泥沙好義終事其不然者○也惟人惟財○坐而論之者有人能不敢知日其○幽于民我亦不敢以時其資于我不敢合风驱于诸役○惟揭之休我不敢上其功神之休歟侯之德歟諸君之力歟○</p>
+<p>矣乎不敢上其功○神之休歟○侯之德歟○諸君之力歟○其令吾言之不食數乎○既知其數○又知其名○既知其名○又知其所以成○亦如茲鄉之歌于踏轢而未勒之○</p>
+<p><strong>函元以卒志者言</strong></p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>崇禎丁卯年（1627）正月，前任县令馮公依照风水方位勘察地形，在县城東南的龟阜上建造函元塔。先筑石基三尋（约五米多），剛起建第一层，便遇到荒年饑荒而停工。馮公也因为任满离去，未能完成此举。</p>
+<p>相隔十年到了丁丑年（1637），荒年已过，乡中人士和父老们来找郭某（即作者）请求道：「人文的教化要靠这座塔来成就，可是人事不能长久拖延。先生能否率先挑起此事作为表率？」衆人也都说：「先生帶头，然后我们可以集合衆力。」</p>
+<p>郭某说：「大家共勉之。」于是斋戒沐浴、祭告诸神，立誓开工。我去稟告县令，县令按我所言告知全邑，衆人大为赞同。议事时说：「此役但求用人得当、用財不漏——不怕困厄、不泥于小节，好义者必能终事。」有人心存疑慮，请进一步说明。郭某说：「诸君疑我太轻率嗎？不必细究。廉不廉、能办不能办——大廈既成，饮水思源而已。衆人志同，这是一樣的。虽然说起来容易，但执行需要有人，办事也需要有人。」</p>
+<p>塔的規模要高聳入云。指掌之间估算工程。再告县令，县令复告全邑。推举能者与廉者，委任于塔工之事：有<strong>蕭君紱</strong>、<strong>邢君鈺</strong>总管全部工程的会计出入，日结月清、月结季清。分管各項的有<strong>谢君应甲</strong>、<strong>楊君廷灿</strong>、<strong>吳君以汀</strong>、<strong>李君时忠</strong>、<strong>孫君应举</strong>、<strong>宋君大淩</strong>、<strong>王君之班</strong>、<strong>陈君明进</strong>、<strong>赵君义辅</strong>，以及郭氏族中贤能之人——分幹各工，日夜轮替。每月一结，我与诸君同阅帳目，各自向全邑徵集义助，收支帳目公开透明。</p>
+<p>县令又撥公帑资助——清理旧物、开通水泽、整治石材薪柴。各种物料从各处取办。物料备齐之后，设专人看守。于是招聘百工：有木匠搭建架构，有石匠打造基礎和石柱，有泥水匠做抹灰。各工各司其事，互相激勵而奮力施工。役夫从閩地及本地招募，轮流上工。朝夕轮班，供给饮食。</p>
+<p>到了塔頂，铸铜为千里戶（塔頂铜件）。磨煉改铸，直到不损耗才安装上去——使塔尖贯通湖山黑澗之气，黄青白紫各色气脈匯聚于頂端，出于嶺脈五方，砥柱南天，补乾坤于南纪之间，经綰天地之气，使<a href="#揭阳" class="internal-link wiki-link">揭阳</a>的日月高懸。</p>
+<p>总计、分幹诸君向县令匯报，己卯年（1639）仲冬塔成。再次斋戒祭告诸神。全部工程中，每一层都额刻其名、记录工序，帳目公开，財物善用，无一遗失。不仅诸位主事君子，至于百工匠人，都善始善终。</p>
+<p>百灵出、雷发于九地——此塔立于天地之间，萬亿年惟<a href="#揭阳" class="internal-link wiki-link">揭阳</a>所有。塔成之功，我不敢居——是神灵之美？是县令之德？还是诸君之力？既知其数目、又知其姓名、更知其所以成就，就如同乡里的歌谣传唱而不刻于碑石一般。</p>
+<p><strong>以上即函元塔的始末记载。</strong></p>
+<h3 id="题解_4">题解</h3>
+<p>本篇为卷二十五中篇幅最长、史料价值最高的一篇。记<a href="#揭阳" class="internal-link wiki-link">揭阳</a>東南龟阜上建造「函元塔」的始末。此塔始建于崇禎丁卯年（1627），由前任县令馮公主持动工，但因荒年中輟。十年后的丁丑年（1637），由<a href="#郭之奇" class="internal-link wiki-link">郭之奇</a>应乡紳父老之请，主持续建，己卯年（1639）仲冬落成。</p>
+<p>文章详细记录了整个组织过程：如何动員乡紳、如何向官府申报、如何推举管理人員、如何徵集资金物料、如何招募各类工匠。尤其珍贵的是保留了十余位参与者的姓名：蕭紱、邢鈺（会计）、谢应甲、楊廷灿、吳以汀、李时忠、孫应举、宋大淩、王之班、陈明进、赵义辅等——这些都是崇禎年间揭阳地方精英的真实姓名，具有重要的地方史料价值。</p>
+<p>文中「砥柱渤澳，补乾坤于南纪，经綰离靂，揭日月于婆娥」等语，以风水堪輿之说阐释建塔的文化意义：塔是匯聚地脈、补益人文的象徵，体现了明代士紳对地方公共建设的责任意识。郭之奇时年三十三岁，已是揭阳最有声望的乡紳之一（崇禎元年进士），此文展现了他组织地方公共事务的才幹。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="卷25人物索引">卷25人物索引</h3>
+<table>
+<thead>
+<tr>
+<th>人物</th>
+<th>身份</th>
+<th>出现篇目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#郭之奇" class="internal-link wiki-link">郭之奇</a></td>
+<td>作者，揭阳人，崇禎元年进士</td>
+<td>全卷</td>
+</tr>
+<tr>
+<td><a href="#馮侯" class="internal-link wiki-link">馮侯</a></td>
+<td>丹徒人</td>
+<td>侣云菴记</td>
+</tr>
+<tr>
+<td>嫺（月容）</td>
+<td>馮侯之妾</td>
+<td>侣云菴记</td>
+</tr>
+<tr>
+<td><a href="#朝云" class="internal-link wiki-link">朝云</a>（王朝云）</td>
+<td>宋·苏軾侍妾（典故）</td>
+<td>侣云菴记</td>
+</tr>
+<tr>
+<td><a href="#馮東渊" class="internal-link wiki-link">馮東渊</a></td>
+<td>東浙慈谿人，大閩正（滁州知府）</td>
+<td>醉乡记、改立欧阳文忠公专祠记、龙蟠小记</td>
+</tr>
+<tr>
+<td>黄某</td>
+<td>温陵（泉州）人，寺丞</td>
+<td>改立欧阳文忠公专祠记、龙蟠小记</td>
+</tr>
+<tr>
+<td><a href="#欧阳修" class="internal-link wiki-link">欧阳修</a></td>
+<td>宋·文忠公（典故/祠主）</td>
+<td>改立欧阳文忠公专祠记</td>
+</tr>
+<tr>
+<td><a href="#韓愈" class="internal-link wiki-link">韓愈</a></td>
+<td>唐·昌黎（典故）</td>
+<td>改立欧阳文忠公专祠记</td>
+</tr>
+<tr>
+<td>馮公</td>
+<td>揭阳前邑侯，函元塔始建者</td>
+<td>函元塔记</td>
+</tr>
+<tr>
+<td>蕭紱、邢鈺</td>
+<td>会计</td>
+<td>函元塔记</td>
+</tr>
+<tr>
+<td>谢应甲、楊廷灿、吳以汀、李时忠、孫应举、宋大淩、王之班、陈明进、赵义辅</td>
+<td>分幹乡紳</td>
+<td>函元塔记</td>
+</tr>
+</tbody>
+</table>
+<h3 id="卷25地名索引">卷25地名索引</h3>
+<table>
+<thead>
+<tr>
+<th>地名</th>
+<th>出现篇目</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#揭阳" class="internal-link wiki-link">揭阳</a></td>
+<td>函元塔记</td>
+<td>郭之奇故乡，广東潮州府</td>
+</tr>
+<tr>
+<td><a href="#滁州" class="internal-link wiki-link">滁州</a>（滁阳）</td>
+<td>醉乡记、改立欧阳文忠公专祠记、龙蟠小记</td>
+<td>安徽，欧阳修故治</td>
+</tr>
+<tr>
+<td><a href="#瑯琊山" class="internal-link wiki-link">瑯琊山</a></td>
+<td>改立欧阳文忠公专祠记</td>
+<td>滁州西南</td>
+</tr>
+<tr>
+<td><a href="#醉翁亭" class="internal-link wiki-link">醉翁亭</a></td>
+<td>改立欧阳文忠公专祠记</td>
+<td>瑯琊山上</td>
+</tr>
+<tr>
+<td><a href="#龙蟠山" class="internal-link wiki-link">龙蟠山</a></td>
+<td>龙蟠小记</td>
+<td>滁州南</td>
+</tr>
+<tr>
+<td>函元塔（龟阜）</td>
+<td>函元塔记</td>
+<td>揭阳東南</td>
+</tr>
+<tr>
+<td>侣云菴</td>
+<td>侣云菴记</td>
+<td>地点不详</td>
+</tr>
+</tbody>
+</table>
+<h3 id="版本说明">版本说明</h3>
+<p>本卷底本为《四庫未收书辑刊》第六辑第27冊影印本（PDF第297–303a頁），2026年3月19日依据影印本逐頁視觉转录，2026年3月20日编订为富版本，补充白话全译、题解、人物地名索引及Obsidian标记。原文中○标记为原刻本句读符号（相当于句号），□标记为模糊不可辨识之字。转录中部分字句因影印品质或古体字形辨识困难，可能存在误读，引用时请对照原影印本。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

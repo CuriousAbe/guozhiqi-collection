@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷六 · 五言律詩 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" class="active">卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷六-·-五言律詩">卷六 · 五言律詩</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之六</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+来源：搜韵网校本 | 富版本编订 2026-03-21</p>
+</blockquote>
+<hr />
+<p>本卷收五言律诗八十四首，多为郭之奇在客游、出仕期间的作品。诗中既有赠别友朋的温情，也有对山川秀美的咏叹，更有对家国沧桑的忧思。</p>
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>送许钦翼公车</td>
+</tr>
+<tr>
+<td>2</td>
+<td>秋日送冯尔韬明府报最</td>
+</tr>
+<tr>
+<td>3</td>
+<td>夜坐</td>
+</tr>
+<tr>
+<td>4</td>
+<td>孙蜚莪邹石可过集</td>
+</tr>
+<tr>
+<td>5</td>
+<td>西园清事①清韵</td>
+</tr>
+<tr>
+<td>6</td>
+<td>家别慈闱 庚午冬北征作</td>
+</tr>
+<tr>
+<td>7</td>
+<td>过隘岭</td>
+</tr>
+<tr>
+<td>8</td>
+<td>雩都登舟</td>
+</tr>
+<tr>
+<td>9</td>
+<td>庐陵阻风晚泊</td>
+</tr>
+<tr>
+<td>10</td>
+<td>梦徐九一邀游虎丘坐千人石上待月联吟觉来枕上偶记数联似五言律也</td>
+</tr>
+<tr>
+<td>11</td>
+<td>然不忆何语出何人矣残灯馀几雨雪霏雱有怀耿然依韵追足</td>
+</tr>
+<tr>
+<td>12</td>
+<td>读肃之诗</td>
+</tr>
+<tr>
+<td>13</td>
+<td>病腕</td>
+</tr>
+<tr>
+<td>14</td>
+<td>晚泊所见</td>
+</tr>
+<tr>
+<td>15</td>
+<td>挂席过南浦</td>
+</tr>
+<tr>
+<td>16</td>
+<td>阴暮</td>
+</tr>
+<tr>
+<td>17</td>
+<td>农圃</td>
+</tr>
+<tr>
+<td>18</td>
+<td>晚望</td>
+</tr>
+<tr>
+<td>19</td>
+<td>春汀</td>
+</tr>
+<tr>
+<td>20</td>
+<td>泊攸镇</td>
+</tr>
+<tr>
+<td>21</td>
+<td>上滩</td>
+</tr>
+<tr>
+<td>22</td>
+<td>燕</td>
+</tr>
+<tr>
+<td>23</td>
+<td>瑞金寇警</td>
+</tr>
+<tr>
+<td>24</td>
+<td>雨过隘岭口占</td>
+</tr>
+<tr>
+<td>25</td>
+<td>泊上杭界</td>
+</tr>
+<tr>
+<td>26</td>
+<td>雨泊鲟鱼村隔舟讯杨承之 癸酉北征舟中作</td>
+</tr>
+<tr>
+<td>27</td>
+<td>晚望雷发</td>
+</tr>
+<tr>
+<td>28</td>
+<td>清明日雨望计春</td>
+</tr>
+<tr>
+<td>29</td>
+<td>泊皖江走笔讯方肃之</td>
+</tr>
+<tr>
+<td>30</td>
+<td>有怀陆山甫</td>
+</tr>
+<tr>
+<td>…</td>
+<td>共84首</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="送许钦翼公车">送许钦翼公车</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#许钦翼" class="internal-link wiki-link">许钦翼</a>
+<strong>关键主题</strong>：<code>#送别</code> <code>#勉励</code> <code>#仕途</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>忽尔先余去，离情动久要。海风吹雁影，江雪振梅条。历览披英誉，文章答圣朝。天人应有策，荷橐拟连镳。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>你突然离别我而先行东去，我们的离情在我心中激起了深长的思念。海风吹动着归雁的影子，江雪颤动着梅花的枝条。你饱览山河，自然披露出英俊的名誉，文章才华可以报答圣明的朝代。天下与人伦都应有你的妙策，我期待看到你荷负印绶、骑马相随的日子。</p>
+<h3 id="题解">题解</h3>
+<p>这是一首送别诗，作者为友人许钦翼将赴任而作。诗的前四句既写离别的酸楚，又用景物烘托，以"海风""江雪"等自然意象暗示旅程的风险与艰辛。后四句转而劝勉，强调许钦翼的才能必将获得认可，必能在朝代做出贡献。全诗呈现了古人送别时既不舍又鼓励的复杂心情。</p>
+<hr />
+<h2 id="秋日送冯尔韬明府报最">秋日送冯尔韬明府报最</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#冯尔韬" class="internal-link wiki-link">冯尔韬</a>
+<strong>关联版本</strong>：康熙本作《再赠尔韬》
+<strong>关键主题</strong>：<code>#送别</code> <code>#秋景</code> <code>#官吏勤勉</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>摇落初分手，登临独寸心（寸，康熙本作"送"。）。行云看岭断⑴，下月绕棠阴（下月绕，康熙本作"月挂古"。）。山海馀清迹（山海馀，康熙本作"祖道留"。），诗文忆好音（诗文忆，康熙本作"鸣珂听"。）。圣明方有事⑵，为慎救时针（为，康熙本作"应"。）。</p>
+<p>异文：
+- ⑴ 此句，康熙本作"秋开黄菊路"。
+- ⑵ 此句，康熙本作"圣朝虽少阙"。</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>秋天枝叶摇落的时候我们初次分手，登高远眺时只有方寸的心在思量。行走的云彩让我看到岭脉断开，月光下围绕着唐棠树的阴影。山海之间留下了清净的足迹，诗文中回忆起了美好的声音。圣明的朝代现在正有许多大事，你要谨慎地施展救国救民的才能。</p>
+<h3 id="题解_1">题解</h3>
+<p>这首诗为送别冯尔韬出任地方官而作。题下注云"康熙本作《再赠尔韬》"，说明两个版本的题目有所不同。诗人以秋景为背景，渲染了离别的气氛——"摇落"与"独寸心"体现了分别的孤独。诗人借助景物意象（行云、月光、山海）暗示冯尔韬应该如何行动，最后两句更是直接劝诫，强调在"圣明方有事"的时代背景下，应当兢兢业业、谨慎从事，这既是对朋友的期许，也反映了作者对时局的认识。</p>
+<hr />
+<h2 id="夜坐">夜坐</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#隐居</code> <code>#独处</code> <code>#自适</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>屐齿门前静，閒庭任绿苔。冷风和窍出，疏月向窗开。水脉池中活，云根屋上栽。吾庐终吾爱，不足外人来。</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>木屐踩在门前的声音已经寂静了，空荡的庭院任凭青苔生长。冷风从窗洞里吹出，稀疏的月光投向窗户打开。池塘里的水脉依然活跃流动，屋顶上仿佛长出了白云的根须。我这简陋的居所终究是我所爱的地方，不值得外人来访问。</p>
+<h3 id="题解_2">题解</h3>
+<p>这是一首表现隐居生活的诗。作者以静谧的夜景为铺垫，通过"屐齿""閒庭""冷风""疏月"等意象营造出幽僻独居的气象。中间四句的景物描写——池水、云根——既是实景，也是象征，暗示作者与自然和谐相处的精神状态。末尾两句"吾庐终吾爱，不足外人来"显示出作者对简朴生活的满足，拒绝了人世的喧嚣，是对心灵宁静的追求。</p>
+<hr />
+<h2 id="孙蜚莪邹石可过集">孙蜚莪邹石可过集</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#孙蜚莪" class="internal-link wiki-link">孙蜚莪</a> <a href="#邹石可" class="internal-link wiki-link">邹石可</a>
+<strong>关键主题</strong>：<code>#宴集</code> <code>#友情</code> <code>#春游</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>雨后诛茅径，春云湿草堂。一樽供笑语，五马动辉光。酒赋忘忧馆，啸闻在水方。稍迟花席上，更醉月中觞。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>雨后里削去了茅草小径，春天的云彩浸湿了草屋。一杯酒招待了我们的笑声与言语，五匹马拉动的车辆闪耀着光辉。饮酒写赋在忘忧的馆舍，长啸的声音远传到水的那边。在花席上我们稍微停留，最后在月光下的杯盏中更加沉醉。</p>
+<h3 id="题解_3">题解</h3>
+<p>这是一首咏宴集的诗，记录了与孙蜚莪、邹石可等友人相聚的欢乐场景。诗的前两句以景物起兴，营造春日相聚的背景。中间四句层层深入，从杯酒、车马、赋诗、啸歌等方面展现了宴集的热烈气氛。末尾两句的"稍迟""更醉"体现了时光流逝和醉意渐浓的过程。全诗充满了对友谊、欢乐和艺术活动的赞美，流露出士人雅聚的品味。</p>
+<hr />
+<h2 id="西园清事①清韵">西园清事①清韵</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#隐居</code> <code>#园林</code> <code>#自适</code>
+<strong>异文</strong>：① 清事，崇祯本原附手书旁校"清韵"</p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>西园新橘柚，东壁旧松云。木石能相友，禽鱼遂作群。栽花泥入袖，灌菜水沾裙。日暮无他事，独酌起微醺。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>西园里有新采的橘子和柚子，东边的墙壁上有古老的松树和浮云。木石之间能相互友爱，禽鸟与鱼儿于是成群结队。栽种花卉让泥土沾湿了我的衣袖，灌溉蔬菜让水珠溅到了我的裙子。到了日暮时分没有其他事情，独自酌饮而起微微的醉意。</p>
+<h3 id="题解_4">题解</h3>
+<p>这是一首描绘隐居园林生活的诗。作者通过对西园景物的细致观察，表现了在园林中劳作的闲适。前两句以静物开篇，后四句通过动词"栽""灌"等体现了作者的实际行动。最后两句的"独酌起微醺"既是劳作后的休息，也是精神的放松。全诗充满了对园林隐居生活的赞美和对自然亲近的渴望。</p>
+<hr />
+<h2 id="家别慈闱-庚午冬北征作">家别慈闱 庚午冬北征作</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：庚午冬
+<strong>关键主题</strong>：<code>#离别</code> <code>#孝思</code> <code>#乡思</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>隐忍竟成去，今从膝下分⑴。密缝如母见，齧指令儿闻。繇此燕天雪（繇，康熙本作"从"。），相参粤岭云（参，康熙本作"兼"。）。征衣空湿尽，夙夜尚殷殷⑵。</p>
+<p>异文：
+- ⑴ 首二句，康熙本作"游子离乡泪，先依慈膝分"。
+- ⑵ 末二句，康熙本作"征魂无近远，陟屺自长勤"。</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>我隐忍着终于成行离去，今天从母亲的膝下分开。母亲密密缝好的衣服如同看到了她的脸，咬破手指的疼痛令孩子也能听到。从此北上到燕地面对天雪，在粤地的山岭云彩中相会。征途的衣服空白地被泪水湿尽，早晚时刻思乡的心情依然殷切。</p>
+<h3 id="题解_5">题解</h3>
+<p>这首诗记述了作者北征时与母亲的离别与思念。题目中"庚午冬北征作"表明这是具体的历史背景。首两句写离别时的内心纠结与身体的行动。中间四句以景物和物象来表达思乡之情：母亲缝的衣服、咬破手指的疼痛都是具体而动人的细节。末两句更是直接表达了对母亲的思念与对北方使命的坚守。这是一首充满孝思与家国情感的诗。</p>
+<hr />
+<h2 id="过隘岭">过隘岭</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#山水</code> <code>#旅途</code> <code>#风景</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>连峰称隘岭，仄径俯汀山。晓日开林杪，晴烟入岫弯。羊肠三十里，鸟道百重间。叹息云深处，终成孔道颜。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>连绵的山峰称为隘岭，窄仄的山路俯瞰着汀州的山。晨晓的太阳打开了林木的树梢，晴朗的烟雾进入了山岫的弯曲处。羊肠般的小路有三十里长，鸟儿飞行的道路重重叠叠。在云雾深处我长声叹息，最终这里成为了通行的孔道。</p>
+<h3 id="题解_6">题解</h3>
+<p>这是一首描写山岳风景的诗。诗人通过对隘岭的观察，呈现了崇山峻岭的壮观景象。首两句以"连峰""仄径"点出地形的险要。中间四句通过具体的景物——晓日、晴烟、羊肠路、鸟道——层层展开，既表现了风景的美丽，也暗示了旅途的艰险。末尾两句的"叹息"与"孔道"既是对自然景观的敬畏，也可能隐含了对人生旅途的思考。</p>
+<hr />
+<h2 id="雩都登舟">雩都登舟</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#离别</code> <code>#江景</code> <code>#乡思</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>山色还依袖，棹歌已入桅。家从云岭去，人向雪江来（江，康熙本作"閒"。）。暮霭千林出，寒烟一抹开。离心迷近远（近远，康熙本作"远近"。），望眼正徘徊。</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>山色依然映照在我的衣袖上，棹歌的声音已经传入了桅杆。家乡从云岭那边消退，我的人向着白雪覆盖的江面而来。傍晚的雾霭从千棵树林升起，寒冷的烟雾一道一道地打开。离别的心情在远近之间迷茫，我的目光正在这里徘徊。</p>
+<h3 id="题解_7">题解</h3>
+<p>这首诗记录了作者在雩都（今江西赣州）登舟出发时的情景。首两句既写景物，也暗示了行程的开始。第三四句表明了地理的流转——家乡消退，而自己向前。中间两句以"傍晚""寒冷"的景物渲染了离别的氛围。末两句"离心迷近远"深刻地表达了离别时的心理状态——在远与近、去与留之间的徘徊。全诗融景物、行动与心理于一体。</p>
+<hr />
+<h2 id="庐陵阻风晚泊">庐陵阻风晚泊</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#庐陵" class="internal-link wiki-link">庐陵</a>
+<strong>关键主题</strong>：<code>#阻风</code> <code>#晚景</code> <code>#乡思</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>阴曀日飘发，悠悠折客程。凄深林壑气，淡泊水天情。寒雾依江暮，霜华逐浪生。思家寻梦早，可奈旅魂惊。</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>阴沉暗暗的日光飘散，我的旅途因风阻而被迂回折绕。深深的凄凉笼罩林壑，淡泊的气质融合了水天。寒冷的雾气依靠江岸到了傍晚，白霜花随着波浪而生成。想念家乡所以早早去寻梦，但怎奈何旅途的灵魂被惊扰。</p>
+<h3 id="题解_8">题解</h3>
+<p>这首诗记录了作者在庐陵被风所阻、晚间停泊时的感受。首两句以气候与旅程相互作用开篇，渲染了被阻的无奈。第三四句转向风景观察与心理感受的融合，"凄深""淡泊"既是景物描写，也是心理投射。后两句更直接地表达乡思与旅途疲惫。全诗在景物与心情的互相映照中，深刻表现了旅人的孤寂与乡愁。</p>
+<hr />
+<h2 id="梦徐九一邀游虎丘坐千人石上待月联吟觉来枕上偶记数联似五言律也">梦徐九一邀游虎丘坐千人石上待月联吟觉来枕上偶记数联似五言律也</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#徐九一" class="internal-link wiki-link">徐九一</a>
+<strong>关联地点</strong>：<a href="#虎丘" class="internal-link wiki-link">虎丘</a> <a href="#千人石" class="internal-link wiki-link">千人石</a>
+<strong>关键主题</strong>：<code>#梦境</code> <code>#友情</code> <code>#创作</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>晚露华山□，游情绝世根。千秋川泽气，三载粤吴魂。古月今相对，新诗近孰尊。沉吟收夜色，歌啸辟天门。</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>晚露在华山闪闪发光，我的游心根于绝世的境界。千秋以来的川泽之气笼罩，三年来粤吴地区的灵魂相会。古来的月亮今天与我们相对，新作的诗歌谁能评定高低。沉思中收拢夜色，歌啸中打开天门。</p>
+<h3 id="题解_9">题解</h3>
+<p>这首诗有一个很长的题目，说明作者在梦中与徐九一在虎丘千人石等月，相互唱和联吟，醒来后在枕上记下了几联诗。诗的内容融梦境与现实、古往与今来于一体。前四句既是梦中的见闻，也是对历史与地理的想象。后四句则是对诗歌创作本身的反思——"新诗近孰尊"问谁能评判诗的优劣，"沉吟""歌啸"则是创作的过程。这是一首充满了浪漫主义精神的诗。</p>
+<hr />
+<h2 id="然不忆何语出何人矣残灯馀几雨雪霏雱有怀耿然依韵追足">然不忆何语出何人矣残灯馀几雨雪霏雱有怀耿然依韵追足</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#思念</code> <code>#孤独</code> <code>#夜景</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>莫逆交之橐，有怀梦亦根。游神通历览，盟性启精魂。静觉文心一，孤存夙约尊。远思劳寐接，春雪乱吴门。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>莫逆之交的礼物在我的心中，虽然有怀念但梦也在其中根植。我的精神游历开阔了视野，心的盟约启开了精妙的灵魂。在静中我觉得文心统一，孤独地存在着夙日的约定。远方的思念在睡梦中劳累接续，春雪纷乱地坠落在吴门。</p>
+<h3 id="题解_10">题解</h3>
+<p>这首诗与前一首相连，是对梦境中种种不甚记得内容的追忆。题目表示诗人不记得梦中说了什么话或是谁说的，只有残灯与雨雪霏霏的记忆。诗中"莫逆交""有怀梦""游神""盟性"等词汇既表现了友谊的深厚，也暗示了对梦境的追溯。末两句"远思""春雪"既是对现实的回归，也是梦与现实的交织。全诗充满了朦胧而深邃的诗意。</p>
+<hr />
+<h2 id="读肃之诗">读肃之诗</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#肃之" class="internal-link wiki-link">肃之</a>（方肃之）
+<strong>关键主题</strong>：<code>#诗歌评论</code> <code>#文学</code> <code>#创作</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>探意出声始，而神忽逗之。理于玄引绪，情以静专思。浑漠人天籁，宁关笔墨司。掀髯披韵刻，此际孰相窥。</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>探索诗的意义从声韵开始，而诗的精神却在其中潜隐。诗理在玄妙中引出线索，情感通过静定的思想而专注。它融合了人与天的声籁浑然一体，这怎么会关乎笔墨的运用。我掀起胡须披览韵脚与寓意，在这个时刻谁能相互观察？</p>
+<h3 id="题解_11">题解</h3>
+<p>这是一首品评友人肃之（方肃之）诗作的诗。诗中对诗歌的创作有深刻的理论见解。前两句论述诗的创作始于声韵但精神超越形式。中间四句则分析诗的理与情如何结合，以及诗与自然的关系。末两句表现了诗人在品评中的深入思考与对话。全诗既是对友人诗作的评价，也是对诗学的思考。</p>
+<hr />
+<h2 id="病腕">病腕</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#病痛</code> <code>#自省</code> <code>#修养</code></p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>臂与閒为狃，腕因不受调。徐从书纠旷，还借药降骄。甘苦惟神剂，浅深亦意料。未能知手舞，肱枕或馀饶。</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>手臂与闲散成了习惯，腕部因为不肯调理而出了问题。我缓缓地从书籍的纠缠中释放，还要借助药物来降低它的傲气。甘苦都取决于精妙的调理，深浅也依照我的料想。我不能知道手舞的境界，但肱骨枕着或许还有余饶。</p>
+<h3 id="题解_12">题解</h3>
+<p>这首诗表面上是写腕部的病痛，实际上是对自身生活状态的自省。首两句既写病的成因——习惯与不调理——也暗示了性格中的问题。中间四句通过对待病痛的态度来表达对修养的看法。末两句则以"手舞"与"肱枕"对比，暗示即使不能达到理想的境界，也可以在现实中找到某种满足。全诗既是自嘲，也是自省。</p>
+<hr />
+<h2 id="晚泊所见">晚泊所见</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#日景</code> <code>#月景</code> <code>#晚景</code></p>
+</blockquote>
+<h3 id="原文_13">原文</h3>
+<p>落日逶迤去，丹霞宛转轻⑴。山深千树绿（深，康熙本作"还"。），月泻一湖清。澄澹繇宽蓄，空濛自远横。微风天汉过，仍曳彩云生。</p>
+<p>异文：
+- ⑴ 首二句，康熙本作"斜照衔峰薄，飞霞拂岫轻"。</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>落日蜿蜒地消退，红霞在空中婉转而轻柔。深山里千棵树呈现翠绿，月光洒落在整个湖面清澈。澄澹的品质来自宽阔的蓄积，空蒙的气象自然从远处横放。微弱的风吹过银河，还拉扯着新生的彩云。</p>
+<h3 id="题解_13">题解</h3>
+<p>这是一首精妙的景物诗，将日落与月出、晚景与夜景融为一体。首两句写日落时的丹霞，中间两句转向月光与湖水。后四句则更深入地表达对自然风景的感悟——"澄澹"与"空濛"都是审美的发现，"微风"与"天汉"则连接了人文与自然。全诗通过对光影、色彩与气象的精细观察，呈现了一个完整而和谐的晚景世界。</p>
+<hr />
+<h2 id="挂席过南浦">挂席过南浦</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#南浦" class="internal-link wiki-link">南浦</a>
+<strong>关键主题</strong>：<code>#江景</code> <code>#风帆</code> <code>#旅途</code></p>
+</blockquote>
+<h3 id="原文_14">原文</h3>
+<p>水力惟风竞，高帆出晓阴。西山飞鸟过，南浦落花深。雾重千林影，舟轻万里心。会看龙跃处，直向剑江寻。</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>水的力量只与风在竞争，高高的帆在晓暗中张起。西方的山上飞鸟掠过，南浦的地方落花堆得很深。大雾加重了千棵树的影子，轻快的舟船承载了远方的心。我会看到龙跃出水的地方，直接向着剑江去寻找。</p>
+<h3 id="题解_14">题解</h3>
+<p>这首诗以高超的笔法描绘了江上航行的景象。首两句写扬帆的动态，强调了自然力量（风与水）的作用。中间两句对比了西山的飞鸟与南浦的落花，既是景物描写，也暗示了季节与地理。后两句既表现了舟行的轻快，也暗示了目标与方向——"龙跃处"与"剑江"都是地理上与精神上的指向。全诗充满了动感与向前的力量。</p>
+<hr />
+<h2 id="阴暮">阴暮</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#阴晴交替</code> <code>#景物</code> <code>#自然变化</code></p>
+</blockquote>
+<h3 id="原文_15">原文</h3>
+<p>晴阴云日抱，薄暮水霞争。近远分山异，浅深授客清。黄鹂依树绿，白鹭点溪明。微出三春韵，各因一物情。</p>
+<h3 id="白话全译_15">白话全译</h3>
+<p>晴与阴的云彩和太阳相互拥抱，薄暮中水光与晚霞相互争奇。远近的距离让山的形态各不相同，水的浅深赋予了旅客清冷的感受。黄莺依靠树的翠绿而鸣唱，白鹭在溪流的明亮处点缀。微微透露出三月的韵味，各自因为一种景物而生情。</p>
+<h3 id="题解_15">题解</h3>
+<p>这首诗在一个短小的篇幅中展现了丰富的自然景象。首两句以对比手法写天气的变化——晴阴相抱、水霞相争。第三四句则强调了观看角度与景物感受之间的关系。后两句通过鸟类与植物来进一步丰富画面。末句"各因一物情"是全诗的点睛之笔，说明了自然景物如何引发人的情感。全诗体现了古人对自然细致而深刻的观察。</p>
+<hr />
+<h2 id="农圃">农圃</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#农业</code> <code>#乡村</code> <code>#自然</code></p>
+</blockquote>
+<h3 id="原文_16">原文</h3>
+<p>春霖谁见德，独向圃农家。山集云雷隘，岸倾陇亩斜。微闻泉脉动，欲令远心遐。植杖何人者，优游语种瓜。</p>
+<h3 id="白话全译_16">白话全译</h3>
+<p>春天的雨水谁见过它的恩德，只有向农圃的农民家里去看。山间聚集了云雷而显得狭隘，岸边倾斜着田垄与阡陌。我微微听到泉水的脉动，想让远方的心灵得到遐想。种田的老人是谁，优闲地说着如何种瓜。</p>
+<h3 id="题解_16">题解</h3>
+<p>这首诗以农圃为题，既表现了对农业的观察，也暗示了对劳动与自然关系的思考。首两句既讴歌了春雨对农业的意义，又指向了具体的农家。中间两句用"山集""岸倾"等动词表现了地形的特点与劳作的环境。后两句则以"植杖"与"种瓜"这样的具体劳动来呈现农人的形象。全诗既是写景，也是写人，充满了对劳动的敬重。</p>
+<hr />
+<h2 id="晚望">晚望</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#晚景</code> <code>#自然美</code> <code>#感悟</code></p>
+</blockquote>
+<h3 id="原文_17">原文</h3>
+<p>微风传窈谷，细雨到平沙。岸色迎垂柳，波文卷落花。云林深愈绿，山卉薄能华。野意来无尽，青烟叠晚涯。</p>
+<h3 id="白话全译_17">白话全译</h3>
+<p>微风传送着幽深谷地的声音，细雨落到了平坦的沙洲。岸边的色彩迎接着垂下的柳枝，波浪的纹理卷起了飘落的花瓣。云雾笼罩的林木显得更加深绿，山间的花卉虽然稀薄但也能显示美丽。野地的意趣源源不尽，青烟层层堆积在晚景的天边。</p>
+<h3 id="题解_17">题解</h3>
+<p>这是一首高度沉静的晚景诗。诗人通过对微风、细雨、岸柳、落花等细微景物的观察，营造了一个细腻而深邃的晚景图景。前四句层层推进，从声音、雨水、植物、花朵等多个角度展开。后四句则上升到更高的审美层次，"云林""山卉"代表了自然的完整性，而"青烟叠晚涯"则将视线延伸到远方。全诗充满了对自然微妙之美的认识与珍视。</p>
+<hr />
+<h2 id="春汀">春汀</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#春景</code> <code>#江景</code> <code>#闲适</code></p>
+</blockquote>
+<h3 id="原文_18">原文</h3>
+<p>扁舟时一望，云水入春汀。淡泊如孤性，凄清就远坰。沙喧争汲女，波动款飞蜓。随意花风起，悠然动渚馨。</p>
+<h3 id="白话全译_18">白话全译</h3>
+<p>扁舟时而向远处张望，云彩与水流进入了春季的沙洲。淡泊如同孤独的性质，凄清就趋向于远方的野地。沙滩上有汲水的女子争嚷，波浪轻柔地推动了飞蜓。随着意愿花风吹起，悠闲地摇动了渚边的香气。</p>
+<h3 id="题解_18">题解</h3>
+<p>这首诗以春汀为景，融自然景观与人文活动于一体。首两句以静观的角度看春汀风景。第三四句则上升到精神的层面——淡泊与凄清既是景物的品质，也是观者的心境。后两句引入了人物活动——汲水的女子、飞蜓，这些具体的生活场景使整个画面活了起来。末句的"悠然动渚馨"是全诗的高潮，融自然、人文与精神为一体。</p>
+<hr />
+<h2 id="泊攸镇">泊攸镇</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#攸镇" class="internal-link wiki-link">攸镇</a>
+<strong>关键主题</strong>：<code>#停泊</code> <code>#观察</code> <code>#夜景</code></p>
+</blockquote>
+<h3 id="原文_19">原文</h3>
+<p>跂远日悠悠，聊从一苇谋。心微迎鸟语，意适俯鱼游。暮雨仍相续，前滩未可柔。灭明村火出，孤缆向昏投。</p>
+<h3 id="白话全译_19">白话全译</h3>
+<p>踮起脚尖远眺日子悠悠长长，姑且用一片芦苇来谋划。心灵微妙地迎接鸟类的鸣唱，意念恰当地观察鱼儿的游动。傍晚的雨仍然连续不断，前面的浅滩还不能变得温柔。熄灭的村火点点出现，孤独的缆绳向黄昏投去。</p>
+<h3 id="题解_19">题解</h3>
+<p>这首诗记录了在攸镇停泊时的观察与感受。首两句的"跂远""一苇"体现了旅人的审视与从容。中间两句以鸟与鱼来比喻自己对自然的亲近与适应。后两句则转向对景物与环境的实际观察——雨、浅滩、村火、缆绳，这些具体的意象构成了停泊时的真实画面。全诗既有观察的敏锐，也有心理的细致。</p>
+<hr />
+<h2 id="上滩">上滩</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#激流</code> <code>#惊险</code> <code>#冒险</code></p>
+</blockquote>
+<h3 id="原文_20">原文</h3>
+<p>弱缆从奔濑，一滩破一心。身随鸥鸟泛，歌动水龙吟。偶尔惊涛及，难因短棹禁。每怀川涉意，因此益临深。</p>
+<p>异文：末四句，康熙本作"竟日雷波转，非风雪浪侵。欹危舟楫溯，时倚石门深"。</p>
+<h3 id="白话全译_20">白话全译</h3>
+<p>脆弱的缆绳跟随奔腾的浅滩，一个滩头就打碎一个心。身体随着海鸥飞鸟漂浮，歌声激动了水龙的吟唱。偶尔有惊人的浪涛冲来，难以用短短的船桨来禁止。每次都怀着川流涉渡的意思，因此越来越临近深水。</p>
+<h3 id="题解_20">题解</h3>
+<p>这首诗以"上滩"为题，表现了船行险滩时的惊险与刺激。首两句直接引入险滩的威胁——"弱缆""奔濑"与"破一心"。中间两句虽然写的是"身随""歌动"这样的轻快意象，但实际上暗示了在危险中的坚定。后两句回到现实的危险——"惊涛""短棹"都表现了对抗自然力量的困难。末句"因此益临深"既是对实际地理的描述，也是对心理与精神层面的隐喻。</p>
+<hr />
+<h2 id="燕">燕</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#自然观察</code> <code>#鸟类</code> <code>#道德寄喻</code></p>
+</blockquote>
+<h3 id="原文_21">原文</h3>
+<p>受风因下上，裔水自差池。日渚留形薄，春洲递语卑。处堂恋主德，渡海赴鹏期。漫有深林在，无心借一枝。</p>
+<p>异文：
+- "下上"，康熙本作"上下"。
+- "处堂恋"，康熙本作"巢梁思"。</p>
+<h3 id="白话全译_21">白话全译</h3>
+<p>燕子因风而上下翻飞，分支的水流自然形成了差异的池塘。在日渚中留下了轻薄的身影，在春洲里传递着谦卑的言语。在堂前栖居恋慕着主人的恩德，渡过海洋去追赶鹏鸟的志期。虽然深林到处都有，但没有想借一根枝条的心思。</p>
+<h3 id="题解_21">题解</h3>
+<p>这首诗以燕为题，既是对燕子生活的观察，也是对人伦道德的讽喻。首两句以"风"与"水"来说明燕子的行动与环境。中间四句描绘了燕子的两种状态——一种是在人类社会中的恋主，一种是对大鹏的向往。末两句则表现了燕子虽然拥有自然的自由（深林），但其心志被限定在人类社会的关系中。全诗通过对燕子的观察，深刻地表现了个体与环境、理想与现实的关系。</p>
+<hr />
+<h2 id="瑞金寇警">瑞金寇警</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#瑞金" class="internal-link wiki-link">瑞金</a>
+<strong>关键主题</strong>：<code>#社会风乱</code> <code>#民生</code> <code>#流民</code></p>
+</blockquote>
+<h3 id="原文_22">原文</h3>
+<p>青春犹水国，粉堞见流民。扰扰居行色，飘飘旦暮身。自为万里客，每念四方人。安得春陵作，凄然此地陈。</p>
+<h3 id="白话全译_22">白话全译</h3>
+<p>青春的季节就像水国一样，白色的城墙里看到了流离失所的人民。扰乱不安的住居行色，飘摇不定的早晚时刻身体。我自己成了万里远游的客人，每每想念四方的人民。怎样才能得到春陵城的秩序，凄然地呈现在这个地方。</p>
+<h3 id="题解_22">题解</h3>
+<p>这首诗以"瑞金寇警"为题，反映了明末社会的混乱局面。首两句虽以"青春""水国"开篇，但立刻转入了"粉堞""流民"这些反映社会危机的意象。中间两句以"扰扰""飘飘"等词描绘了社会的不安。后两句则表现了诗人的身份转变——从观察者变成了流民，最后对"春陵"（代表有序社会）的渴望。全诗既是对社会乱象的观察，也是对和平秩序的渴望。</p>
+<hr />
+<h2 id="雨过隘岭口占">雨过隘岭口占</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#隘岭" class="internal-link wiki-link">隘岭</a>
+<strong>关键主题</strong>：<code>#山水</code> <code>#雨景</code> <code>#隐喻</code></p>
+</blockquote>
+<h3 id="原文_23">原文</h3>
+<p>细雨千山内，轻云万木坰。钩连从灭没，屈折落青冥。仰胁舒心目，交襟抱影形。藏身真隘岭，何处是前汀。</p>
+<h3 id="白话全译_23">白话全译</h3>
+<p>细细的雨在千层山脉之内，轻飘飘的云遮掩着万棵树木。钩形连接的东西从消没中展现，屈折的道路陷落在青色的深空。仰头与胁腹舒展了心眼，交叉的衣襟抱着影子与形体。藏身在真正的隘岭之中，哪里是前面的沙汀。</p>
+<h3 id="题解_23">题解</h3>
+<p>这首诗用"口占"（即兴创作）的形式描写了雨中的隘岭风景。诗人在雨中观察到了多层次的景象——从近的细雨、轻云，到远的钩形物象、屈折的道路。中间两句则上升到身心的层面——通过身体的姿态来感受景物。末两句则以"藏身"与"何处"的问题回到了旅人的身份与方向。全诗既是景物描写，也是心路的记录。</p>
+<hr />
+<h2 id="泊上杭界">泊上杭界</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#上杭" class="internal-link wiki-link">上杭</a>
+<strong>关键主题</strong>：<code>#停泊</code> <code>#乡村</code> <code>#人文景观</code></p>
+</blockquote>
+<h3 id="原文_24">原文</h3>
+<p>山深依树峡，溪转见柴门。鸟雀逢人语，牛羊与牧喧。澌流无静势，芳麓有微痕。一苇相依倚，薜萝尚可扪。</p>
+<h3 id="白话全译_24">白话全译</h3>
+<p>深山依靠树林形成了峡谷，溪流转弯处看到了柴扉紧闭的门。飞鸟与麻雀遇到人就发出声音，牛与羊在牧人的喧声中活动。流冰消融的水流没有静止的势头，芳香的山麓上有微弱的足迹。一片芦苇相互依靠倚靠，薜萝的藤蔓还能被手摸到。</p>
+<h3 id="题解_24">题解</h3>
+<p>这首诗以在上杭停泊时的观察为内容。首两句描绘了地理环境——深山、树林、溪流、柴门，这些都是乡村的特征。中间两句引入了生活元素——鸟雀、人、牛羊、牧人，构成了生动的乡村图景。后两句则从自然现象（流冰、微痕）转向可触及的植物（芦苇、薜萝），体现了对环境的亲近与感受。全诗融地理、生活与感受于一体。</p>
+<hr />
+<h2 id="雨泊鲟鱼村隔舟讯杨承之-癸酉北征舟中作">雨泊鲟鱼村隔舟讯杨承之 癸酉北征舟中作</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：癸酉
+<strong>关联人物</strong>：<a href="#杨承之" class="internal-link wiki-link">杨承之</a>
+<strong>关联地点</strong>：<a href="#鲟鱼村" class="internal-link wiki-link">鲟鱼村</a>
+<strong>关键主题</strong>：<code>#通讯</code> <code>#友谊</code> <code>#雨景</code></p>
+</blockquote>
+<h3 id="原文_25">原文</h3>
+<p>寂寞江村处，连绵风雨时。招邀无一事，闻问各何思。玄草君成否，危言我亦为。消閒差此胜，分手共成诗。</p>
+<h3 id="白话全译_25">白话全译</h3>
+<p>在寂寞的江村处，连绵的风雨时刻。招呼邀请没有一件事，相互听闻问询各有什么想法。玄妙的草木你是否做成了，危言我也会提出。消磨闲暇之时最好就是这样，分手时相互成就成诗。</p>
+<h3 id="题解_25">题解</h3>
+<p>这首诗是隔舟与朋友杨承之通讯时作的，题注"癸酉北征舟中作"指明了时代背景。首两句以环境描写开篇——寂寞的江村与连绵的风雨。中间四句则是诗人与杨承之之间的对话与想象——既问他的进展，也说自己的看法。末两句"消閒差此胜，分手共成诗"则表现了友人交往中诗歌创作的重要性。全诗既是实际的通讯，也是对友谊的咏叹。</p>
+<hr />
+<h2 id="晚望雷发">晚望雷发</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#雷雨</code> <code>#晚景</code> <code>#自然现象</code></p>
+</blockquote>
+<h3 id="原文_26">原文</h3>
+<p>披窗舒望眼，向夕屡徘徊。雨点穷春日，江声动晚雷。苍茫烟水去，历乱电光来。看取满盈意，羁怀倏与开。</p>
+<h3 id="白话全译_26">白话全译</h3>
+<p>披开窗户舒展了望眼，向着夕阳多次徘徊。雨点穷尽了春日，江水的声音激动了晚雷。苍茫的烟水消退了，杂乱的电光来临了。看透了满盈的意思，羁旅的怀抱突然打开。</p>
+<h3 id="题解_26">题解</h3>
+<p>这首诗以天气现象为题，描写了傍晚时雷雨的来临。首两句从窗口的观察开始，建立了诗人的观看位置。中间两句则逐步深入——从雨点到江声，再到烟水与电光。后两句则上升到心理的层面——苍茫与混乱的外界景象引发了内心的开放与顿悟。全诗既是对自然现象的观察，也是对情感变化的记录。</p>
+<hr />
+<h2 id="清明日雨望计春">清明日雨望计春</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#清明</code> <code>#雨景</code> <code>#乡思</code> <code>#春景</code></p>
+</blockquote>
+<h3 id="原文_27">原文</h3>
+<p>九旬春序六，万里客程三。一水云光湿，千山雨鬓毵。桃花红未了，柳色绿相参。何处愁心数，惊时祇自憨。</p>
+<h3 id="白话全译_27">白话全译</h3>
+<p>春天的九十天中第六十天，万里旅程中走了三十天。一泓水被云光浸湿，千座山被雨水打得鬓发蓬乱。桃花的红色还没有完全消退，柳色的绿与红相互参差。在哪里数愁心，惊人的时刻只能自己憨呆呆地看。</p>
+<h3 id="题解_27">题解</h3>
+<p>这首诗作于清明雨中，表现了旅人在清明节的思乡之情。首两句以时间与地点的对比开篇——春季的节奏与万里的行程。第三四句则以景物来表现雨的威力与范围。后两句引入了季节特征——桃花与柳树，最后以"何处愁心"和"祇自憨"来表达了旅人在明节的复杂心情。全诗融时间、地点、自然与情感于一体。</p>
+<hr />
+<h2 id="泊皖江走笔讯方肃之">泊皖江走笔讯方肃之</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#方肃之" class="internal-link wiki-link">方肃之</a>
+<strong>关联地点</strong>：<a href="#皖江" class="internal-link wiki-link">皖江</a>
+<strong>关键主题</strong>：<code>#通讯</code> <code>#友谊</code> <code>#诗歌</code></p>
+</blockquote>
+<h3 id="原文_28">原文</h3>
+<p>三载过君再，依依一水盈。诗从传处尽，绪自问时生。以我春江约，听君雨谷声。书行仍引领，目极片云争。</p>
+<h3 id="白话全译_28">白话全译</h3>
+<p>三年过去了又见到你一次，依依不舍的情感充满了这一泓水。诗歌从传播的地方穷尽了，思绪从提问的时刻自然产生。用我的春江之约，听你的雨谷之声。书信行走时还要引领方向，目光尽力争取片片云彩。</p>
+<h3 id="题解_28">题解</h3>
+<p>这首诗是在皖江停泊时寄给友人方肃之的快笔之作。首两句既表现了三年的时间流逝，也表现了依依不舍的友谊。中间两句涉及诗歌的创作与传播，同时也表现了二人之间的心灵沟通。后两句则从书信的寄送到目光的相望，既是实际的通讯行为，也是精神的交流。全诗充满了对友谊与诗歌的深思。</p>
+<hr />
+<h2 id="有怀陆山甫">有怀陆山甫</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#陆山甫" class="internal-link wiki-link">陆山甫</a>
+<strong>关键主题</strong>：<code>#思念</code> <code>#友情</code> <code>#对比</code></p>
+</blockquote>
+<h3 id="原文_29">原文</h3>
+<p>思君何处起，回首岭云深。祖帐披胸语，灯前顾影吟。阮生馀白眼，季子尽黄金。徒将一杯酒，为余万里心。</p>
+<h3 id="白话全译_29">白话全译</h3>
+<p>想念你从何处开始，回头看岭云很深。祖父帐篷前披露胸中言语，灯前对着影子吟诗。阮籍还有白眼相赠，季札却把黄金用尽。我只能用一杯酒，为我表达万里之外的心。</p>
+<h3 id="题解_29">题解</h3>
+<p>这首诗表现了诗人对陆山甫的思念。首两句以"思"和"回首"建立了诗人的心理状态。第三四句则以具体的场景——祖帐、灯前——来表现对友人的回忆。中间两句引用了历史典故——阮籍的"白眼"与季札的"黄金"——用来对比陆山甫的品质。末两句则以"一杯酒"作为表达方式，表现了在万里之隔中对友人的思念。全诗融个人情感、历史典故与现实处境于一体。</p>
+<hr />
+<h2 id="幽斋偶成">幽斋偶成</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#隐居</code> <code>#居室</code> <code>#自适</code></p>
+</blockquote>
+<h3 id="原文_30">原文</h3>
+<p>素几明幽独，盆花为客公。娇纭晴日霭，氲燠暮春风。心定迎喧寂，窗虚受色空。午云檐际落，亦向此冲融。</p>
+<h3 id="白话全译_30">白话全译</h3>
+<p>素朴的几案明亮地呈现出幽独，盆栽的花卉成为了我的客人。娇嫩多彩的花朵在晴日的雾霭中，温暖的暮春风吹过。心灵安定地迎接喧嚣与寂寞，虚空的窗户接受色彩与空境。午时的云在屋檐边落下，也向着这里冲融过来。</p>
+<h3 id="题解_30">题解</h3>
+<p>这首诗以"偶成"（偶然成作）的形式记录了在幽斋闲居的时刻。首两句建立了隐居居室的环境——素几、盆花。中间两句则描写了自然现象对居室的影响——日光、春风。后两句则上升到心理与精神的层面——心定、窗虚、云融，这些都既是实景，也是内心状态的比喻。全诗充满了对隐居生活的细致观察与深刻感受。</p>
+<hr />
+<h2 id="客路">客路</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#旅途</code> <code>#岐路</code> <code>#时光流逝</code></p>
+</blockquote>
+<h3 id="原文_31">原文</h3>
+<p>青春归白水，岐路忆同人。所畏莺声老，还愁马背新。长途难屡计，幽事颇宜亲。近识杨花意，飘摇念客身。</p>
+<h3 id="白话全译_31">白话全译</h3>
+<p>青春的季节回归了白水之畔，在岐路上想起了同伴。我所害怕的是莺声变老，还要愁心马背上的新鞍。长途难以多次计算，幽深的事情颇适宜亲身体验。最近认识了杨花的意思，飘摇中想起了我客人的身份。</p>
+<h3 id="题解_31">题解</h3>
+<p>这首诗以"客路"为题，表现了旅人在行进中的思想与感受。首两句以季节与岐路来表现旅程的特点。中间两句则引入了对时间流逝的恐惧——莺声与马背都代表了时间的推移。后两句则以杨花这个意象来表现了旅人身份的感受。全诗融旅程的实际经历与精神的内向思考于一体。</p>
+<hr />
+<h2 id="新暑">新暑</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#炎热</code> <code>#季节更替</code> <code>#旅途</code></p>
+</blockquote>
+<h3 id="原文_32">原文</h3>
+<p>炎帝司初令，高云散碧端。恒旸方与助，新暑遂难宽。去鸟惟依树，来人未解鞍。所愁芳草歇，谁念客途单。</p>
+<h3 id="白话全译_32">白话全译</h3>
+<p>炎帝开始发布了初令，高云在碧色的天边散开。太阳一直光照并且更加帮助炎热，新的暑期于是变得难以宽松。离去的鸟儿只能依靠树木，来往的人还没有解下鞍马。我所愁的是芳草枯萎，谁还记得客人旅途的孤单。</p>
+<h3 id="题解_32">题解</h3>
+<p>这首诗以"新暑"为题，描写了夏天到来时的景象。首两句以拟人化的"炎帝"与自然现象来描写热的开始。中间两句进一步推进——太阳的作用与热的增强。后两句则引入了人与动物——鸟的依靠、人的行进、草的枯萎，最后落在了"客途单"这个对旅人孤寂的深刻表达。全诗既描写了季节特征，也表现了旅人的感受。</p>
+<hr />
+<h2 id="午车">午车</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#季节交替</code> <code>#午时</code> <code>#旅途</code></p>
+</blockquote>
+<h3 id="原文_33">原文</h3>
+<p>远道收春尽，轻车破夏来。晴岚归远树，燠霭散平莱。永昼光初吓，午云倦不开。凉薰虽可悦，畏日亦长哉。</p>
+<h3 id="白话全译_33">白话全译</h3>
+<p>远方的旅途收尽了春季，轻快的车子突破了夏天的到来。晴朗的岚气归回了远处的树木，温暖的霭气散布在平坦的田野。永远的白昼光开始吓人了，午时的云疲倦地不肯打开。凉爽的香气虽然让人悦意，但我怕日子也很长啊。</p>
+<h3 id="题解_33">题解</h3>
+<p>这首诗以"午车"为题，记录了在午时行车时的观察。首两句以季节的交替来标记旅程的进展。中间两句则描写了午时的景象——岚气、霭气、永昼、午云，这些都是午时特有的气象。后两句则既表现了对凉爽的感谢，也表现了对漫长夏日的恐惧。全诗融季节、时间与旅途于一体。</p>
+<h2 id="雨意">雨意</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#雨景</code> <code>#心境</code> <code>#游兴</code></p>
+</blockquote>
+<h3 id="原文_34">原文</h3>
+<p>雨意分朝暮，山容合近遥。
+褰帷惟鸟见，倚轼亦云招。
+乍令红尘退，还疑碧草骄。
+长途争此刻，赢得我歌谣。</p>
+<h3 id="白话全译_34">白话全译</h3>
+<p>雨意在朝暮间分明呈现，山的容貌融合了近与远。撩开帐帷只有鸟儿能看见，倚着车轼连云彩也来招手。突然让红尘消退，反而怀疑碧草高傲自得。长途的旅人争抢这样的时刻，赢得了我心中的歌谣。</p>
+<h3 id="题解_34">题解</h3>
+<p>这首诗以雨中的感受为题，表现了旅人对自然变化的敏锐观察。首两句描写了雨对山景的影响，既分朝暮又融远近，体现了景物的动态变化。中间两句以鸟与云的意象表现了自然的亲近感。后两句则转入对旅途中这一刻的珍视，"争此刻"体现了诗人对瞬间美好的把握。全诗充满了对自然、旅途与艺术创作的融合。</p>
+<hr />
+<h2 id="邹滕道中喜连日密云细雨">邹滕道中喜连日密云细雨</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#邹" class="internal-link wiki-link">邹</a> <a href="#滕" class="internal-link wiki-link">滕</a>
+<strong>关键主题</strong>：<code>#雨景</code> <code>#炎热消退</code> <code>#欣悦</code></p>
+</blockquote>
+<h3 id="原文_35">原文</h3>
+<p>始见青山色，依依向远人。
+炎光能稍逊，景物倍堪亲。
+悦性开蝉籁，披襟动客神。
+堤花垂晓露，归色尚疑春。</p>
+<h3 id="白话全译_35">白话全译</h3>
+<p>开始看到青山的颜色，依依不舍地向远方的旅人招手。炎热的光线能稍微退却，景物变得更加亲切可人。悦意打开了蝉的鸣声，披散衣襟的客人精神为之一振。堤上的花垂下晓露，回归的色彩还让人怀疑是否春天。</p>
+<h3 id="题解_35">题解</h3>
+<p>这首诗记录了在邹滕道中遇到连日密云细雨时的欣悦之情。序文（已省略）详细描写了炎热的困苦与突然降雨的救赎。诗则捕捉了这一转变的精妙时刻。首两句写青山与依依，暗示了自然的复苏。中间两句强调了炎热消退带来的舒适。后两句则以蝉鸣、花露、春色等意象来表现自然的苏醒。全诗既是对天气转变的记录，也是对生命活力恢复的咏叹。</p>
+<hr />
+<h2 id="雨后晓发夹沟驿">雨后晓发夹沟驿</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#夹沟驿" class="internal-link wiki-link">夹沟驿</a>
+<strong>关键主题</strong>：<code>#晓景</code> <code>#雨后</code> <code>#清爽</code></p>
+</blockquote>
+<h3 id="原文_36">原文</h3>
+<p>云轻龙意倦，雨宿鸟声阑。
+晓袖浮芳润，轻蹄印草乾。
+尘光愁欲放，曙色幸犹跚。
+望里青梅落，应为渴者酸。</p>
+<h3 id="白话全译_36">白话全译</h3>
+<p>云彩轻盈龙意疲倦，经过雨夜鸟声已阑珊。晓间衣袖浮起芳润，轻快的马蹄踩过半干的草。尘埃的光线愁着欲要放开，晨曦的色彩幸好还在缓步。望里的青梅坠落，应该为那些渴望的人酸楚。</p>
+<h3 id="题解_36">题解</h3>
+<p>这首诗描写了雨后晓间在夹沟驿出发时的景象。首两句以天气与鸟声标记了时间的变化。中间两句写马行进中的感受——衣袖的润与马蹄的印迹都是触觉与视觉的细致描写。后两句既描写景物，也暗示了对行旅人（"渴者"）的同情。全诗既是写景，也隐含了对他人处境的关注。</p>
+<hr />
+<h2 id="过桃山岳武穆祠愤感再成">过桃山岳武穆祠愤感再成</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#桃山" class="internal-link wiki-link">桃山</a> <a href="#岳武穆祠" class="internal-link wiki-link">岳武穆祠</a>
+<strong>关键主题</strong>：<code>#历史悲剧</code> <code>#忠义</code> <code>#愤慨</code></p>
+</blockquote>
+<h3 id="原文_37">原文</h3>
+<p>忠以冤馀愤，冤奇愤莫寻。
+杀臣君不意，报国子同心。
+血泪金牌湿，丹铭涅背深。
+身亡和计就，悬眼恨留今。</p>
+<h3 id="白话全译_37">白话全译</h3>
+<p>忠义因为冤屈而留下了愤恨，冤屈的奇怪让愤恨无处可寻。杀害忠臣的皇帝没有想到，报效国家的岳飞与儿子一样的心。血与泪浸湿了金色的牌令，丹红的铭文在背上刻得很深。身体已经死亡而和议的计划完成了，悬着眼睛的恨意留到了今天。</p>
+<h3 id="题解_37">题解</h3>
+<p>这首诗过岳武穆祠时感怀而作，主题是对岳飞历史悲剧的愤感。诗中充满了对冤屈与忠义的对比。首两句以"忠""冤""愤"三个词概括了悲剧的本质。中间两句对比了皇帝的昏庸与岳飞父子的忠心。后两句则以血泪、金牌、背刻、身亡等意象深化了这一悲剧的残酷性。末句"悬眼恨留今"表现了历史创伤的持久性。</p>
+<hr />
+<h2 id="自徐州渡河途中寻春即见有感">自徐州渡河途中寻春即见有感</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#徐州" class="internal-link wiki-link">徐州</a> <a href="#河" class="internal-link wiki-link">河</a>
+<strong>关键主题</strong>：<code>#春景</code> <code>#地域差异</code> <code>#失落</code></p>
+</blockquote>
+<h3 id="原文_38">原文</h3>
+<p>江南春一片，河北渺难寻。
+马首迷昏霭，羁怀滞远林。
+莺疲歌易涩，柳细叶难阴。
+惟有枝头杏，千花慰独心。</p>
+<h3 id="白话全译_38">白话全译</h3>
+<p>江南的春色一片繁华，河北却渺茫难以寻找。马首迷失在昏暗的雾霭中，羁旅的怀抱滞留在远处的树林。莺儿疲惫歌声容易涩滞，柳树细长叶子难以遮阴。只有枝头的杏花，千朵花朵来安慰我孤独的心。</p>
+<h3 id="题解_38">题解</h3>
+<p>这首诗记录了从江南渡河进入河北时的失落感。诗人以对比的手法——江南与河北、春色繁华与寥落——来表现地域的差异与心境的变化。首两句直接对比，中间两句以马首、羁怀、莺歌、柳树等意象深化这种失落。末两句则以杏花作为唯一的慰藉，表现了诗人在绝望中寻找希望的精神。全诗充满了对春天、家乡的渴望与现实的无奈。</p>
+<hr />
+<h2 id="所思">所思</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#思念</code> <code>#旅途疲惫</code> <code>#朦胧</code></p>
+</blockquote>
+<h3 id="原文_39">原文</h3>
+<p>风尘春不让，况复久游身。
+懒困花谁主，迷离草似人。
+劳心空就远，周道每怀新。
+渺渺林烟际，所思欲具陈。</p>
+<h3 id="白话全译_39">白话全译</h3>
+<p>风尘之中春色也不退让，更何况我久居游旅的身体。懒惰困顿的心不知花谁来照料，迷离模糊的草却看起来像人。劳累的心为远方而白白奔波，周遍的道路每每让我怀想新异。渺茫朦胧的林烟交界处，我的思念想要具体陈述。</p>
+<h3 id="题解_39">题解</h3>
+<p>这首诗表现了旅人在长期游历中的疲惫与思念。首两句以风尘与春天对比，暗示旅途的压倒性。中间两句以花草比喻，"懒困"与"迷离"既是景物的状态，也是心理的投射。后两句则直接表达了旅途的无谓与思乡的朦胧。末句"所思欲具陈"虽然想要表达思念，却最终只能留在朦胧中，这种无奈深刻地表现了旅人的孤独。</p>
+<hr />
+<h2 id="见孟尝养士及叔孙演礼故碑">见孟尝养士及叔孙演礼故碑</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#历史遗迹</code> <code>#衰落</code> <code>#讽刺</code></p>
+</blockquote>
+<h3 id="原文_40">原文</h3>
+<p>时雄因客重，曲学表君尊。
+义市齐公子，礼传汉叔孙。
+两生终莫致，三窟竟何存。
+寂寞荒碑在，徒贻识者论。</p>
+<h3 id="白话全译_40">白话全译</h3>
+<p>时代的雄杰因为养客而显得重要，曲折的学问表现出君主的尊贵。义气的市场属于齐国的公子，礼节的传承来自汉代的叔孙。两位古人的成就终究无法达到，三个洞窟的逃生计划究竟何存。寂寞的荒碑还在那里，徒然留给识者来评论。</p>
+<h3 id="题解_40">题解</h3>
+<p>这首诗在看到孟尝君与叔孙通的纪念碑时有感而发。诗以历史来讽刺现实。首两句以孟尝与叔孙两位古人开篇，评价他们的"重"与"尊"。中间两句则分别指其事迹——孟尝的义市与叔孙的礼学。后两句则以"终莫致""竟何存"来质疑这些古人成就的持久性。末两句则以荒碑的寂寞来暗示历史的徒然。全诗既是对古人的评价，也是对历史衰落的慨叹。</p>
+<hr />
+<h2 id="日暮迷途赖初月得至新嘉">日暮迷途赖初月得至新嘉</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#新嘉" class="internal-link wiki-link">新嘉</a>
+<strong>关键主题</strong>：<code>#迷途</code> <code>#月光</code> <code>#救赎</code></p>
+</blockquote>
+<h3 id="原文_41">原文</h3>
+<p>烟林西照入，东望似薰春。
+竟日无啼鸟，终风独傲人。
+疲心销永昼，迷路赖初轮。
+细细轻弦出，微光念远身。</p>
+<h3 id="白话全译_41">白话全译</h3>
+<p>烟雾笼罩的树林中西日照进来，向东望去就像薰香的春天。整天没有听到啼鸟，终风独自傲慢对着人。疲惫的心消销了整个白昼，迷路的我依靠初升的月亮。细细的弦声发出，微弱的光线让我想起远方的身影。</p>
+<h3 id="题解_41">题解</h3>
+<p>这首诗记录了日暮时迷路赖月光得救的经历。首两句以景物描写开篇，建立了迷茫的氛围。中间两句反映了整天行进的疲惫与自然的冷漠——无啼鸟、终风都暗示了孤独。后两句则以初月作为救赎的象征——月光既是实际的指引，也是精神的寄托。"细细轻弦"与"微光"都体现了月光的细微与珍贵。全诗融旅途的艰辛与自然的救援于一体。</p>
+<hr />
+<h2 id="东平晓望">东平晓望</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#东平" class="internal-link wiki-link">东平</a> <a href="#汶水" class="internal-link wiki-link">汶水</a>
+<strong>关键主题</strong>：<code>#晓景</code> <code>#春色</code> <code>#观察</code></p>
+</blockquote>
+<h3 id="原文_42">原文</h3>
+<p>春光惟晓际，花柳暂逢迎。
+嫩绿殊轻薄，妖红遂满盈。
+凄清从汶水，烂熳及东平。
+幽事初关切，风尘莫骤惊。</p>
+<h3 id="白话全译_42">白话全译</h3>
+<p>春光只在晓间显现，花与柳暂时相互迎接。嫩绿的色彩特别轻薄，妖艳的红色于是充盈满绽。凄清的气氛从汶水升起，绚烂的景象延及东平。幽深的事情初次关切我，风尘的变化不要急促惊扰。</p>
+<h3 id="题解_42">题解</h3>
+<p>这首诗在东平晨望时作，捕捉了春晓的独特美感。首两句强调了春光的短暂与季节的限制——"惟晓际"与"暂逢迎"都暗示了转瞬即逝。中间两句对比了嫩绿与妖红两种春色，既是颜色的描写，也是生命的象征。后两句则以地理（汶水、东平）来固定景象，同时以"幽事初关切"来表现了观者对自然细致变化的敏感与珍视。全诗既是写景，也是心灵的觉醒。</p>
+<hr />
+<h2 id="东阿晓望见雨后春色心目为之一开">东阿晓望见雨后春色心目为之一开</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#东阿" class="internal-link wiki-link">东阿</a>
+<strong>关键主题</strong>：<code>#雨后春景</code> <code>#心灵开启</code> <code>#观察</code></p>
+</blockquote>
+<h3 id="原文_43">原文</h3>
+<p>旅绪终无极，花光亦有初。
+含情窥远道，连类见群居。
+细细朝菲缀，依依晓艳舒。
+幽园殊衬帖，春色任亲疏。</p>
+<h3 id="白话全译_43">白话全译</h3>
+<p>旅途的思绪终于没有尽头，但花的光彩也有它的开始。含着感情窥视远方的道路，连贯地看到了群体的居住。细细的朝花缀成，依依地晓光绚烂舒展。幽深的园子尤其衬托得贴切，春色任凭亲疏的选择。</p>
+<h3 id="题解_43">题解</h3>
+<p>这首诗记录了在东阿见到雨后春色时的心灵感受——题目中"心目为之一开"是这首诗的核心。首两句既表现了旅途的疲惫，也表现了对春色的新发现。中间两句以"含情""连类"等词表现了对自然现象的深刻理解与联想。后两句则以"细细""依依"的拟人化笔法来描写春色，"任亲疏"则表现了观者与自然的互动关系——春色的呈现取决于观者的亲近程度。全诗既是景物描写，也是心灵的觉醒与开放。</p>
+<hr />
+<h2 id="雨宿">雨宿</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#雨中停留</code> <code>#自然净化</code> <code>#精神转变</code></p>
+</blockquote>
+<h3 id="原文_44">原文</h3>
+<p>雨宿花光重，风浮草色轻。
+转添莺欲语，更觉柳摇情。
+碧野真如洗，烟林复与清。
+欣欣群物意，相对愧劳生。</p>
+<h3 id="白话全译_44">白话全译</h3>
+<p>在雨中停留使花的光泽加重，风吹浮动了草的颜色变轻。更加增添了莺欲言语的欲望，更让人感到柳的摇动之情。碧色的野地真如被洗净，烟雾笼罩的林子也恢复了清澈。欢欣欢喜的群物意趣，相对之下让我为劳累的生活羞愧。</p>
+<h3 id="题解_44">题解</h3>
+<p>这首诗以"雨宿"（在雨中停留）为题，表现了雨对自然与人心的净化作用。首两句以感官层面的变化开篇——花光、草色的变化都是雨的作用。中间两句引入了生物——莺与柳，暗示了生命的活动与情感的流动。后两句则上升到精神的层面——碧野与烟林的清澈象征了自然的纯净，而最后两句"欣欣群物意"与"愧劳生"则表现了人在自然面前的反思与自谴。全诗是对雨与自然的深刻感受，也是对人生的重新审视。</p>
+<hr />
+<h2 id="将至荏平见雷风大作">将至荏平见雷风大作</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#荏平" class="internal-link wiki-link">荏平</a>
+<strong>关键主题</strong>：<code>#恶劣天气</code> <code>#民生关怀</code> <code>#悲悯</code></p>
+</blockquote>
+<h3 id="原文_45">原文</h3>
+<p>鼓动雷风职，方春振百凋。
+群生俱有待，万汇各相翘。
+久客甘濡滞，饥农欲悴憔。
+自悲仍虑物，心折任飘摇。</p>
+<h3 id="白话全译_45">白话全译</h3>
+<p>雷风在执行敲鼓的职责，春天方才震动了百般的凋零。群生之物都有所期待，万种的东西各自相互抬头。久居异乡的我甘愿被雨所困，饥荒中的农民却因此更加憔悴。为自己悲伤的同时还为万物操心，心灵破碎了任由飘摇。</p>
+<h3 id="题解_45">题解</h3>
+<p>这首诗记录了将至荏平时遇到雷风大作的情景，题目既是场景的描写，也暗示了诗的内容与主旨。首两句以拟人化的手法描写了自然力量的强大——雷风在"鼓动"与"振"。中间两句对比了群生的期待与农民的苦难，这种对比突出了自然力量的双重性——既能促进，也能摧毁。后两句则表现了诗人复杂的心理——既为自己的困境感到悲伤，也为他人的苦难操心。这既反映了诗人的敏感与关怀，也表现了时代的困难与社会的不公。</p>
+<hr />
+<h2 id="暮轺见归鸟有感">暮轺见归鸟有感</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#归巢</code> <code>#旅人对比</code> <code>#乡思</code> <code>#羡慕</code></p>
+</blockquote>
+<h3 id="原文_46">原文</h3>
+<p>群飞俱一息，日入故林招。
+自惜羽毛瘁，兼防牖户漂。
+如何万里客，不及一枝鹩。
+俯首惭诸翼，悠悠促暮轺。</p>
+<h3 id="白话全译_46">白话全译</h3>
+<p>群体飞行都在一个呼吸间，太阳入落时故林在招手。我自己惜惜地看着羽毛的疲惫，同时防范窗户里的东西漂流。怎么样，万里旅行的客人，还不如一个枝条上的小鸟。低下头来为众多的翅膀感到羞愧，悠闲地在暮色的小车上促进。</p>
+<h3 id="题解_46">题解</h3>
+<p>这首诗以归鸟的景象来引发对旅人身份的思考与羡慕。首两句描写了归鸟的场景——群体、日入、故林，这些都暗示了家的意象。中间两句虽然描写的是鸟的特点（羽毛、防风），但实际上暗示了旅人对安全与稳定的渴望。末两句则以对比的方式——旅人与鸟——来表现了对家乡的渴望与对旅途的无奈。"不及一枝鹩"的自嘲既是对自己的讽刺，也是对家的深深渴望。全诗融自然观察与人生感悟于一体。</p>
+<hr />
+<h2 id="哀东人三首-其一">哀东人三首 其一</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#社会危机</code> <code>#饥荒</code> <code>#民生</code> <code>#人道关怀</code></p>
+</blockquote>
+<h3 id="原文_47">原文</h3>
+<p>岂不重乡井，其如转壑沟。
+携持相死救，离散或生偷。
+幸未沦胡虏，犹当仰喔咻。
+须臾喘息计，黾勉一箪求。</p>
+<h3 id="白话全译_47">白话全译</h3>
+<p>怎么不看重乡村，只是不幸转向了沟壑。携带家人相互拯救于死亡，离散时或许会出现偷盗。幸运的是还没有沦陷于虏掠，还是要仰望禽鸟的样子。在短暂的喘息时刻，勉强追求一筐粮食。</p>
+<h3 id="题解_47">题解</h3>
+<p>这是"哀东人"三首中的第一首，题目前有长序文（已省略）描写了明末东方地区的饥荒与社会危机——斗米高价、流民遍地、人口大幅减少等。诗则是对这一现象的深刻悲悯与记录。首两句对比了对乡村的重视与现实的转折——从"乡井"跌落到"壑沟"。中间两句描写了人民在绝境中的互救与苦难——"相死救"体现了亲情的力量，"生偷"则暗示了绝望中的挣扎。末两句既感到庆幸（未被虏掠），也表现了对基本生存的绝望哀求——仅仅能"一箪求"。全诗既是对社会危机的记录，也是对人民苦难的悼念。</p>
+<hr />
+<h2 id="哀东人三首-其二">哀东人三首 其二</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#战乱</code> <code>#饥荒</code> <code>#官僚无能</code> <code>#民不聊生</code></p>
+</blockquote>
+<h3 id="原文_48">原文</h3>
+<p>东人亦孔痗，饥馑接疮痍。
+兵后荒常必，黎馀旱易欺。
+何臣容节矫，无地可民移。
+万里萧条客，分餐欲济谁。</p>
+<h3 id="白话全译_48">白话全译</h3>
+<p>东方的人民也很痛苦，饥荒与战争的伤痕相接。兵争之后荒废总是难免，黎民的残余被旱灾容易欺负。怎么样官员能够装作廉洁，却没有地方可以迁移人民。万里路途中的萧条旅客，分着有限的粮食却想救济谁。</p>
+<h3 id="题解_48">题解</h3>
+<p>这是第二首，进一步深化了对东方人民困境的描写。首两句强调了饥荒与战争的双重打击——"接"字特别有力，暗示了连续不断的灾难。中间两句分析了社会现实的困境——战后荒废无法避免、官员虚伪无力、人民无地可迁。末两句则以诗人自己为例，表现了在这样的背景下，即使是有心帮助的人也无能为力。全诗既是对人民苦难的悲悯，也是对自己与官僚体制无力的自嘲。</p>
+<hr />
+<h2 id="哀东人三首-其三">哀东人三首 其三</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#救荒政策</code> <code>#官僚</code> <code>#讽刺</code> <code>#绝望</code></p>
+</blockquote>
+<h3 id="原文_49">原文</h3>
+<p>救荒政十二，省薄首相教。
+无骨供输挽，何心积厩庖。
+鸿飞看在野，鼠食问谁郊。
+所叹求刍牧，依然向斗筲。</p>
+<h3 id="白话全译_49">白话全译</h3>
+<p>救荒的十二条政策，从首相的教导开始就显得淡薄。没有骨头来供应运输与搬动，怎么样能有心思积累在马厩与厨房。大雁飞行看似在野外自由，老鼠吃东西但问谁在郊外。所以感叹的是求取粗粮与牧草，仍然还是指向小小的量器。</p>
+<h3 id="题解_49">题解</h3>
+<p>这是"哀东人"三首中最后一首，转向对救荒政策本身的讽刺与批评。题目强调了"救荒政十二"（指朱子的十二条救荒政策），但诗则质疑这些政策的真实执行与效果。首两句讽刺官员的空泛承诺——从"首相教"开始就"省薄"。中间两句以"无骨""何心"等词强调了执行的困难与官员的无心——即使有政策也没有实际资源来执行。后两句以大雁与老鼠的对比来讽刺人类社会的荒唐——动物们尚能自寻生路，人类反而被束缚在官僚体制中。末句"依然向斗筲"则回到了现实的绝望——再多的政策也只是减少到小小的量器，无法真正救荒。全诗既是对政策的批评，也是对整个社会体制的质疑，充满了深刻的讽刺与绝望。</p>
+<hr />
+<h2 id="见诸邑遍立粥厂高旗旗书抚院明文饥者之口果及粥乎否也">见诸邑遍立粥厂高旗旗书抚院明文饥者之口果及粥乎否也</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#宣传</code> <code>#虚伪</code> <code>#民众</code> <code>#讽刺</code></p>
+</blockquote>
+<h3 id="原文_50">原文</h3>
+<p>独怜疮补计，今下肉糜文。
+巧妇炊谁见，邦人谷未闻。
+群哺非易合，中饱竟难分。
+自古流图绘，何时达圣君。</p>
+<h3 id="白话全译_50">白话全译</h3>
+<p>只有怜惜伤口的补救之计，现在下达了肉糜的公文。巧妙的女人炊煮谁看见，邦国的人民还未听闻粮谷。集体饱食非易合成，中间的饱足竟然难以分配。自古以来流传图绘，何时能达到圣明的君主。</p>
+<h3 id="题解_50">题解</h3>
+<p>这首诗讽刺各地竖立粥厂、发布救荒令却实际效果有限的现象。题目本身就是一个疑问："饥者之口果及粥乎否也"——粥真的到了饥民的嘴里吗？诗则通过一系列讽刺来回答这个问题。首两句对比了"疮补计"与"肉糜文"，暗示政策只停留在公文层面。中间两句更直接地质疑——"巧妇炊谁见""邦人谷未闻"，说明救荒的实际效果无法验证。后两句则从政策执行的层面分析困难——"群哺""中饱"都暗示了分配的不公与腐败。末两句则将问题上升到历史与体制层面——这种现象自古就有，能否真正解决仍然是个问题。全诗既是对当下现象的观察，也是对官僚体制的批评。</p>
+<hr />
+<h2 id="饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首-其一">饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首 其一</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#税收</code> <code>#饥荒</code> <code>#官吏失职</code> <code>#讽刺</code></p>
+</blockquote>
+<h3 id="原文_51">原文</h3>
+<p>狗彘皆人食，衣冠半茧丝。
+君无尤旱魃，民已失春时。
+考未阳城署，都非孔距为。
+如何饥馑故，独使旰宵思。</p>
+<h3 id="白话全译_51">白话全译</h3>
+<p>狗彘的肉都被人吃了，衣冠的人穿的还是茧丝。君主不要怪罪干旱，人民已经失去了春天的季节。考察不满阳城的政绩，都不是孔融的距离。怎么样饥荒的故事，独独让皇帝在暮夜思虑。</p>
+<h3 id="题解_51">题解</h3>
+<p>这首诗讽刺官吏在饥荒中仍然催征税收的做法。题目强调了"催科抚字当并计"——催征税收与抚恤人民应该一起考虑。首两句以"狗彘皆人食"与"衣冠半茧丝"对比，暗示了社会的崩坏——连狗彘的肉都被吃掉了，说明饥荒的严重性。中间两句既是对旱灾的理解，也是对官吏的讽刺——既然民众已经失去春天，为何还要强征税收。后两句则讽刺官吏的无能——连阳城（汉代的廉吏典范）的政绩都比不上，更谈不上像孔融那样的高尚。末句则以皇帝的"旰宵思"来讽刺决策者的无奈与虚伪。全诗充满了对官僚体制的批评与对人民苦难的同情。</p>
+<hr />
+<h2 id="饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首-其二">饥者毙于荒而有不尽以荒毙者催科抚字当并计矣二首 其二</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#赈济</code> <code>#官策</code> <code>#人文关怀</code> <code>#希望</code></p>
+</blockquote>
+<h3 id="原文_52">原文</h3>
+<p>未易言蠲赈，庶几别旧新。
+用三离父子，取一足君民。
+经国前贤训，哀时独我陈。
+空谈何补切，或可助仁人。</p>
+<h3 id="白话全译_52">白话全译</h3>
+<p>蠲免与救济不容易说清楚，但希望能区别旧制度与新制度。用三份中的一份离分父子，取得一份足以满足君与民。治理国家有前贤的教训，哀伤时代独独我来陈述。空谈怎么能有补益，或许可以帮助有仁心的人。</p>
+<h3 id="题解_52">题解</h3>
+<p>这是第二首，转向对救荒政策本身的思考。诗中引用了古代的赈济政策——"用三离父子，取一足君民"暗示了某种历史上有效的方案。首两句既承认赈济政策的复杂性，也表达了对改变的希望。中间两句引用古代贤人的治国智慧，暗示了解决办法的存在。后两句则表现了诗人的自觉——虽然"空谈"无益，但如果能帮助有仁心的决策者，也许就有意义。全诗既是对现实的批评，也是对未来的期许。相比第一首的绝望与讽刺，这首诗显示了诗人在认识到问题后寻求解决之道的努力。</p>
+<hr />
+<h2 id="寂寂">寂寂</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#旅途</code> <code>#自然观察</code> <code>#人生感悟</code></p>
+</blockquote>
+<h3 id="原文_53">原文</h3>
+<p>寂寂芳郊色，纷纷孔道颜。
+炎凉虽异地，清浊自殊班。
+彼结幽人侣，此为达者关。
+客心殊异迹，车马亦云山。</p>
+<h3 id="白话全译_53">白话全译</h3>
+<p>寂寂的芳草郊野的颜色，纷纷的孔道的脸色。炎凉虽然在异地，清浊自然有不同的等级。那边结成了隐士的同伴，这边成为了达人的关口。客人的心殊然不同的足迹，车马也变成了云与山。</p>
+<h3 id="题解_53">题解</h3>
+<p>这首诗以"寂寂"与"纷纷"的对比来描写旅途中的观察与思考。首两句既写景物，也暗示了寂寞与喧嚣的对比。中间两句引入了人文层面——"炎凉"既指天气，也指人情；"清浊"既指景物，也指品格。后两句则以隐士与达人的对比来表现不同人生选择的差异。末句"车马亦云山"是全诗的妙笔——旅人的车马在山路中变成了自然的一部分，暗示了人与自然的融合、旅人身份的特殊性。全诗充满了对旅途与人生的深刻思考。</p>
+<hr />
+<h2 id="野色">野色</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#野景</code> <code>#时间流逝</code> <code>#人生</code> <code>#游历</code></p>
+</blockquote>
+<h3 id="原文_54">原文</h3>
+<p>野色来天地，春怀动古今。
+云从生及止，烟自浅为深。
+接瞬穷诸变，哀时抚寸阴。
+生涯从此问，更作远游心。</p>
+<h3 id="白话全译_54">白话全译</h3>
+<p>野色来自天地的广阔，春怀激动了古往今来。云彩从生成到停止，烟雾自然从浅变深。在瞬间接触穷尽诸多变化，哀伤时代抚摸每一寸光阴。生涯从此地提出问题，更加深了远游的心思。</p>
+<h3 id="题解_54">题解</h3>
+<p>这首诗通过对野景的观察来思考时间与人生。首两句建立了观看的视角——以野色开篇，以春怀回应，既是景物，也是心理。中间两句以云与烟的变化来象征时间的流逝——"从生及止""自浅为深"都体现了不可逆转的时间流向。后两句则将观察上升到人生的层面——"接瞬穷诸变"强调了瞬间的丰富性，"抚寸阴"则是对时光的珍视。末两句表现了观者的自觉——通过对野景的观察，诗人的"远游心"更加坚定。全诗融景物、时间与人生于一体，充满了哲思。</p>
+<hr />
+<h2 id="四月二日再补客司二首-其一">四月二日再补客司二首 其一</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#官职</code> <code>#孝道</code> <code>#忠诚</code> <code>#责任</code></p>
+</blockquote>
+<h3 id="原文_55">原文</h3>
+<p>将母来生事，惟寅夙夜心。
+常存非孝意，以著服官箴。
+寂寞时犹昨，艰虞道弥深。
+作忠求寸补，何地可浮沉。</p>
+<h3 id="白话全译_55">白话全译</h3>
+<p>将要侍奉母亲的事情就要到来，只有虔诚地有早晚的心。常常存心不仅是孝道，更要用来彰显服官的训诫。寂寞的时刻如同昨日，艰难的道路更加深远。作为忠诚者求取寸许的补偿，在哪个地方可以浮沉。</p>
+<h3 id="题解_55">题解</h3>
+<p>这首诗作于补任客司时，表现了诗人对即将到来的官职的认识与态度。题目强调"再补"，说明诗人曾经担任过类似的职务。首两句以孝道开篇——"将母来生事"既是对母亲的考虑，也是对自己责任的认识。中间两句将孝道与官职相连——"常存""以著"都表现了将孝道原则用于官事的想法。后两句则表现了诗人对现实的认识——"寂寞""艰虞"既是个人的感受，也是对环境的观察。末句"何地可浮沉"虽然看似颓唐，但实际上是对坚守原则的坚决态度——不愿"浮沉"，而要坚守忠诚。</p>
+<hr />
+<h2 id="四月二日再补客司二首-其二">四月二日再补客司二首 其二</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#官位</code> <code>#服从</code> <code>#国家</code> <code>#荣宠</code></p>
+</blockquote>
+<h3 id="原文_56">原文</h3>
+<p>莫道含香旧，依然束带初。
+中原方羽檄，四海尚车书。
+典属虽无似，和容庶有馀。
+圣朝收敝帚，犹诏锦窠居。</p>
+<h3 id="白话全译_56">白话全译</h3>
+<p>不要说含香的旧事，依然像初次束带一样。中原正在发送檄文，四海仍然还有车书。虽然官属没有相似之处，和容的态度或许还有余地。圣明的朝代收取破旧的扫帚，还诏令锦绣的窝居。</p>
+<h3 id="题解_56">题解</h3>
+<p>这是补任官职题下的第二首。首两句既是对自己的勉励——"含香旧"不重要，重要的是"束带初"的认真态度。中间两句将个人的官职与国家的大事相连——既然"中原"与"四海"还需要治理，个人的官职就有了意义。后两句则以自谦的方式表现对朝廷恩宠的感谢——"典属虽无似"表现了自己的无能，"和容庶有馀"则表现了对职位的尽力。末两句最是巧妙——"敝帚"既是自比（旧的、破的），"锦窠居"则是对朝廷重视的感谢。整首诗既表现了诗人的自觉与谦逊，也表现了对官职与国家的理解。</p>
+<hr />
+<h2 id="中秋前一日有七闽督学之命">中秋前一日有七闽督学之命</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#七闽" class="internal-link wiki-link">七闽</a> <a href="#雪峰" class="internal-link wiki-link">雪峰</a> <a href="#考亭" class="internal-link wiki-link">考亭</a>
+<strong>关键主题</strong>：<code>#新官命</code> <code>#荣誉</code> <code>#使命</code> <code>#学术传承</code></p>
+</blockquote>
+<h3 id="原文_57">原文</h3>
+<p>雪峰初入望，旗鼓旧相扶。
+观察当年相，考亭百代儒。
+一官仍己学，吾道未邻孤。
+叹息高山在，谁能隔步趋。</p>
+<h3 id="白话全译_57">白话全译</h3>
+<p>雪峰刚刚进入视野，旗鼓曾经互相扶持。观察历年的丞相，考亭是百代的儒者。一个官职仍然是自己的学问，我的道路没有邻近孤独。叹息高山还在，谁能隔着一步去追趋。</p>
+<h3 id="题解_57">题解</h3>
+<p>这首诗作于获得七闽督学之命时。题目本身就是重要的信息。诗人以雪峰与考亭两个地理与文化标志来开篇——雪峰是佛教胜地的象征，考亭则是朱子讲学之地。首两句既是对新官地点的描写，也暗示了这一职位的重要性。中间两句则上升到文化与学术的层面——"观察""相""儒"都强调了这一官职的文化意义。后两句则表现了诗人对这一职位的理解——"一官仍己学"说明这不仅是官职，更是对自己学术的践行。末两句虽然以"叹息"开头，但实际上表现的是对理想的坚守——"高山"既指朱子这样的高贤，也指学问的高峰。全诗既是对新官职的庆贺，也是对学术责任的认识。</p>
+<hr />
+<h2 id="有感">有感</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#人生反思</code> <code>#学问修养</code> <code>#知己</code> <code>#时局</code></p>
+</blockquote>
+<h3 id="原文_58">原文</h3>
+<p>十年玄尚白，知我自寥寥。
+养拙诗书际，藏身礼乐朝。
+何心皋北近，每叹指南遥。
+此意含终古，时人那可料。</p>
+<h3 id="白话全译_58">白话全译</h3>
+<p>十年来玄妙的事物仍然变白，认识我的人自然很少。在诗书之间养拙，在礼乐的朝代中藏身。哪有心思靠近皋陶与尧，每每感叹指南针很遥远。这种意思包含在终古，当时的人怎么能推测。</p>
+<h3 id="题解_58">题解</h3>
+<p>这首诗表现了诗人对自己人生轨迹的反思。题目只说"有感"，暗示这是对某个时刻的感慨。首两句以"十年"与"玄尚白"来表现时间的流逝与理想的现实化——"玄尚白"既是颜色的变化，也暗示了对初心的背离。中间两句则表现了诗人的策略——"养拙""藏身"既是对自己处境的接纳，也暗示了某种被动或不得已。后两句则以历史典范（皋陶、尧、指南）来表现理想与现实的距离。末句则是全诗的核心——诗人承认自己所做之事"含终古"（具有永恒的意义），但"时人那可料"（当时的人无法理解）。这既表现了诗人的自信，也表现了一种孤独。</p>
+<hr />
+<h2 id="坚坐">坚坐</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#独坐</code> <code>#秋景</code> <code>#自适</code> <code>#夜景</code></p>
+</blockquote>
+<h3 id="原文_59">原文</h3>
+<p>一室分晨暮，空庭秋气敲。
+露凝天汉冷，风动斗枢摇。
+纵目来潇旷，虚心对泬寥。
+悠悠长夜袭，坚坐遂中宵。</p>
+<h3 id="白话全译_59">白话全译</h3>
+<p>一间房间分出了早晚，空荡的庭院里秋气敲打。露水凝结时天河变冷，风吹动北斗枢纽摇晃。纵目而望来到了潇洒旷阔，虚心对着空阔寂寥。悠闲的长夜来袭击，坚坐的我就到了半夜。</p>
+<h3 id="题解_59">题解</h3>
+<p>这首诗以"坚坐"为题，表现了独坐时的境界。首两句以时间与空间来建立氛围——"晨暮""空庭"都暗示了独处。中间两句转向自然现象的描写——露、天汉、风、斗枢，这些都是夜间独有的景象。后两句则上升到精神的层面——"纵目""潇旷""虚心"都表现了一种精神的自在。末句"坚坐遂中宵"既是对行动的描写，也暗示了时间的流逝——不知不觉从黄昏坐到了半夜。全诗既是写景，也是对隐逸与修养的表现。</p>
+<hr />
+<h2 id="爽色">爽色</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#秋景</code> <code>#爽朗</code> <code>#客思</code> <code>#自然变化</code></p>
+</blockquote>
+<h3 id="原文_60">原文</h3>
+<p>燕舍忽成秋，梧风就客愁。
+俄传声憭慄，渐觉气高浮。
+霜薄朝花耐，天空晚雁悠。
+月明西岭对，爽色尽皇州。</p>
+<h3 id="白话全译_60">白话全译</h3>
+<p>燕子的巢穴忽然成了秋天，梧桐的风就向客人的愁绪走去。突然传来了冷的声音，逐渐感觉气候高远飘浮。霜薄的朝花很耐寒，天空的晚雁悠闲地飞。月明亮的西岭相对，爽朗的颜色充满了皇州。</p>
+<h3 id="题解_60">题解</h3>
+<p>这首诗以"爽色"（秋天的爽朗）为题，描写秋天到来时的景象变化。首两句以"忽""就"来表现季节转换的突然性。中间两句则以声与气来描写秋的特征——"憭慄"是冷的拟声词，"高浮"则是秋风的特点。后两句则以具体景物——霜、花、雁、月——来进一步描写秋景。末句"爽色尽皇州"既是对景象的总结，也暗示了秋的普遍性——遍布整个州域。全诗充满了对秋天自然美的发现与赞美。</p>
+<hr />
+<h2 id="散馆得春曹未补">散馆得春曹未补</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#官场失意</code> <code>#衰老</code> <code>#虚伪</code> <code>#反思</code></p>
+</blockquote>
+<h3 id="原文_61">原文</h3>
+<p>六载藜灯倦，三秋兰署深。
+红颜吹短鬓，白眼愧华簪。
+坐对浮云变，时忧末路沉。
+闻弦应欲坠，按剑复何心。</p>
+<h3 id="白话全译_61">白话全译</h3>
+<p>六年的粗糙灯火让我疲倦，三个秋天的兰署更深。红颜被风吹得鬓发短乱，白眼为华丽的簪子而羞愧。坐着对着浮云变化，时时为末路的沉沦忧虑。听弦乐声应该要坠落，按着剑还有什么心思。</p>
+<h3 id="题解_61">题解</h3>
+<p>这首诗作于散馆（从翰林院出馆）得春曹（春官，礼部员外郎）官职时。题目说"未补"，说明这个官职还没有真正就任。诗中充满了对官场的失望与自我反思。首两句"藜灯""兰署"分别代表了清贫与官署的生活。中间两句则以"红颜""白眼""华簪"等意象表现了衰老与虚伪——自己的容颜衰落了，官场的虚伪也让人厌倦。后两句引用典故——孔子"闻弦歌而知雅意"的故事，但诗人反而说"应欲坠"（听了就想坠落），这是对官场的绝望。末句"按剑复何心"既是无奈，也是对自己的讽刺。全诗既是对官场的批评，也是对自己人生的反思。</p>
+<hr />
+<h2 id="解嘲">解嘲</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#自况</code> <code>#讽刺</code> <code>#坦然</code> <code>#品性</code></p>
+</blockquote>
+<h3 id="原文_62">原文</h3>
+<p>少小怀孤尚，浮名那足贪。
+遇禽羞获十，分栗任朝三。
+已笑书空拙，更深愿外惭。
+虽云不晓事，遮莫解嘲谙。</p>
+<h3 id="白话全译_62">白话全译</h3>
+<p>从少年起就怀抱孤独的志尚，浮浮的名声哪里值得贪心。遇到禽兽羞于获得十个，分栗子甘愿只有朝三。已经笑笑书空的拙劣，更加深层愿意外面的羞惭。虽然说不懂事，怎么能不解开嘲笑的智慧。</p>
+<h3 id="题解_62">题解</h3>
+<p>这首诗以"解嘲"为题，表现了诗人对自己的讽刺与辩护。首两句既是对自己志向的陈述，也是对世俗的批评——"孤尚""浮名"的对比突出了诗人的不屑。中间两句引用典故——"遇禽""朝三"都是古代有名的故事，用来比喻自己的简朴与愚钝。后两句则既是自嘲——"书空拙""愿外惭"——也是对这种自嘲的进一步解释。末句是全诗的关键——"虽云不晓事，遮莫解嘲谙"既是说自己"不晓事"，也是说自己对嘲笑的理解反而更深。这种反讽的手法既表现了诗人的幽默感，也表现了对自己处境的坦然。</p>
+<hr />
+<h2 id="长叹">长叹</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#季节变化</code> <code>#生命短暂</code> <code>#理想失落</code> <code>#感慨</code></p>
+</blockquote>
+<h3 id="原文_63">原文</h3>
+<p>摇落秋风日，低徊万古心。
+青云悲短翮，白雪怅孤吟。
+懒复呼升斗，终须问尺寻。
+当年初服在，长叹未抽簪。</p>
+<h3 id="白话全译_63">白话全译</h3>
+<p>秋风摇落的日子，低回着万古的心思。青云为短翮而悲伤，白雪为孤吟而怅惘。懒得再呼喝升斗，终究要问尺寻的长短。当年初次穿官服在，长叹一声还没有拔簪。</p>
+<h3 id="题解_63">题解</h3>
+<p>这首诗以"长叹"为题，表现了诗人对时光流逝与理想失落的感慨。首两句以秋天的摇落来象征人生的无常。中间两句则以"青云"与"白雪"来代表理想与现实——"短翮"与"孤吟"既是对自己的形容，也是对处境的表现。后两句则转向对官位的讽刺——"升斗"与"尺寻"都是古代官位的代称，诗人对此感到厌倦。末句是全诗的高潮——"当年初服在，长叹未抽簪"既说官服已经穿上，也说自己始终没有真正接纳这一身份。全诗充满了对人生、官场与理想的复杂感受。</p>
+<hr />
+<h2 id="补主客司有提督二馆之差">补主客司有提督二馆之差</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#新官职</code> <code>#文化使命</code> <code>#礼仪</code> <code>#外交</code></p>
+</blockquote>
+<h3 id="原文_64">原文</h3>
+<p>礼乐从君子，车书尽远人。
+献方无异物，典属有微臣。
+咫尺阶前近，要荒万里邻。
+从兹诸服外，谁敢不尊亲。</p>
+<h3 id="白话全译_64">白话全译</h3>
+<p>礼乐从君子身上体现，车与书覆盖了远方的人。献出的方案没有异异的东西，官职的属下有微弱的我。咫尺的阶前很近，边远荒凉的万里是邻居。从此以后各种官服之外，谁敢不尊敬亲人。</p>
+<h3 id="题解_64">题解</h3>
+<p>这首诗作于补任主客司官职、提督二馆时。这是一个相对重要的官职，涉及外交与文化。首两句以"礼乐""车书"来概括官职的文化内涵。中间两句则以"献方""典属"来表现官职的具体职能——献方案与管理属下。后两句虽然看似转向地理与亲情，但实际上是对官职意义的阐述——"咫尺""万里"表现了官职的重要性（连接中心与边远），"诸服外""尊亲"则表现了这一官职对维持秩序与尊重的作用。全诗既是对新官职的认识，也是对其文化使命的理解。</p>
+<hr />
+<h2 id="贡使杂沓至馆">贡使杂沓至馆</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#外交</code> <code>#礼仪</code> <code>#朝贡制度</code> <code>#文化交流</code></p>
+</blockquote>
+<h3 id="原文_65">原文</h3>
+<p>重译归中国，咸宾及四门。
+正仪思足法，束带自能言。
+表饵非吾术，柔怀属圣恩。
+须知干羽地，观耀莫齐论。</p>
+<h3 id="白话全译_65">白话全译</h3>
+<p>重译回到了中国，各个宾客达到了四门。正确的仪式需要足够的法规，束着带子的人自然能够言说。表面与诱饵不是我的技术，柔和的怀抱属于圣明的恩德。需要知道干戚羽毛的地方，观看的光耀不应该一样评论。</p>
+<h3 id="题解_65">题解</h3>
+<p>这首诗记录了贡使众多来到馆舍时的情形。首两句描写了外交场合的盛况——"重译"指翻译众多，"四门"则指礼仪接待的规范。中间两句强调了仪式与言语的重要性——"正仪""束带"都暗示了礼仪的约束性。后两句则表现了诗人对外交工作的理解——"表饵非吾术"说明诗人不屑于外交手腕，而是依靠"柔怀"（温和的态度）与"圣恩"（皇帝的权威）。末两句则以歌舞（干羽）来表现外交交往的多样性。全诗既是对外交工作的记录，也表现了诗人的外交理念——诚恳而不虚伪。</p>
+<hr />
+<h2 id="西番诸夷方物多恶薄及乌思藏入贡违期诗以示之">西番诸夷方物多恶薄及乌思藏入贡违期诗以示之</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#西番" class="internal-link wiki-link">西番</a> <a href="#乌思藏" class="internal-link wiki-link">乌思藏</a>
+<strong>关键主题</strong>：<code>#朝贡</code> <code>#期限</code> <code>#诗谏</code> <code>#外交</code></p>
+</blockquote>
+<h3 id="原文_66">原文</h3>
+<p>流沙非不远，鞭箠在阶堂。
+西旅能通道，氐羌自享王。
+薄来虽有训，职贡本无忘。
+自古咸宾日，何时失献方。</p>
+<h3 id="白话全译_66">白话全译</h3>
+<p>流沙虽然不是不远，鞭子的声音却在堂前。西方的旅队能够通过道路，氐羌自然享受了王的恩惠。礼物虽然很薄还有教导，职贡的本质没有遗忘。自古以来都有宾客的日子，何时失去了献方的时刻。</p>
+<h3 id="题解_66">题解</h3>
+<p>这首诗是对乌思藏（西藏）贡使逾期未至的讽谏。题目本身就说明了这首诗的外交目的——"诗以示之"。诗采用的是劝诫的手法。首两句既承认远方的困难（流沙），也暗示了制度的约束（鞭箠）。中间两句既表现了对西番民族的理解（自有其王），也暗示了朝贡制度的优惠。后两句则转入劝诫——"薄来虽有训"既说礼物虽薄还是可以接受的，也暗示应当及时；"职贡本无忘"则是对义务的强调。末两句更是直接——既然"自古咸宾"（自古就有朝贡制度），"何时失献方"（何以不按期献贡）。全诗既是对历史的回顾，也是对当下的委婉批评，充分体现了诗人作为外交官的智慧。</p>
+<hr />
+<h2 id="与朝鲜贡使">与朝鲜贡使</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联国家</strong>：<a href="#朝鲜" class="internal-link wiki-link">朝鲜</a>
+<strong>关键主题</strong>：<code>#朝贡</code> <code>#同情</code> <code>#外交</code> <code>#保护</code></p>
+</blockquote>
+<h3 id="原文_67">原文</h3>
+<p>独念间关苦，劳来出至尊。
+蠢奴方绝命，尔国旧同伦。
+普率思王土，梯航亦圣恩。
+但无忘远服，自可世维藩。</p>
+<h3 id="白话全译_67">白话全译</h3>
+<p>独独想念间关的苦难，劳累来自至尊的命令。愚蠢的奴隶正在绝望，你的国家曾经是同伴。普遍的一致思想关于王土，梯航也是圣明的恩德。只要不忘记远方的服从，自然可以世世维持为藩属。</p>
+<h3 id="题解_67">题解</h3>
+<p>这首诗是与朝鲜贡使的外交诗，充满了同情与劝诫。题目前的注文说明朝鲜"密迩北奴，闻其贡途多戒心"——位置靠近后金，因此有很多顾虑。首两句既是对朝鲜处境的同情，也表现了对使者的尊重。中间两句"蠢奴"指后金，"尔国旧同伦"则既说朝鲜与中国的历史关系，也暗示了朝鲜应当向谁倾斜。后两句"普率思王土"强调了朝贡制度的普遍性，末句"不忘远服""世维藩"则是对朝鲜的劝告与承诺。全诗既是外交的，也充满了人文关怀。</p>
+<hr />
+<h2 id="鲜使以皇华石洲二集求序兼乞余诗文稿书以答之">鲜使以皇华石洲二集求序兼乞余诗文稿书以答之</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#东夷" class="internal-link wiki-link">东夷</a>
+<strong>关键主题</strong>：<code>#文化交流</code> <code>#诗文</code> <code>#传播</code> <code>#教化</code></p>
+</blockquote>
+<h3 id="原文_68">原文</h3>
+<p>著书依北阙，问字及东夷。
+八则传箕后，同文入盛时。
+未飞司马檄，能诵大苏词。
+海外多声教，归求自有师。</p>
+<h3 id="白话全译_68">白话全译</h3>
+<p>著书依靠北方的宫阙，问字甚至可以到东夷。八条法则从箕子以后传承，同样的文字进入了盛世。还未飞出司马的檄文，能够诵读大苏的词。海外有很多声教，回去求学自然有老师。</p>
+<h3 id="题解_68">题解</h3>
+<p>这首诗是对朝鲜使者求取诗文序言的回应。诗强调了文化的跨越性与教化的普遍性。首两句既肯定了朝鲜对文化的追求，也暗示了中国文化的中心性。中间两句则从历史的角度强调了文化传承的连续性——"箕子""八则"是朝鲜文化的源头。后两句既是对朝鲜学者的鼓励（"能诵大苏词"），也是对文化自信的表现（"海外多声教"）。末句"归求自有师"既说诗人愿意提供诗文，也暗示朝鲜回去后有足够的资源来学习。全诗既是对文化交流的赞许，也体现了中国对朝鲜的文化优越感与教化使命。</p>
+<hr />
+<h2 id="汶上阻雨-甲戌册荆藩道中作">汶上阻雨 甲戌册荆藩道中作</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：甲戌
+<strong>关联地点</strong>：<a href="#汶上" class="internal-link wiki-link">汶上</a>
+<strong>关键主题</strong>：<code>#阻风雨</code> <code>#孤寂</code> <code>#官途</code> <code>#迷茫</code></p>
+</blockquote>
+<h3 id="原文_69">原文</h3>
+<p>朝云行岫出，暝雨向林深。
+乍喜红尘退，还愁绿野沉。
+前车迷屡望，后骑未闻音。
+惟有孤村火，遥悬失路心。</p>
+<h3 id="白话全译_69">白话全译</h3>
+<p>早晨的云行走着山岫出现，傍晚的雨向树林深处走去。突然高兴红尘退却，却又忧愁绿野沉没。前面的车队迷失在多次望看中，后面的骑士还未听到声音。只有孤独的村火，远远地悬挂着我失路的心。</p>
+<h3 id="题解_69">题解</h3>
+<p>这首诗作于甲戌年册封荆藩时，在汶上因雨被阻。题目标明了历史背景与地点。首两句以朝暮的对比来描写天气的变化——云与雨交替出现。中间两句既写景物，也写心理——喜与愁的转变体现了对天气与旅程的感受。后两句则强调了被阻的孤独——前后都看不到，只有孤村的火光。末句"失路心"既是对迷茫方向的描写，也是对迷茫心境的表现。全诗既是对阻风雨的记录，也是对旅途孤独的感悟。</p>
+<hr />
+<h2 id="邹邑道中雨过晓望">邹邑道中雨过晓望</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#邹邑" class="internal-link wiki-link">邹邑</a>
+<strong>关键主题</strong>：<code>#晓景</code> <code>#雨后</code> <code>#山水</code> <code>#旅思</code></p>
+</blockquote>
+<h3 id="原文_70">原文</h3>
+<p>晨郊收宿雨，晓望出馀清。
+野意参差碧，山容近远明。
+苔浮生日厚，草湿受风轻。
+更觉含烟柳，离披似客情。</p>
+<h3 id="白话全译_70">白话全译</h3>
+<p>晨间的郊野收起了夜里的雨水，晓间的望远显出了余留的清澈。野地的意趣参差不齐地呈现碧色，山的容貌在远近中显得光明。苔藓浮起来一天天变厚，草地潮湿接受风的轻吹。更加觉得含着烟雾的柳树，离披的样子就像客人的心情。</p>
+<h3 id="题解_70">题解</h3>
+<p>这首诗记录了在邹邑雨后晓间的观察。首两句的"收宿雨""出馀清"既是天气的变化，也是观看视角的变化。中间两句的"野意"与"山容"则是对景物特征的捕捉——参差的颜色与变化的容貌。后两句则从植物的角度继续描写——苔、草、柳都通过雨的作用而显现出新的面貌。末句的"离披似客情"是全诗的点睛之笔——柳树的离披不定既是自然现象，也象征了客人（旅人）的游离不定的心情。全诗充满了对雨后自然的细致观察与对旅人心境的微妙捕捉。</p>
+<hr />
+<h2 id="晚眺">晚眺</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#晚景</code> <code>#远眺</code> <code>#自然美</code> <code>#闲适</code></p>
+</blockquote>
+<h3 id="原文_71">原文</h3>
+<p>骋目清郊际，轻阴拂道周。
+山容兼野澹，林影入村幽。
+万象空烟合，孤霞夕丽流。
+繇来多晚兴，此际倍悠悠。</p>
+<h3 id="白话全译_71">白话全译</h3>
+<p>纵目远眺清彻的郊野边际，轻微的阴影拂过道路周围。山的容貌兼含着野地的淡泊，树林的影子进入了村子的幽深。万种景象在空烟中融合，孤独的晚霞流动着夕日的绚丽。自古以来就喜欢晚间的兴致，这个时刻更加悠闲悠长。</p>
+<h3 id="题解_71">题解</h3>
+<p>这首诗以"晚眺"为题，描写了晚间远眺时的景象与感受。首两句建立了观看的视角——"骋目""清郊"既表现了视野的开阔，也表现了观者的主动。中间两句则以"山容""林影""村幽"等意象具体描写了晚景。后两句则上升到审美与心理的层面——"万象空烟合"既是对景物的总体描写，也暗示了景象的和谐；"孤霞夕丽"既是光的现象，也是美的发现。末句既说诗人习惯晚间的观赏，也说这一刻特别令人悠悠然而深思。全诗充满了对晚景的赞美与对闲适的珍视。</p>
+<hr />
+<h2 id="七夕江月-距立秋前有六日">七夕江月 距立秋前有六日</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#七夕</code> <code>#月景</code> <code>#爱情神话</code> <code>#季节交替</code></p>
+</blockquote>
+<h3 id="原文_72">原文</h3>
+<p>江远摇凉月，影分天汉流。
+弦光低鹊渡，机石拂蟾钩。
+巧向何人得，槎因使客浮。
+祇怜欢夜短，此夕未为秋。</p>
+<h3 id="白话全译_72">白话全译</h3>
+<p>远江摇动凉爽的月亮，影子分散在银河的流动中。弦形的光低垂在喜鹊的渡口，织机的石头拂过月亮的钩形。巧妙的本领是从谁那里得到，木筏因为使者的关系而漂浮。只是怜惜欢乐的夜晚太短，这个夜晚还不算是秋天。</p>
+<h3 id="题解_72">题解</h3>
+<p>这首诗以七夕为题，融合了中国古代的爱情神话与对季节的观察。首两句既描写了江月的景象，也暗示了七夕的清凉与凄凉。中间两句则引用了牛郎织女的神话——"鹊渡"与"机石"都是故事中的意象。后两句既问"巧向何人得"（巧妙的技艺从何而来），也暗示了牵牛星引浮槎而来的传说。末两句既表现对爱情的同情（"祇怜欢夜短"），也捕捉了七夕与立秋之间的微妙关系——还没有秋天，但秋的迫近已经在感受中。全诗既是对神话的诗化，也是对季节与人生的感悟。</p>
+<hr />
+<h2 id="十四夜泊繁昌旧县镇">十四夜泊繁昌旧县镇</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#繁昌" class="internal-link wiki-link">繁昌</a> <a href="#旧县镇" class="internal-link wiki-link">旧县镇</a>
+<strong>关键主题</strong>：<code>#月夜</code> <code>#停泊</code> <code>#自然</code> <code>#时局感慨</code></p>
+</blockquote>
+<h3 id="原文_73">原文</h3>
+<p>月自无而满，风惟西与南。
+秋光时可掬，天意日难探。
+绿岸同舟懒，青山对客憨。
+羁人甘寂寂，或恐使星惭。</p>
+<h3 id="白话全译_73">白话全译</h3>
+<p>月亮从无变成满圆，风只吹向西方与南方。秋光在时候可以掬起，天意每天都难以推测。绿色的岸与同舟的人懒散，青色的山对着客人显得憨厚。羁旅的人甘愿寂寂，或许害怕使星感到惭愧。</p>
+<h3 id="题解_73">题解</h3>
+<p>这首诗记录了在繁昌旧县镇停泊十四夜的情形。首两句以月与风来标记自然与时间——月圆暗示时间的推移，风向暗示季节的特征。中间两句则以"秋光""天意"来表现对自然与宇宙的思考。后两句则转向人文层面——"绿岸""青山"既是景物，也映照了人的状态——"懒""憨"都表现了某种被动的接纳。末句的"使星"可能指管理的星（如摄提等），"羁人甘寂寂"既是对自己处境的接纳，也暗示了对官职责任的逃避或无奈。全诗既是对景物的描写，也是对官场与人生的思考。</p>
+<hr />
+<h2 id="汉川秋怀">汉川秋怀</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#汉川" class="internal-link wiki-link">汉川</a>
+<strong>关键主题</strong>：<code>#秋怀</code> <code>#隐逸</code> <code>#诗歌</code> <code>#精神寄托</code></p>
+</blockquote>
+<h3 id="原文_74">原文</h3>
+<p>垂耳悲劳骥，冥飞羡逸鸿。
+及兹游远日，方见出门功。
+招隐怀幽桂，歌骚变落枫。
+沧浪何处叟，此调或相同。</p>
+<h3 id="白话全译_74">白话全译</h3>
+<p>垂着耳朵为劳累的骏马悲伤，暗暗飞翔羡慕逸散的鸿雁。到了游远日子的这个时候，才看到了出门的成功。招隐怀念幽深的桂树，歌骚在落枫中变化。沧浪的叟在何处，这种调调或许相同。</p>
+<h3 id="题解_74">题解</h3>
+<p>这首诗在汉川时作，表现了对隐逸与诗歌的思考。首两句以骏马与鸿雁的对比来表现被约束与自由的对立——诗人既为被束缚的自己悲伤，也羡慕逃脱的可能。中间两句则说明了游历的意义——"及兹游远日""方见出门功"既是对旅程的肯定，也暗示了出仕的某种成就与局限。后两句转向诗歌——"招隐""歌骚"都指诗歌的传统，通过诗歌来寄托隐逸的精神。末句的"沧浪叟"指《楚辞》中的沧浪渔父，是隐逸的象征。诗人问"此调或相同"，既是对古人的致敬，也是对自己精神寄托的确认。全诗既是对出仕与隐逸二者的平衡，也是对诗歌作为精神寄托的强调。</p>
+<hr />
+<h2 id="十七早晓发虚江">十七早晓发虚江</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#虚江" class="internal-link wiki-link">虚江</a>
+<strong>关键主题</strong>：<code>#晓发</code> <code>#江景</code> <code>#醉梦</code> <code>#独对</code></p>
+</blockquote>
+<h3 id="原文_75">原文</h3>
+<p>落月衔山白，归帆出树青。
+新凉烟抱石，欲晓影摇汀。
+醉梦滩声破，昏愁鸟语醒。
+披衣成独对，云水自泠泠。</p>
+<h3 id="白话全译_75">白话全译</h3>
+<p>落下的月亮衔着山显得白，归来的帆从树木中出现青色。新凉的烟雾抱着石头，将要晓亮时影子摇动沙汀。醉梦被滩流的声音打破，昏睡的愁绪被鸟语唤醒。披散衣物成就了独自的对面，云与水自然冷冷清清。</p>
+<h3 id="题解_75">题解</h3>
+<p>这首诗记录了十七日在虚江早晓出发时的情景。首两句以落月与归帆来标记时间与方向——既是天亮的标志，也是行程的指向。中间两句继续描写晓景——"新凉""烟""影"都是晓间特有的现象。后两句则以梦与醒来表现夜间的变化与晨曦的来临。末句"披衣成独对"既是动作的描写（披衣整装），也是心理的表现（独对自然），"云水自泠泠"既是景物的状态，也暗示了某种冷清与孤独。全诗既是对晓景的美妙捕捉，也是对旅人早发的感受。</p>
+<hr />
+<h2 id="雩都山行">雩都山行</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#雩都" class="internal-link wiki-link">雩都</a>
+<strong>关键主题</strong>：<code>#山行</code> <code>#风景</code> <code>#季节</code> <code>#傍晚</code></p>
+</blockquote>
+<h3 id="原文_76">原文</h3>
+<p>秋嶂青无几，合色始纷纭。
+积爽招遥黛，含凄散窈云。
+浅深环径别，阴霁百峰分。
+日暮孤村见，疏篱已落曛。</p>
+<h3 id="白话全译_76">白话全译</h3>
+<p>秋日的山峰青色没有多少，融合的颜色开始纷纭复杂。积累的清爽招引了远处的黛色，含着悲凉散布了深邃的云。浅深的环境让山径各不相同，阴晴的变化让百座山峰区分。日暮时看到孤独的村子，疏落的篱笆已经被黄昏笼罩。</p>
+<h3 id="题解_76">题解</h3>
+<p>这首诗记录了在雩都山行时的观察。首两句以秋嶂的颜色来开篇——"青无几"既说青色有限，也暗示了秋景的苍凉。中间两句则以"爽""凄"等词表现了秋的特质——既有清爽，也有凄凉。后两句以地形与光影来深化对山景的描写。末两句则以"日暮孤村"来结束——既是对日景的结束，也是对旅途的继续。"疏篱已落曛"既是对村景的描写，也暗示了时刻的推移。全诗充满了对山景与秋景的细致观察。</p>
+<hr />
+<h2 id="大宁晓发">大宁晓发</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联地点</strong>：<a href="#大宁" class="internal-link wiki-link">大宁</a>
+<strong>关键主题</strong>：<code>#晓景</code> <code>#山路</code> <code>#探险</code> <code>#自然奇观</code></p>
+</blockquote>
+<h3 id="原文_77">原文</h3>
+<p>玉露团深巘，征人拂晓裾。
+梯盘窥鸟道，穿穴探猿居。
+烟合疑松卧，泉幽听谷歔。
+赪颜得素术，飞液正堪茹。</p>
+<h3 id="白话全译_77">白话全译</h3>
+<p>玉露团聚在深深的山峰上，远征的人在晓间拂去衣边的露水。梯形盘旋让人窥见鸟儿的道路，穿过山洞来探寻猿猴的居所。烟雾融合怀疑是否松树在卧躺，幽静的泉声听起来像谷地的叹息。红色的脸庞得到了清爽的技艺，飞溅的泉液正好可以吞下。</p>
+<h3 id="题解_77">题解</h3>
+<p>这首诗记录了在大宁晓间出发时的山行经历。诗充满了对山路探险的生动描写。首两句既描写自然现象（玉露），也交代出行的时间与人物。中间两句则以梯形山路、山洞等具体景观来展现山行的险峻与探险的精神——"窥鸟道"与"探猿居"都表现了对自然秘境的发现。后两句既是对景物的描写，也是对感受的记录——"烟合疑松卧"表现了视觉的幻觉，"泉幽听谷歔"表现了听觉的发现。末句"赪颜得素术，飞液正堪茹"既是对山行过程中身体状态的描写，也是对山泉的赞美。全诗充满了对自然的敬畏与对探险的热情。</p>
+<hr />
+<h2 id="春雨晓对">春雨晓对</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#春雨</code> <code>#隐居</code> <code>#独处</code> <code>#修养</code></p>
+</blockquote>
+<h3 id="原文_78">原文</h3>
+<p>花雨销红色，春潮转碧芳。
+清晨观物变，闭户息时光。
+独令幽怀远，因知隐趣长。
+深居非避世，不敢向人忙。</p>
+<h3 id="白话全译_78">白话全译</h3>
+<p>花与雨消销了红色，春潮转变成碧色的芬芳。在清晨观察景物的变化，闭上门户来歇息时光。独独让幽深的怀抱达到远处，因此知道了隐逸的趣味源长。深居不是避世，不敢向人匆忙奔走。</p>
+<h3 id="题解_78">题解</h3>
+<p>这首诗以"春雨晓对"为题，表现了春雨中的静居生活。首两句既描写了春雨对景物的影响，也暗示了季节的推移。中间两句则强调了观察与闭居的重要性——"观物变""息时光"既是行动，也是修养。后两句则是全诗的核心——诗人说深居不是避世，也不敢"向人忙"（不敢向外界奔忙）。这既是对隐居的理性认识，也是对修养的诚实表白。全诗既是对春雨与闭居的描写，也是对个人修养理想的阐述。</p>
+<hr />
+<h2 id="雨宿-其一">雨宿 其一</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#雨中停留</code> <code>#自然观察</code> <code>#精神状态</code> <code>#艺术感受</code></p>
+</blockquote>
+<h3 id="原文_79">原文</h3>
+<p>孤吟明独对，耳目作生涯。
+雨宿闻啼鸟，风前中落花。
+无营春愿足，即事晓因加。
+静色烟光外，幽情欲共遐。</p>
+<h3 id="白话全译_79">白话全译</h3>
+<p>孤独的吟唱在明亮中独自面对，耳目成了生活的内容。在雨中停留听到啼鸟的声音，风前被落花打中。没有营垒时春的愿望就满足，就着事物晓间的原因增加。在静色与烟光之外，幽深的情感想要共同远遥。</p>
+<h3 id="题解_79">题解</h3>
+<p>这首诗记录了在雨中停留时的感受，有两首。这是第一首。首两句以"孤吟""独对"来表现个人的艺术感受与生活状态。中间两句则以雨宿时的具体观察——啼鸟、落花——来丰富这种状态。后两句则转向更深层的思考——"无营春愿足"既说没有外在的营垒束缚，内心就得到满足，也暗示了对简朴生活的珍视。末句"幽情欲共遐"既是对感受的总结，也是对某种精神共鸣的追寻。全诗既是写景，也是对个人精神生活的反思。</p>
+<hr />
+<h2 id="雨宿-其二">雨宿 其二</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关键主题</strong>：<code>#雨景</code> <code>#自然感受</code> <code>#春景</code> <code>#醉意</code></p>
+</blockquote>
+<h3 id="原文_80">原文</h3>
+<p>晓寂堪无虑，所思忽复长。
+拙愁因景逼，痴懒怪时忙。
+个个啼莺怨，双双舞蝶狂。
+撩情若在酒，凭此醉春光。</p>
+<h3 id="白话全译_80">白话全译</h3>
+<p>晓间的寂寞足以排除忧虑，所思的念想忽然又变长。笨拙的愁绪因景物的逼近而加强，痴的懒惰怪罪时刻的匆忙。一个个啼鸣的黄莺在哀怨，成对成对跳舞的蝴蝶在疯狂。撩动感情的东西如果在酒里，凭着这个来醉在春光中。</p>
+<h3 id="题解_80">题解</h3>
+<p>这是雨宿的第二首，继续表现在雨中停留时的感受。首两句既说"晓寂堪无虑"（晓间的寂寞可以排除忧虑），也说"所思忽复长"（思念又回来了），体现了矛盾的心理状态。中间两句则以"拙愁""痴懒"来自嘲，同时又归咎于"景逼""时忙"——既是对自己的讽刺，也是对环境的感慨。后两句则以自然景物——莺、蝶——来丰富对春景的描写。末句"撩情若在酒，凭此醉春光"既是对酒的赞美，也是对春景的沉醉。全诗既表现了对雨与春景的观察，也表现了在这种观察中的精神放松与感性的释放。</p>
+<hr />
+<h2 id="乙亥北征至分关却望">乙亥北征至分关却望</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：乙亥
+<strong>关联地点</strong>：<a href="#分关" class="internal-link wiki-link">分关</a>
+<strong>关键主题</strong>：<code>#北征</code> <code>#远望</code> <code>#离乡</code> <code>#思念</code></p>
+</blockquote>
+<h3 id="原文_81">原文</h3>
+<p>出门山导客，及此与云深。
+俯视苍茫接，遥看碧落沉。
+岐峰迷别绪，洄涧落乡心。
+万里伤魂处，离初泪不禁。</p>
+<h3 id="白话全译_81">白话全译</h3>
+<p>出门时山引导着客人，到了这里与云融合得很深。俯视苍茫的景象相接，遥看碧落的颜色沉下去。分叉的山峰迷失了别离的感情，回旋的溪涧坠落了故乡的心。万里伤魂的地方，离别初时泪水禁不住流下。</p>
+<h3 id="题解_81">题解</h3>
+<p>这首诗作于乙亥年北征至分关时。题目的"却望"说明诗人在分关时回望来时路，引发了对离乡的思考。首两句既描写了山路的引导，也暗示了进入深山与云的融合。中间两句则以远望的视角来观察景物——"俯视"与"遥看"都是观看角度的变化。后两句则转向内心的感受——"岐峰迷别绪""洄涧落乡心"既是景物的拟人化，也是对离乡心情的象征。末句"离初泪不禁"既是对离别时的回忆，也直接表达了此刻的感受。全诗既是对山水的描写，也是对离乡与思念的深刻表现。</p>
+<hr />
+<h2 id="过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰-其一">过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰 其一</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#陈扆六" class="internal-link wiki-link">陈扆六</a>
+<strong>关联地点</strong>：<a href="#上杭" class="internal-link wiki-link">上杭</a>
+<strong>关键主题</strong>：<code>#夜集</code> <code>#友谊</code> <code>#官场失意</code> <code>#慰藉</code></p>
+</blockquote>
+<h3 id="原文_82">原文</h3>
+<p>频年离索感，偶对语飘零。
+已见君头白，犹求世眼青。
+可怜逢故识，仍使叹晨星。
+夜尽倾前绪，游人驻马听。</p>
+<h3 id="白话全译_82">白话全译</h3>
+<p>频繁的年岁中感受到离别与索寞，偶尔对话时言语飘零散落。已经看到你的头发变白，还在求取世界的眼光显青。可怜是相逢了故旧，仍然让人叹息晨星的稀少。夜晚快要结束时倾吐了以前的情绪，游人驻足听马的声音。</p>
+<h3 id="题解_82">题解</h3>
+<p>这是陈扆六相招夜集时作的二首中的第一首。题目说明了诗人自述了"两令坎壈事"，即两次为官的失意。首两句既描写了相聚的场景，也暗示了共同的失意与感伤。中间两句以"头白"与"求世眼青"来表现年岁的增长与仕途的难遇。后两句则强调了相聚的珍贵与共同的叹息。末句"夜尽倾前绪"既说一夜未尽就要结束，也说倾吐了心中的情感。全诗既是对友谊的庆贺，也是对共同官场失意的互相慰藉。</p>
+<hr />
+<h2 id="过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰-其二">过上杭陈扆六相招夜集自述两令坎壈事诗以慰之兼志别悰 其二</h2>
+<blockquote>
+<p><strong>体裁</strong>：五言律 | <strong>繫年</strong>：未详
+<strong>关联人物</strong>：<a href="#陈扆六" class="internal-link wiki-link">陈扆六</a>
+<strong>关键主题</strong>：<code>#友谊</code> <code>#归隐</code> <code>#林泉</code> <code>#别离</code></p>
+</blockquote>
+<h3 id="原文_83">原文</h3>
+<p>君归竭俸钱，杯酒客心怜。
+此地青山色，当年塞北烟。
+不因时坎壈，谁与日林泉。
+感昔姑相慰，离悰倍黯然。</p>
+<h3 id="白话全译_83">白话全译</h3>
+<p>你回来竭尽官俸去招待，杯中的酒让客人的心感到同情。这个地方的青山颜色，当年塞北的烟雾。不因为时刻的坎坷，谁与我一起享受林泉。感念过去的相互慰藉，别离的感情更加黑暗悲伤。</p>
+<h3 id="题解_83">题解</h3>
+<p>这是第二首，继续关于友谊与别离的主题。首两句既赞美了陈扆六的款待（"竭俸钱"体现了盛情），也表现了彼此的同情。中间两句既描写了此地的青山，也对比了"当年塞北"——暗示彼此曾经的共同经历与此刻的变化。后两句则说，正是因为时局的坎壈，才需要林泉的寄托与朋友的陪伴。末句"感昔姑相慰，离悰倍黯然"既感谢过去的互相慰藉，也为即将的别离而感伤。全诗既是对友谊的感谢，也是对别离的遗憾。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

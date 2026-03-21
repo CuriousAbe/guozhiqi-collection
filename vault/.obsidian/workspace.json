@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "113e02ca094a9ec6",
+    "type": "split",
+    "children": [
+      {
+        "id": "456ad39bdd4e71ce",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "60fcc17662d619e9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "05_附录/篇目总索引.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "篇目总索引"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8b6a52f75c245842",
+    "type": "split",
+    "children": [
+      {
+        "id": "8b231cfbce3d87f6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "876cb3297c9c41f4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "49a089b232147a7f",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "fabe72184e6eb605",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 286.5
+  },
+  "right": {
+    "id": "6c16664deab41589",
+    "type": "split",
+    "children": [
+      {
+        "id": "e94721f46568de04",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "631b9210ae029e02",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "03_散文/文·卷20·论.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "文·卷20·论 的反向链接列表"
+            }
+          },
+          {
+            "id": "736590f6e36fd3dd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "03_散文/文·卷20·论.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "文·卷20·论 的出链列表"
+            }
+          },
+          {
+            "id": "565195cdc11031ec",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "3824c2b97cec7676",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "添加笔记属性"
+            }
+          },
+          {
+            "id": "16f85f66b1f21cf0",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "03_散文/文·卷20·论.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "文·卷20·论 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false,
+      "bases:新建数据库": false
+    }
+  },
+  "active": "60fcc17662d619e9",
+  "lastOpenFiles": [
+    "05_附录/关于本材料库.md",
+    "05_附录/篇目总索引.md",
+    "HOME.md",
+    "05_附录/诗歌富版本编订进度.md",
+    "05_附录/富版本编订进度.md",
+    "02_诗歌/诗·卷03·古乐府.md",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086390908",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086385795",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086382106",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086378236",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086373076",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086369123",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086365046",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086360197",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086355875",
+    "02_诗歌/诗·卷03·古乐府.md.tmp.5.1774086351586",
+    "02_诗歌/诗·卷14·七言排律.md",
+    "02_诗歌/诗·卷20·四言诗.md",
+    "02_诗歌/诗·卷21·赞文.md",
+    "02_诗歌/诗歌总索引.md",
+    "02_诗歌/诗·卷19·诗余（词）.md",
+    "02_诗歌/诗·卷16·六言绝句.md",
+    "02_诗歌/诗·卷12·七言律诗.md",
+    "02_诗歌/诗·卷10·七言律诗.md",
+    "02_诗歌/诗·卷06·五言律诗.md",
+    "02_诗歌/诗·卷07·七言古体.md",
+    "02_诗歌/诗·卷05·五言古体.md",
+    "04_史料/官修史料汇编.md",
+    "01_生平编年/郭之奇年谱.md",
+    "01_生平编年/郭之奇传·永历实录.md",
+    "03_散文/文·卷22·议策.md",
+    "03_散文/文·卷20·论.md",
+    "03_散文/文·卷25·记.md",
+    "03_散文/文·卷21·疏.md",
+    "03_散文/文·卷33·文移.md",
+    "03_散文/文·卷30·辑志献纪.md"
+  ]
+}

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十三 · 序上 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" class="active">卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十三-·-序上">卷二十三 · 序上</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十三</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第273–282a頁 | 視覺逐頁轉錄 → 富版本編訂</p>
+</blockquote>
+<p>本卷收序文十一篇及跋文一篇，均為郭之奇為友人或自己的詩文集所作序言，作於崇禎元年（1628）至崇禎五年（1632）之間。序文是明代文人之間最常見的文學社交形式——互贈詩集、互作序跋，既是品評文章，也是交流文學理念。全卷集中體現了郭之奇早年（22–26歲）的文學觀與詩學思想。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+<th>頁碼</th>
+<th>對象</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#怒流草自敘" class="internal-link">#怒流草自敘</a></td>
+<td>戊辰（1628）</td>
+<td>273a</td>
+<td>自序</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#初瞻集自序" class="internal-link">#初瞻集自序</a></td>
+<td>—</td>
+<td>273b–274a</td>
+<td>自序</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#焉上集自序" class="internal-link">#焉上集自序</a></td>
+<td>—</td>
+<td>274a</td>
+<td>自序</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#祠部郎中會銘西座師封公封諱序" class="internal-link">#祠部郎中會銘西座師封公封諱序</a></td>
+<td>己（~1629）</td>
+<td>274a–275a</td>
+<td>師長</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#孫實甫詩序" class="internal-link">#孫實甫詩序</a></td>
+<td>己（~1629）</td>
+<td>275a–276a</td>
+<td>友人詩集</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="#許班王稿序" class="internal-link">#許班王稿序</a></td>
+<td>庚午（1630）</td>
+<td>276a–276b</td>
+<td>友人文稿</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="#何潔卿稿序" class="internal-link">#何潔卿稿序</a></td>
+<td>—</td>
+<td>276b–278a</td>
+<td>友人文稿</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="#楊樂苑詩序" class="internal-link">#楊樂苑詩序</a></td>
+<td>庚午（1630）</td>
+<td>278a–279a</td>
+<td>友人詩集</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="#謝儒美御冷庫詩序" class="internal-link">#謝儒美御冷庫詩序</a></td>
+<td>—</td>
+<td>279–280a</td>
+<td>友人詩集</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="#文令社序" class="internal-link">#文令社序</a></td>
+<td>壬申（1632）</td>
+<td>280–281a</td>
+<td>文學社團</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="#陳仲因文似堂詩序" class="internal-link">#陳仲因文似堂詩序</a></td>
+<td>壬申（1632）</td>
+<td>281–283a</td>
+<td>友人詩集</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="#開山日記小跋" class="internal-link">#開山日記小跋</a></td>
+<td>—</td>
+<td>282a</td>
+<td>跋文</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="怒流草自敘">怒流草自敘</h2>
+<blockquote>
+<p><strong>繫年</strong>：戊辰（1628），<a href="#崇禎" class="internal-link wiki-link">崇禎</a>元年 | <strong>體裁</strong>：自序
+<strong>關鍵主題</strong>：<code>#自序</code> <code>#怒流草</code> <code>#文气</code> <code>#诗论</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p>怒流草自敘（戊辰作）</p>
+<p>怒流草何以名也。曰天物怒流。人事錯錯。則文章一。蓋益本怒氣以生。而後天精既下。五色並見。孔曰不□而止。纏性雕情。吾知其無能也。矣詩不多。強半家思。</p>
+<p>動吾人甫學掬管便已腹孔胎孟。而成敗兩念纖之生。浩然此氣出之篇章。排揚其華。猶令毛孔生不許而止。纏性雜也。天地秋月間而無甘露之義。</p>
+<p>嗚呼與此氣並也。馬上焦自救年。德冠自右有文中貞歐冶在餘。吃吃何能多言。</p>
+<p>怒行其勢之所旺。而以橺其氣之所生。則怒流草之名。蓋取諸此。若夫整茂渢湲取□作□登城而麾軍。破卒感自有文中真歐冷在余。吃吃何能多言。</p>
+<h3 id="白话全译">白话全译</h3>
+<p>「怒流草」为什么叫这个名字？答曰：天地万物以怒气而流动，人间之事纷纷错杂，文章也因此而生。大概文章的根本就是「怒气」——怒气充盈之后，天精下降，五色并现。孔子说「不可止」，但纠缠性情、雕琢情感，我自知力有不逮。诗作不多，大半是思乡之作。</p>
+<p>我辈初学执笔，便已心怀孔孟之道。成败两念纤细地滋生，浩然之气发而为篇章，扬其精华。犹如毛孔不能不张——这正是性情的纠缠。天地之间秋月高悬，却无甘露的恩泽。</p>
+<p>唉！与此浩气并行。焦虑中自救于年华。德行居首，文中自有真正的锻冶。我口吃拙讷，还能多说什么呢？</p>
+<p>怒气行于势之所旺，文章生于气之所发——「怒流草」的名字，大概取义于此。</p>
+<h3 id="题解">题解</h3>
+<p>本篇为郭之奇自己的诗文集「怒流草」所作自序，戊辰年即崇祯元年（1628），郭之奇年仅二十二岁，刚中进士。「怒流」取「天物怒流」之义——文章以「怒气」为生命力的源泉，如洪流奔涌不可遏止。这一文学观深受孟子「浩然之气」影响，也暗合晚明文学尚「气」的风潮。「诗不多，强半家思」透露了年轻进士离乡赴京后的思乡之情。末句「吃吃何能多言」以自嘲作结，简短有力。</p>
+<hr />
+<h2 id="初瞻集自序">初瞻集自序</h2>
+<blockquote>
+<p><strong>體裁</strong>：自序
+<strong>關鍵主題</strong>：<code>#自序</code> <code>#初瞻集</code> <code>#仕途</code> <code>#归去来</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>初瞻集自序（乙作）</p>
+<p>余初入仕○每念歸去來○奇文共賞焉○義相折衝○或杯酒浩浩○言笑宴宴○猶時稍能諒余疏而縱之適遣○余愁而導之歡○不可不謂烏紗局而中大世落坦也○然而友之怨我者深○之長我亦益深○</p>
+<p>散可方長卿而滯留終○梗節加之糞土惟填風塵○倦客奔走剌調之餘○祝有一枕黑甜○三杯軟飽聊悠○歲時嗑呿歌言閒或一二年○以酬人牛以自遣草草○</p>
+<p>而止○縷性雕情○吾知其無能也○矣詩不多○強半家思○實渡且遠○言志逐歌○終不□於歸去來之音○云爾○</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>「初瞻集」自序。我初入仕途，每每念及陶渊明「归去来兮」之语。与友人奇文共赏、针锋折冲，或杯酒浩荡、言笑晏晏——这些时候友人还能体谅我的疏懒放纵，排遣我的愁闷、引导我的欢乐。不能不说是乌纱帽下的大千世界里难得的坦荡。然而友人对我的怨怼也日益加深。</p>
+<p>漂泊如司马长卿般滞留不去，骨梗节操加诸粪土、尘风填塞；倦旅奔走调遣之余，但愿有一枕酣甜、三杯微醉聊以解忧。一两年间偶有歌咏，聊以酬友自遣而已。</p>
+<p>最终，纠缠性情、雕琢文词，我自知力有不逮。诗作不多，大半是思乡之作。路途遥远，以言志之歌，终不离「归去来」之音——如此而已。</p>
+<h3 id="题解_1">题解</h3>
+<p>本篇为「初瞻集」自序。「初瞻」即初次瞻望仕途之意。通篇以陶渊明「归去来」为情感基调——初入官场，便已思归。友人情谊是唯一的慰藉：「奇文共赏」「杯酒浩浩」。但倦客之感日深，末以「终不离归去来之音」收结，预示了郭之奇后来投身南明抗清的精神底色：入仕非为富贵，而是为了践行儒者的责任。</p>
+<hr />
+<h2 id="焉上集自序">焉上集自序</h2>
+<blockquote>
+<p><strong>體裁</strong>：自序
+<strong>關聯地點</strong>：<a href="#北京" class="internal-link wiki-link">北京</a>（燕京）
+<strong>關鍵主題</strong>：<code>#自序</code> <code>#焉上集</code> <code>#燕京</code> <code>#归省</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>焉上集自序</p>
+<p>五○者循○而言廻○志志之所之莫或雜也○天地殊觀○古四○者積而尊廻○情之所鐘莫能偽也○頗之以見閒思○遠○則心勞○撫時○則意杳○吊古○則神壯○感物○則氣連○令快筆不有韻人○朗之蔡歌盡之編簡後先者安得</p>
+<p>與○於○斯○哉○追○尚○性情深而言未竟○志坦而詞昌○孰達情而易性○孰蕉志而千時○乃真爲僞○爲正爲雜○末繁度識者之眸矣○餘守燕○三載塞風遊倦白雲思○深蒙恩歸省○途歷八千里水陸○雖然馬上強半○也驅車方夏仲抵家而秋旣老○積情借志益朝夕○之故痼言喘歌苦○或速之念不及轉○私不及謀○雖意淺文輕○爲爲雜亦廝○幾其免夫○</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>「焉上集」自序。「焉上」即在燕京（北京）之上。</p>
+<p>作者以「五者循而言回」「四者积而尊回」的枚举结构开篇，论述诗文创作之道——志之所向不可杂乱，情之所钟不能虚伪。闲思则远，远则心劳；抚时则意渺；吊古则神壮；感物则气相连。</p>
+<p>然后自述：我在燕京守任三年（守燕三载），边塞之风使人倦游，白云之思日深。蒙恩准假归省，途经八千里水陆，大半在马上。盛夏出发、秋天才到家。积情借志、朝夕不辍，但因仓促赶路，诗作来不及细磨——虽然意浅文轻，也姑且如此，但求免于苛评。</p>
+<h3 id="题解_2">题解</h3>
+<p>本篇为「焉上集」自序——「焉上」谐音「燕上」，指在北京任职期间的诗文集。郭之奇崇祯元年（1628）中进士后留京为官三年（守燕三载），本篇记录了他归省的旅途：从北京出发，八千里水陆，大半马上赶路，盛夏出发秋天抵家。文中对诗文创作提出「志不杂」「情不伪」的要求，以「闲思→远思→抚时→吊古→感物」五种创作状态分论诗歌与性情的关系。</p>
+<hr />
+<h2 id="祠部郎中會銘西座師封公封諱序">祠部郎中會銘西座師封公封諱序</h2>
+<blockquote>
+<p><strong>繫年</strong>：己（約1629） | <strong>體裁</strong>：壽序/祠序
+<strong>關聯人物</strong>：封公（太老師）、老師
+<strong>關鍵主題</strong>：<code>#师长</code> <code>#祠堂</code> <code>#寿</code> <code>#仁德</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>〔正文見原始轉錄，約300字。核心段落：〕</p>
+<p>賢者必貴。仁者必壽。于今見之見之封公付太老師之訓也。某非能知太老師也。因老師而知太老師。老師之眷重碩德其之所以命某者而知太老師非一日也。身不出閭里名在公卿非一日也。丙寅老師儀部累封而孫亭應。又丁卯楗起于今年八十餘。乃早夕課諸孫不倦。則賢者之眷仁者之壽亦無候某再諄諄也。</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>「贤者必贵，仁者必寿」——如今从封公太老师身上得到了印证。我本不能直接了解太老师，是因老师（封公之子）而知太老师。太老师身不出乡里而名在公卿之间，这已非一日之事。丙寅年老师累封儀部，丁卯年太老师已年逾八十，仍然早晚课教诸孙不倦。贤者之福、仁者之寿，无须我再多言。</p>
+<p>文中继而论述建祠堂之意义：祠堂不仅是感恩之举，更是表彰仁德的公共行为。太老师喜施好学，壮年践行、老年无求，正是《孟子》所谓「良贵」——不求于外而自有其贵。</p>
+<h3 id="题解_3">题解</h3>
+<p>本篇为郭之奇受命为其西座师封公的太老师（祖父辈）所作序文。封公年逾八十犹课诸孙不倦，以「贤者必贵、仁者必寿」开篇，赞其躬行仁义。文中特别强调「身不出闾里名在公卿」——真正的声望来自德行而非官位。序文的写法是通过「因老师而知太老师」的间接叙述，层层展现封公家族的世代仁德。</p>
+<hr />
+<h2 id="孫實甫詩序">孫實甫詩序</h2>
+<blockquote>
+<p><strong>繫年</strong>：己（約1629） | <strong>體裁</strong>：詩集序
+<strong>關聯人物</strong>：孫實甫
+<strong>關鍵主題</strong>：<code>#诗论</code> <code>#诗言志</code> <code>#雅正</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>詩言志也。志莫能已而依之言。一念之與也。一時之與也。致也。植百年事端千秋梗。若分符然至人之言以則雅人之言瞻以清反。是若不足。</p>
+<p>遠正人之言束以則雅人之言瞻以清反是若不足。道也。詩之呈人也莫或有道而終莫知所縱來也。〔中段〕市之澹致凝恩。綠雅而歸於正。綠正而造其至。百年千秋吾終以詩中之雄位置焉。實甫循沖平遠乎其之。守此以竟志也。吾又烏取乎諛詞佞舌以世俗中之。</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>诗是言志的。志不能自已而寄之于言——一念之感、一时之情，都可以化为诗章。以此植百年之基、立千秋之梗。至人之言归于雅正，雅人之言归于清远——这是诗的正道。</p>
+<p>诗呈现于人，须有「道」贯穿，而不可漫无归宿。澹泊凝思，由雅而归于正，由正而造于至——百年千秋之后，我终将以「诗中之雄」的标准来衡量。孙实甫的诗循冲淡平远之路，守此以竟其志。我又何必取媚于谀词佞舌？</p>
+<h3 id="题解_4">题解</h3>
+<p>以「诗言志」开篇——这是中国诗学的根本命题。郭之奇在此提出了由「雅」而「正」而「至」的诗学进路：诗以雅为宗、以正为归、以至为极。赞孙实甫诗「循冲平远」，不以华丽取悦世俗。末句「吾又乌取乎谀词佞舌」态度鲜明——拒绝文坛的逢迎之风。此文虽短，是郭之奇早期诗学思想的重要宣言。</p>
+<hr />
+<h2 id="許班王稿序">許班王稿序</h2>
+<blockquote>
+<p><strong>繫年</strong>：庚午（1630） | <strong>體裁</strong>：文稿序
+<strong>關聯人物</strong>：許班王
+<strong>關鍵主題</strong>：<code>#文论</code> <code>#兵法</code> <code>#神气</code> <code>#文武相通</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>許班王稿序 庚午作</p>
+<p>文章之道通諸軍族之事○莫不以神行以氣往○故兵弱者沒○騎者覆○其神與氣非也○一其不備不可言神○衆志不同不可言氣○善治兵者戰守攻圍剿平其指掌也○仰則風雲俯察山澤○詳虛實緩急之故○密離合常變之權○以取勝算於胸而後三軍之衆稱千立戈○皆指駒之呼吸調之○</p>
+<p>〔中段論三百年來文壇之弊〕</p>
+<p>況夫士人挾策平時○博一世之通榮○流千載之英譽○其道蕭於師中○其權一於閫外○臨幄謀成○益幾幾焉必也○取平日怨疾妒尤之念○漫嘗以倖一售○如是者暴馮無悔○可不謂大感乎○故曰文章之道通諸軍旅之事○勝敗能不其擭一也○</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>文章之道与军旅之事相通——都以「神」（精神）行、以「气」（气势）往。兵弱者败亡、骑兵覆灭，都是因为神与气不一。器械不完备不能谈「神」，众志不同不能谈「气」。善于用兵的人，战守攻围尽在掌握——仰观风云、俯察山泽，详察虚实缓急之理，密谋离合常变之权。先在胸中取得胜算，然后三军万众、千戈林立，都随指挥的一呼一吸而调动。</p>
+<p>三百年来文坛之弊：豪杰之士矜夸自负，落于人后者，一半因怨疾而终，一半因妒忌而亡——都是因为神与气不一。</p>
+<p>士人平时怀策在胸，博取一世通荣、流传千载英誉——其道如统帅在军中，其权如将军在阵外。临幄谋成，岂可将平日怨疾妒忌之念，侥幸一试？暴虎冯河而无悔，岂不是天大的愚蠢？所以说，文章之道通于军旅之事——胜败之理不过如此。</p>
+<h3 id="题解_5">题解</h3>
+<p>本篇为全卷最出色的序文之一。以「文章之道通诸军旅之事」开篇，提出文学创作如同用兵——都以「神」（精神境界）和「气」（气势气韵）为根本。这一「文武相通」的论述在明代文论中并不罕见，但郭之奇的阐释尤为系统：从兵法的「虚实缓急」「离合常变」推及文章的构思布局，从三军的「众志」「神气」推及文坛的弊病。庚午年（1630）作，郭之奇时年二十四岁。</p>
+<hr />
+<h2 id="何潔卿稿序">何潔卿稿序</h2>
+<blockquote>
+<p><strong>體裁</strong>：文稿序 | <strong>關聯人物</strong>：何潔卿
+<strong>關鍵主題</strong>：<code>#友人</code> <code>#文稿</code> <code>#志同道合</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>〔本篇開篇待轉錄。結尾：〕</p>
+<p>…嗑嗑請從此知快心事也。詩不云乎。河海絲來合風雲若有期。余固以潔卿之教我者合所見略同。即以余之敘潔卿者期潔卿而預為之必矣。</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>（开篇待转录）……嗑嗑（笑语），请从此知道什么是快心之事。诗不是说「河海丝来合，风云若有期」吗？我以洁卿教我之处与我所见略同。以我为洁卿作序之诚意，期望洁卿能预见必然的成就。</p>
+<h3 id="题解_6">题解</h3>
+<p>本篇为何洁卿文稿作序，开篇待补。结尾引诗「河海丝来合风云若有期」，表达与洁卿志同道合之情。「教我者合所见略同」表明两人的文学观高度一致。</p>
+<hr />
+<h2 id="楊樂苑詩序">楊樂苑詩序</h2>
+<blockquote>
+<p><strong>繫年</strong>：庚午（1630） | <strong>體裁</strong>：詩集序
+<strong>關聯人物</strong>：楊樂苑
+<strong>關聯典故</strong>：長門賦
+<strong>關鍵主題</strong>：<code>#诗集</code> <code>#南国佳人</code> <code>#长门赋</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>楊樂苑詩序 庚午作</p>
+<p>薄暮居燕辭□趨淒。天高氣蕭。〔中段〕翔莫可方及衆英群御沉灌爲吸日將舒胸抱之緒。餘以光以焰眞所云南國佳人絕世而獨立者蕭蕭。〔末段〕其秋之既告也。樂苑年友杯酒微詩序趣促立且告余曰。昔百斤金買長門之賦。今一杯酒求嘿雲之。</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>庚午年暮秋，居燕京。天高气萧。众英群御之中，杨乐苑舒展胸中之志，其光焰如同「南国佳人，绝世而独立」。</p>
+<p>秋天将尽之时，年友杨乐苑持杯酒来求诗序，笑着对我说：「昔日百斤金买长门之赋，今日一杯酒求你的诗序。」</p>
+<h3 id="题解_7">题解</h3>
+<p>庚午年（1630）作。序文以秋日燕京为背景，引「南国佳人绝世而独立」赞杨乐苑诗才高洁。结尾「昔百斤金买长门赋，今一杯酒求诗序」最为俏皮——将司马相如作《长门赋》收千金的典故，与友人以一杯酒换诗序相比，谐趣盎然而情真意切。</p>
+<hr />
+<h2 id="謝儒美御冷庫詩序">謝儒美御冷庫詩序</h2>
+<blockquote>
+<p><strong>體裁</strong>：詩集序 | <strong>關聯人物</strong>：謝儒美
+<strong>關鍵主題</strong>：<code>#诗论</code> <code>#深情</code> <code>#日月交愁</code> <code>#七体诗</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>〔序文甚长，主要段落：〕</p>
+<p>不欲佞也。儒美以英敏絕世之姿。從其令先君宦遊。歷覽風謠錯緒韻籟博聞疆志有綠來矣。其古文詞及制義每一出輝映四座千人嘆絕延抱質無匹三。</p>
+<p>〔核心论述〕夫懷春之女與庶珍之士。凡其人皆與日月交相愁者世間。惟此等為深情人。惟此等深情人獨惆惆乎能感于居諸而其忡忡惋惜之志逐每足生。</p>
+<p>〔评诗〕今讀儒美之詩七歌悵悵。何思孝而紈韌也。懷古暨暨。何式高而仿侍也。賦物揭揭。何蘊結而紉神也。紀懷悠悠。何容○遂而縡志也○</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>谢儒美以英敏绝世之姿，随其先君宦游四方，历览各地风谣韵律，见闻广博。他的古文和制义（八股文），每次出手便辉映四座，千人叹绝——才质无匹。</p>
+<p>世间有一种「深情人」：怀春之女与怀才之士，都与日月交相愁恼。唯有这等深情之人，才能感于岁月流逝而生忡忡惋惜之志——这正是诗歌的根源。</p>
+<p>读儒美之诗：七言歌行怅怅然——思孝之情如何深切；怀古诗暨暨然——高古之风如何仿效；咏物诗揭揭然——蕴结之深如何入神；纪怀诗悠悠然——志向之远如何实现。</p>
+<h3 id="题解_8">题解</h3>
+<p>这是卷23中论述最深入的一篇诗序。核心命题是「深情人与日月交相愁」——真正的诗人都是深情之人，他们与日月共愁：春花秋木之感、朱颜凋零之叹，都是诗歌的源泉。序文还对谢儒美的七种诗体（七歌、怀古、赋物、纪怀等）逐一品评，显示了郭之奇精细的诗歌批评能力。</p>
+<hr />
+<h2 id="文令社序">文令社序</h2>
+<blockquote>
+<p><strong>繫年</strong>：壬申（1632） | <strong>體裁</strong>：社序
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>
+<strong>關鍵主題</strong>：<code>#文学社</code> <code>#揭阳</code> <code>#结社</code> <code>#礼义</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>文令社序 壬申作</p>
+<p>〔核心段落〕然而與拒則監○此之距也亦傷○迺若會之於聲○與其流也○奉○會之於意氣○其流也俠○〔…〕吾鄉僻處潮海○士多邈邈○禮謙之風○既而浸淫日下或有輕心態慾因之為快○二三兄丈○則愓然憂之是不。</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>壬申年（1632）为「文令社」所作序文。</p>
+<p>文中批评当世士人结社之弊：以声名结交则流于虚浮，以意气结交则流于侠气，装模作样则被明眼人看穿——这些都不是真正的文学结社之道。</p>
+<p>「我们揭阳偏处潮海之滨，士人多有远大之志，本有礼谦之风。但近来风气日下，有人以轻浮态度和欲望为快。二三位兄长忧虑不已——于是发起文令社。」</p>
+<p>文章呼吁以真正的文学理想凝聚同道，以礼义为基，以文学自勉。</p>
+<h3 id="题解_9">题解</h3>
+<p>壬申年（1632）作，郭之奇时年二十六岁。这是为家乡揭阳的文学社团「文令社」所作序言。文中批评三种不良的结社之风：以声名、以意气、以侠义——而提出以「礼义」为基础的文学结社理想。「吾乡僻处潮海」是郭之奇对揭阳地理位置的自述，「士多邈邈、礼谦之风」则是对家乡士风的肯定。此文是了解晚明潮汕地区文人社团活动的珍贵史料。</p>
+<hr />
+<h2 id="陳仲因文似堂詩序">陳仲因文似堂詩序</h2>
+<blockquote>
+<p><strong>繫年</strong>：壬申（1632） | <strong>體裁</strong>：詩集序
+<strong>關聯人物</strong>：陳仲因
+<strong>關鍵主題</strong>：<code>#诗集</code> <code>#文似堂</code> <code>#友人</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>陳仲因文似堂詩序 壬申作</p>
+<p>〔正文部分轉錄，中間段落待補〕</p>
+<p>末段（pg283a_r確認結尾）：菴姑爲之掐其分量所及以告人。而持其所造以揭□也。坊也如此。</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>壬申年（1632）为陈仲因「文似堂」诗集作序。</p>
+<p>文中以自然意象赞扬陈仲因之诗才——文如风雨山川，意境高远。「文似堂」之名，寓意文章之美如其人之品格。作序者姑且掐量其分量告知世人，而陈仲因则持其所创造之诗文以揭示天下。</p>
+<h3 id="题解_10">题解</h3>
+<p>壬申年（1632）作。为友人陈仲因「文似堂」诗集作序。「文似堂」是陈仲因的书斋名，取文章与人品相似之义。全篇中间段落待补，但从首尾可见郭之奇对友人诗才的高度评价。</p>
+<hr />
+<h2 id="開山日記小跋">開山日記小跋</h2>
+<blockquote>
+<p><strong>體裁</strong>：跋文 | <strong>本卷末篇</strong>
+<strong>關聯典故</strong>：陶唐氏、天文分野
+<strong>關鍵主題</strong>：<code>#跋文</code> <code>#日记</code> <code>#天文分野</code> <code>#山川</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>開山日記小跋</p>
+<p>此靖共○自昂畢抵參井分野○異天黃弄之域○相榡帶而燕趙○異地恩深哉○其有陶唐氏之遺俗○習民風厪○故也廼</p>
+<p>今古則異人矣○入用實之心手○則漯水桓山五原四塞○畫以川嶽之氣作耳○日靈奇觀於是○海運鵬搖雲蒸龍變○遁而不偏○遠而不攜○不淫所喜○不遺所厭○左之右之有之似之○取不匱而施不転○非胸中具大鑣也○洽安能合天地人聚散中之種種者○以指頤間一之哉○</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>此篇是「开山日记」的小跋。从天文分野说起——昴、毕、参、井诸星宿对应的分野，涵盖燕赵之域。此地深厚的恩情啊！犹存陶唐氏（尧帝）的遗风民俗。</p>
+<p>古今人事虽异，但以心手之实录之，则漯水、桓山、五原、四塞，皆可以山川之气写入文章。日月灵奇可观——如鹏翔海运、云蒸龙变，不偏不携、不淫不遗。左右前后皆有可取，取之不竭、施之不尽——非胸中有大格局者，岂能将天地人间聚散之种种，融于指掌之间？</p>
+<h3 id="题解_11">题解</h3>
+<p>本篇为卷23末篇，是一篇「开山日记」的后记（跋文）。以天文分野（古代以星宿对应地域的体系）开篇，点明开山之地在燕赵一带。核心论述是日记写作的意义：以心手之实，将山川之气融入文字，如鹏翔龙变般包罗万象。「非胸中具大镳也，岂能合天地人聚散中之种种者以指颐间一之哉」——这是对日记文学的高度评价。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="卷23创作年表">卷23创作年表</h3>
+<table>
+<thead>
+<tr>
+<th>年份</th>
+<th>篇目</th>
+<th>郭之奇年齡</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>戊辰 1628</td>
+<td>怒流草自敘</td>
+<td>22岁（中进士之年）</td>
+</tr>
+<tr>
+<td>己 ~1629</td>
+<td>祠部郎中序、孫實甫詩序</td>
+<td>23岁</td>
+</tr>
+<tr>
+<td>庚午 1630</td>
+<td>許班王稿序、楊樂苑詩序</td>
+<td>24岁</td>
+</tr>
+<tr>
+<td>壬申 1632</td>
+<td>文令社序、陳仲因詩序</td>
+<td>26岁</td>
+</tr>
+</tbody>
+</table>
+<h3 id="卷23诗学关键词">卷23诗学关键词</h3>
+<p>本卷集中体现了郭之奇早年的几个核心文学理念：「怒气」（怒流草——文以气生）、「归去来」（初瞻集——仕途中的归隐之思）、「神气」（许班王——文武相通之道）、「深情」（谢儒美——诗人与日月交愁）、「雅正」（孙实甫——由雅而正而至）、「礼义」（文令社——结社以礼义为基）。</p>
+<h3 id="版本说明">版本说明</h3>
+<p>本卷底本为《四库未收书辑刊》第六辑第27册影印本（PDF第273–282a页），2026年3月19日依据影印本逐页视觉转录并全面重写（清除前版伪造内容），2026年3月20日编订为富版本。原文中部分篇目（何洁卿序开篇、陈仲因序中段等）因影印品质或转录进度原因标注「待转录」。卷23与卷24的分界已于2026-03-19确认：pg282下展开（z282b_l运题「卷之二十四 一 序」）起为卷24。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

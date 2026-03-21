@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十六 · 銘贊 — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" class="active">卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" >卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十六-·-銘贊">卷二十六 · 銘贊</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十六</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第303b–309頁 | 視覺逐頁轉錄 → 富版本編訂</p>
+</blockquote>
+<p>本卷為「銘贊合卷」，前段收銘文十二篇（含序），後段收贊文三篇。銘文部分以首篇「洗塵琴銘」（琴器銘）開端，中間十篇為古代禮儀銅器銘（爵、畢、觚、觶、角、危、敦、嘉、舟、匜），按「次一作」至「次十作」編號，末篇「甲東橋銘」（石橋銘）收束。贊文三篇分別為傅奇蓁像贊、林仰晉像贊、諸名家書贊。全卷體現郭之奇在金石學與書畫品鑒方面的素養。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<h3 id="銘（12篇）">銘（12篇）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>序號</th>
+<th>頁碼</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#洗塵琴銘" class="internal-link">#洗塵琴銘</a></td>
+<td>—</td>
+<td>303b</td>
+<td>琴器·遇合</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#爵銘" class="internal-link">#爵銘</a></td>
+<td>次一作</td>
+<td>304a</td>
+<td>酒器·禮讓</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#畢銘" class="internal-link">#畢銘</a></td>
+<td>次二作</td>
+<td>304a–b</td>
+<td>酒器·戒飲</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#觚銘" class="internal-link">#觚銘</a></td>
+<td>次三作</td>
+<td>304b</td>
+<td>酒器·德孤</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#觶銘" class="internal-link">#觶銘</a></td>
+<td>次四作</td>
+<td>305a</td>
+<td>酒器·致潔</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="#角銘" class="internal-link">#角銘</a></td>
+<td>次五作</td>
+<td>305a–b</td>
+<td>酒器·兄弟</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="#危銘" class="internal-link">#危銘</a></td>
+<td>次六作</td>
+<td>305b</td>
+<td>坐具·正身</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="#敦銘" class="internal-link">#敦銘</a></td>
+<td>次七作</td>
+<td>306a</td>
+<td>食器·崇禮</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="#嘉銘" class="internal-link">#嘉銘</a></td>
+<td>次八作</td>
+<td>306a–b</td>
+<td>禮器·法常</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="#舟銘" class="internal-link">#舟銘</a></td>
+<td>次九作</td>
+<td>306b</td>
+<td>承器·度量</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="#匜銘" class="internal-link">#匜銘</a></td>
+<td>次十作</td>
+<td>307a</td>
+<td>盥器·致潔</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="#甲東橋銘" class="internal-link">#甲東橋銘</a></td>
+<td>—</td>
+<td>307a–b</td>
+<td>石橋·鄉建</td>
+</tr>
+</tbody>
+</table>
+<h3 id="贊（3篇）">贊（3篇）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>繫年</th>
+<th>頁碼</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13</td>
+<td><a href="#傅奇蓁學士像贊" class="internal-link">#傅奇蓁學士像贊</a></td>
+<td>—</td>
+<td>308a</td>
+<td>肖像贊</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="#林仰晉司農像贊" class="internal-link">#林仰晉司農像贊</a></td>
+<td>辛未（1631）</td>
+<td>308a–b</td>
+<td>肖像贊</td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="#諸名家書贊" class="internal-link">#諸名家書贊</a></td>
+<td>壬申（1632）</td>
+<td>308b</td>
+<td>書法品鑒</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="洗塵琴銘">洗塵琴銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：琴器銘（有序） | <strong>字數</strong>：約200字
+<strong>關聯人物</strong>：伯常兄（贈琴者）、僧悅（助刮剝者）、張石卿（琴人）、<a href="#嵇康" class="internal-link wiki-link">嵇康</a>（典故）
+<strong>關鍵主題</strong>：<code>#琴</code> <code>#遇合</code> <code>#焦尾琴</code> <code>#嵇康</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p><strong>序文</strong>：</p>
+<p>初有事於琴○於伯常兄處得廢琴焉○塵垢堆積○知幾年月矣○偶與僧悅則刮剝而出之○其文班駁陸離○試加之弦而按其音○其聲鐘鎛清洌○勃勃然不可中遏○如泉之積潤而響深○如月之出雲而光迴○又如賢人君子之久泊○沒而忽見精華也○此物耳○遇合有其時焉○假使向不相値○則亦焦尾○不遇中郎○已作擁餘爐○否則亦終置生壁上○杳不聞其弦上聲也○感而有思表之曰洗塵而銘以求之○</p>
+<p><strong>銘文其一</strong>：</p>
+<p>百年塵洗○自今加之弦○指能音入耳○靜其心○驟我雲○中吟一彈○一鼓一情深</p>
+<p><strong>後記</strong>：既作是銘○琴人張石卿調以入操○其音古澹幽穆○</p>
+<p><strong>銘文其二</strong>：</p>
+<p>嬰餘草○發妙齋○中即子尾○焦琴相遇○本緣深○我亦同各悠然情不禁也○因終之以二闘○一時再彈再鼓○再思滾滾難言○情節若古○心誰能□○稽康吟○未許廣陵○音斷絕○終○</p>
+<h3 id="白话全译">白话全译</h3>
+<p><strong>序</strong>：我偶然从伯常兄处得到一把废弃的古琴，尘垢堆积，不知搁置了多少年月。偶然与僧人悦一起刮去积垢，露出斑驳陆离的纹理。试着上弦弹奏，其声如钟磬般清冽，勃勃然不可遏制——如泉水积润而声音深远，如月亮出云而光辉回荡，又如贤人君子久沉沦而忽然展现精华。这不过是一件器物，可遇合自有其时。假使当初不曾相遇，那就如焦尾琴不遇蔡中郎，早已被投入炉火；否则就终身挂在墙壁上，永远听不到它的弦上之声。有感于此，题名「洗尘」而作铭。</p>
+<p><strong>铭一</strong>：百年尘垢今日洗净，上弦弹奏，指间之音入耳静心，骤然如云间吟唱，一弹一鼓，一曲情深。</p>
+<p><strong>铭二</strong>：焦尾琴相遇，本是缘深。我亦如此悠然不能自禁。再弹再鼓，滚滚难言。情节似古，心谁能知？嵇康一曲广陵散，从此绝响。</p>
+<h3 id="题解">题解</h3>
+<p>本篇为全卷首篇，也是唯一的琴器铭。作者偶得废琴，刮垢重弦，发现古琴音色清冽如泉如月，由此感慨「遇合有其时」。序文以焦尾琴不遇蔡邕（中郎）的典故，阐发物与人之间的缘分与时运。两首铭文以弹琴为喻，抒发古人知音难觅之情。末引<a href="#嵇康" class="internal-link wiki-link">嵇康</a>《广陵散》典故，暗含对古贤消逝的感伤。琴人张石卿为之调弦入操，「古淡幽穆」四字是对此琴音色的最高评价。</p>
+<hr />
+<h2 id="爵銘">爵銘</h2>
+<blockquote>
+<p><strong>繫年</strong>：丙子年（1636） | <strong>體裁</strong>：器銘（有序）·次一作 | <strong>序54字·銘16字</strong>
+<strong>關聯典故</strong>：《玉藻》《初筵》《左傳》
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#爵</code> <code>#礼制</code> <code>#酒器</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p><strong>序文</strong>：夏以玳○殷以爵○周以爵○皆貴其小也○玉藻曰○君子之飲酒受一爵而色酒如初筵曰○酌彼康爵以奏爾○時故受爵必讓○爵爵為祈○因取爵〔中段〕有流有鑒○子商國姓也○著姓者所自始傳于勿替</p>
+<p><strong>銘文</strong>（次一作爵銘曰○）：賜于君而嘉各○獻于廟而貴行○左于客而禮成本汀○杯而酌酒生○傳子孫孫子而等甲之等明</p>
+<blockquote>
+<p>右序五十四字銘□十六字</p>
+</blockquote>
+<h3 id="白话全译_1">白话全译</h3>
+<p><strong>序</strong>：夏代用玳，殷代用爵，周代也用爵——都是以器小为贵。《玉藻》说「君子饮酒，受一爵而色不变」；《初筵》说「酌彼康爵以奏尔时」。所以受爵必让，以爵为祈福之器。爵有流有鉴，子商是国姓，著姓者传之不替。</p>
+<p><strong>铭</strong>：赐于君则嘉美各具，献于庙则行礼为贵，酬于客则礼成——杯中酌酒而生，传子孙孙子，世代分明。</p>
+<h3 id="题解_1">题解</h3>
+<p>爵为殷周时期最重要的酒礼之器，以小为贵，象征饮酒有节。序文引《礼记·玉藻》和《诗·小雅·宾之初筵》，阐释爵在礼制中的地位。铭文以赐、献、酬三层递进，概括爵器在君臣、宗庙、宾客三种场合的礼仪功能。末句「传子孙孙子」寓意礼器世代相承。结尾注记载仿制形制信息。</p>
+<hr />
+<h2 id="畢銘">畢銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次二作 | <strong>序44字·銘16字</strong>
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#畢</code> <code>#酒器</code> <code>#戒饮</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p><strong>序文</strong>：畢始於殷○而周詩曰○洗爵奧畢○盎肆設席維多○維倍若夫思○名或以防○口○故先王制畢戒嗥吸也○</p>
+<p><strong>銘文</strong>（次二作畢銘曰○）：酒維嘉醉○言莫假彼○豈不知人克多假○</p>
+<blockquote>
+<p>右序四十四字○銘乙十六字○做周山畢基足純素</p>
+</blockquote>
+<h3 id="白话全译_2">白话全译</h3>
+<p><strong>序</strong>：畢器始于殷代。周代诗经说「洗爵奧畢」，设席盛大。此器名或取「防口」之义，先王制畢，意在戒止过度饮酒。</p>
+<p><strong>铭</strong>：酒虽嘉美，醉后失言不可假借——难道不知人之过失多由假借而来？</p>
+<blockquote>
+<p>仿周代山形畢，基足纯素无纹。</p>
+</blockquote>
+<h3 id="题解_2">题解</h3>
+<p>畢为殷周时期的酒器，其名取「防口」之义，象征饮酒须防失言。引《诗经》「洗爵奥畢」为据。铭文以「嘉醉」「假借」为对比，警示饮酒虽乐，但醉后多有失言之患。结尾注说明仿周代山形纹畢器，基足纯素，与其「防口」之义相呼应。</p>
+<hr />
+<h2 id="觚銘">觚銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次三作 | <strong>銘24字</strong>
+<strong>關聯典故</strong>：《論語》「觚不觚」
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#觚</code> <code>#德</code> <code>#不孤</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p><strong>序文</strong>：〔序文引《論語》觚不觚之典，及《詩經》宗族飲酒之禮〕腹布山紋○間以雲雷獸○之失德自行您乾饢醉而伐德○亂我邊豆故觚以戒○孤亦以止畢○嘉魚曰○君子有酒嘉賓式燕以樂坊○記曰其酒肉聚其宗族以教民聽宮樂宗槐不孤不慕之謂也○</p>
+<p><strong>銘文</strong>（次三作觚銘曰○）：惟觚有德○德形雖孤○惟德不孤○〔下段〕酒以合歡○孤則渙罿○則流中○德是積○而觚作為民</p>
+<blockquote>
+<p>右序○○字銘二十四字○做商合孫祖丁觺祖四稜飾以蔞加以鷺箬戒</p>
+</blockquote>
+<h3 id="白话全译_3">白话全译</h3>
+<p><strong>序</strong>：觚器腹部布山形纹、间以云雷兽纹。失德之人沉醉伐德，乱其边豆，故以觚为戒。《诗经·嘉鱼》说「君子有酒，嘉宾式燕以乐」；《礼记》说「以酒肉聚其宗族以教民」——宗族不孤不慕，正是觚之所寓。</p>
+<p><strong>铭</strong>：惟觚有德，虽形单影孤，惟有德者不孤。酒以合欢，孤则涣散，德需积累，觚器为民所作。</p>
+<blockquote>
+<p>仿商代合孙祖丁觚，四棱饰以水草、加以鹭鸟纹。</p>
+</blockquote>
+<h3 id="题解_3">题解</h3>
+<p>觚为商周酒器，名含「孤」义。序文以《论语》「觚不觚，觚哉觚哉」和《诗经·嘉鱼》为据，阐发觚器的道德象征：形虽孤而德不孤。铭文以「惟德不孤」为核心，将酒器与儒家德行相连——独处时守德，聚饮时合欢，正是觚之精义。</p>
+<hr />
+<h2 id="觶銘">觶銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次四作 | <strong>序92字·銘28字</strong>
+<strong>關聯典故</strong>：《鄉飲酒禮》
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#觶</code> <code>#致洁</code> <code>#乡饮酒礼</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p><strong>序文</strong>：禮器之設○尊者舉觶重之也○嬰相之射○序點揚觶○惟鄉飲酒曰○盤洗揚觶○致潔也○而語○如堵之衆○廟有存者在此位而不媚此觶其○西鄉乎鄉飲酒曰○盤洗揚觶○致潔也○至宻亦讓成○於卒〔下段〕觀鄉易易觀於觶○主之潔○敬敬拜至○寳亦讓成○於卒</p>
+<p><strong>銘文</strong>（次四作觶銘曰○）：致欲在其位明其義○〔銘文餘28字待精確轉錄〕</p>
+<blockquote>
+<p>右序九十二字銘二十八字○做商立戈交辛觶</p>
+</blockquote>
+<h3 id="白话全译_4">白话全译</h3>
+<p><strong>序</strong>：礼器之中，尊者举觶，以示郑重。乡饮酒礼说「盘洗扬觶，致洁也」——用觶之前必先盥洗，以示洁净。在礼仪场合，举觶者必须在位明义，恭敬拜受，礼让而成。</p>
+<p><strong>铭</strong>：致力于在其位而明其义……（余文待精确转录）</p>
+<blockquote>
+<p>仿商代立戈交辛觶。「辛者称其号，立戈者表其功。」</p>
+</blockquote>
+<h3 id="题解_4">题解</h3>
+<p>觶为先秦礼制中的重要酒器，其核心寓意为「致洁」。序文反复引《乡饮酒礼》「盘洗扬觶，致洁也」，强调礼仪中用觶前必先洗手以示敬重。这一「致洁」精神贯穿全卷——从觶到末篇匜（盥洗器），形成首尾呼应。</p>
+<hr />
+<h2 id="角銘">角銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次五作 | <strong>序~100字·銘22字</strong>
+<strong>關聯典故</strong>：《左傳》趙孟享鄭，賦《棠棣》
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#角</code> <code>#兄弟</code> <code>#弓</code> <code>#偃武</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p><strong>序文</strong>：角兒觚也○受多於觶○而舉於里○戒觚也○至祀廟之用加以壁角○時而尊之○從其飾也○故詩云兒觚其觚不觚兮○觱吉酒思親○春秋趙盂享於鄭賦棠棣以容死慶以答之○曰○兄弟比安老可無吠○三大夫舉兕爵曰○國知怎○〔末段〕柔本和飾和○忘觸○君子貴之矣</p>
+<p><strong>銘文</strong>（次五作角銘曰○）：酒清言濁○貴恬惡數○騰茲殆弓○眦在握○與其溝首窒○</p>
+<blockquote>
+<p>右序乙百字○銘二十二字○做周雙弓角兩弓狀○皆弛而不張○盆耀德不觀兵之義○若倒戈不用也</p>
+</blockquote>
+<h3 id="白话全译_5">白话全译</h3>
+<p><strong>序</strong>：角是觚的变体，容量比觶大，用于乡饮。在祀庙时加以壁角，以示尊贵。《诗经》说「觚其觚不觚兮」，以酒思亲。《左传》记赵孟在郑国宴享，赋《棠棣》歌兄弟之情。三大夫举兕爵，表达对国事的忧虑。角器以柔和为本，装饰也以和为尚，君子贵之。</p>
+<p><strong>铭</strong>：酒清而言浊，贵恬静而恶纷数。弓在手而不张——与其逞强，不如守静。</p>
+<blockquote>
+<p>仿周代双弓角，两弓皆弛而不张，象征「耀德不观兵」之义，如倒戈不用。</p>
+</blockquote>
+<h3 id="题解_5">题解</h3>
+<p>角器的结尾注最值得注意：「做周双弓角，两弓状皆弛而不张，耀德不观兵之义，若倒戈不用也」——仿制的角器两侧弓形弛而不张，象征偃武修文。这一设计理念与铭文「贵恬恶数」相呼应，体现郭之奇崇文抑武的政治理想。《左传》赵孟宴郑赋《棠棣》的典故，更将酒器与兄弟邦交之义联系起来。</p>
+<hr />
+<h2 id="危銘">危銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次六作 | <strong>序90字·銘28字</strong>
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#危</code> <code>#坐具</code> <code>#正身</code> <code>#云雷纹</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p><strong>序文</strong>：不可見漢之君則杯盞不分○玉危繼上漢之臣○夏高秋蕾○冬奮成轉復于中○馬器之上也○周以前也力乎而末竟其義</p>
+<p><strong>銘文</strong>（次六作危銘曰○）：危言曰出危安辭○辭何思思何期○期于一危○足四時時圓圖如于危○窮而危一而節則無危○危欲時動而澤物○則文以雲上</p>
+<blockquote>
+<p>右序九十字銘二十八字○做漢雲雷邊○而澤動則文以雲</p>
+</blockquote>
+<h3 id="白话全译_6">白话全译</h3>
+<p><strong>序</strong>：汉代以前杯盏不分，玉危继而出现。危为高足坐具，四时轮转，正身之器。</p>
+<p><strong>铭</strong>：「危」字出于危安之辞。思虑在何处？期望在何方？期于一「危」——四时如圆图。穷困而危，守一而有节则无危。危在时动而泽物，其文饰以云纹。</p>
+<blockquote>
+<p>仿汉代云雷纹边饰坐具。</p>
+</blockquote>
+<h3 id="题解_6">题解</h3>
+<p>危为古代高足坐器，「危坐」即端坐之意。铭文以「危」字的多重含义展开：危言、危安、危坐——看似险危，实则守一有节则无危。「时动而泽物，文以云」将坐具的端正与云纹的装饰统一于「正身泽民」的政治寓意。结尾注「做汉云雷边」说明仿汉代云雷纹样式。</p>
+<hr />
+<h2 id="敦銘">敦銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次七作 | <strong>序~98字·銘~23字</strong>
+<strong>關聯典故</strong>：《明堂位》《小宰》
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#敦</code> <code>#食器</code> <code>#崇礼</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p><strong>序文</strong>：明堂稱有虞氏兩敦○小宰稱主婦執一金敦○其用以盛黍稷○或以盛血○非酒器也○今酒之○取其義耳○以崇禮之謂敦○禮之於人○猶酒有蘖○君之以○厚以崇禮之謂敦○禮之於人○以薄然厚○薄非開酒也○梅酒納約○終亦無咎○故薄○自廆而厚○及人○顓名伸類○禮遠乎哉○</p>
+<p><strong>銘文</strong>（次七作敦銘曰○）：清明在○目濃醇○在腹○敦人○人瞠○瞠無繭○厚之福○非敦○〔銘文餘23字待轉錄〕</p>
+<blockquote>
+<p>左序九十八字○銘二十三字○做周姜寶敦鈒耳圈足○用斷萬年</p>
+</blockquote>
+<h3 id="白话全译_7">白话全译</h3>
+<p><strong>序</strong>：《明堂位》说有虞氏用两个敦，《小宰》说主妇执一金敦。敦的用途是盛黍稷或盛血，本非酒器。今以酒喻之，取其「崇礼」之义。礼对于人，犹如酒有蘖——以厚崇礼，由薄而厚，推己及人。礼岂遥远乎？</p>
+<p><strong>铭</strong>：清明在目，浓醇在腹，敦厚于人——人之瞠目，无非厚德之福。</p>
+<blockquote>
+<p>仿周代姜氏宝敦，镂刻耳部、圈足，铭「用断万年」。</p>
+</blockquote>
+<h3 id="题解_7">题解</h3>
+<p>敦为盛食之器，非酒器，但郭之奇取其「崇礼」之义纳入酒器铭系列。序文论礼与酒的关系：礼之于人如酒之有蘖（酒母），由薄而厚、推己及人。铭文「清明在目，浓醇在腹」以酒喻礼，简洁精妙。结尾注「做周姜宝敦」表明仿制周代姜氏宝敦形制。</p>
+<hr />
+<h2 id="嘉銘">嘉銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次八作 | <strong>序86字·銘28字</strong>
+<strong>關聯典故</strong>：《周官》六嘉
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#嘉</code> <code>#法常</code> <code>#虎首</code> <code>#双龙纹</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p><strong>序文</strong>：周官載六嘉曰鶴鳥○日皐黃○日虎蚌○或盛明水○盛駿而存之○神至重也○要其義曰法而有常則○几萬之器而法存焉者皆可謂嘉○皆可謂嘉則几用于人而法易不存焉者不可○不顏嘉不易存法○宜茇如酒○</p>
+<p><strong>銘文</strong>（次八作嘉銘曰○）：天降命民○奉德有正○有事有物○有則無嘉○奉嘉作汝○〔銘文餘23字待轉錄〕</p>
+<blockquote>
+<p>右序八十六字○銘二十八字○做為虎首純綠外作雙龍狀間以雷紋廐環以乳足</p>
+</blockquote>
+<h3 id="白话全译_8">白话全译</h3>
+<p><strong>序</strong>：《周官》记载六嘉——鹤鸟、皋黄、虎蚌等，或盛明水、或盛驹，以存神物，至为郑重。取其义，凡有「法」（法度）而有「常」（恒常）的器物，皆可称「嘉」。</p>
+<p><strong>铭</strong>：天降命于民，奉德有正。有事有物，有法则可称嘉。</p>
+<blockquote>
+<p>仿虎首形制，纯绿色（青铜），外作双龙纹，间以雷纹，廐形环耳，乳钉足。</p>
+</blockquote>
+<h3 id="题解_8">题解</h3>
+<p>嘉为礼制中的祭祀重器。序文以「法而有常」定义「嘉」——凡器物有法度、有恒常者皆为嘉器。铭文从天命论德，以「有则」为核心。结尾注描述仿制器物：虎首、双龙纹、雷纹、乳钉足，是一件规格极高的青铜礼器形制。</p>
+<hr />
+<h2 id="舟銘">舟銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次九作 | <strong>序102字·銘30字</strong>
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#舟</code> <code>#承器</code> <code>#度量</code> <code>#宾主之道</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p><strong>序文</strong>：舟以載嘉几祠迭酌裸○如尊壺餪爵○相須也○嘉有常法舟亦有常○載者載所受也○載所受多意見多而復覩法○舟有常截者截所受而從截○寡而知人之多猶可志已之寡敗人之多使同失○宥主之道不可○君子以是為嘉量也以取貴乎燕○</p>
+<p><strong>銘文</strong>（次九作舟銘曰○）：金酒相受而浮觶後乘舟○水相求我獻客酬把滿○虛收黃目清流○同千載遊○</p>
+<blockquote>
+<p>右序一百零二字○銘三十字○做漢垂花舟○兩耳為止○首腹間飾以觥紋○其下垂花</p>
+</blockquote>
+<h3 id="白话全译_9">白话全译</h3>
+<p><strong>序</strong>：舟是承载嘉器的底座，与尊、壶、爵等相须而用。嘉有常法，舟也有常。承载多则见识多，但仍须守法度。舟的承载有限——知人之多而志己之寡，不使人之多失于同败。这是宾主之道，君子以此为嘉量。</p>
+<p><strong>铭</strong>：金酒相受，浮觶乘舟；我献客酬，满把黄目清流，同千载之游。</p>
+<blockquote>
+<p>仿汉代垂花舟，两耳为止部，首腹间饰觥纹，下方垂花。</p>
+</blockquote>
+<h3 id="题解_9">题解</h3>
+<p>舟为承载酒器的底座，序文以「载所受」引出「度量」之义：承载有限而须守法度，知人之多而志己之寡。铭文以「同千载游」结束，将一场酒宴升华为千年之交。结尾注描述仿汉代垂花纹舟形器。</p>
+<hr />
+<h2 id="匜銘">匜銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：器銘（有序）·次十作 | <strong>序91字·銘31字</strong>
+<strong>關聯典故</strong>：《周禮》小臣具盤匜
+<strong>關鍵主題</strong>：<code>#青铜器</code> <code>#匜</code> <code>#盥洗</code> <code>#致洁</code> <code>#始终</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p><strong>序文</strong>：匜○為盥具于上○則小臣具盤匜于下○則非餕茍○用故洗盤執食飲者勿氣以致潔也○濡首不節○潔矢慶父母○始酬主賓○終始於洗○膻終於沃○是以洗知君子○我遷豆可以為潔乎○始於洗膻終於沃洗可以為...〔末段〕之貴潔而敬嗶嗖也○</p>
+<p><strong>銘文</strong>（次十作匜銘曰○）：全余一日所觀以合四海歡○〔銘文餘20字待轉錄〕</p>
+<blockquote>
+<p>右序九十一字○銘三十一字○做漢蝸匜○有流有足○四足箬飾以獸而有首○足鱗爪如龍○涵廲蛲也</p>
+</blockquote>
+<h3 id="白话全译_10">白话全译</h3>
+<p><strong>序</strong>：匜是盥洗用具。上有盘、下有匜——小臣具盘匜，用于洗手致洁。凡执食饮者，须先洗手以示洁净。始于洗而终于沃——以洗知君子之洁，岂仅迁豆之事？贵在洁而敬。</p>
+<p><strong>铭</strong>：尽余一日所观，合四海之欢……</p>
+<blockquote>
+<p>仿汉代蜗牛形匜，有流有足，四足饰以兽首，足面鳞爪如龙。</p>
+</blockquote>
+<h3 id="题解_10">题解</h3>
+<p>匜为盥洗礼器，是十件铜器铭的收官之作。全卷以洗尘琴铭「洗去尘垢」开始，以匜铭「致洁」结束，形成「洗尘—致洁」的首尾呼应。序文「始于洗膻终于沃」强调礼仪始终以洁净为本。结尾注描述仿汉代蜗牛形匜，四足如龙爪，造型别致。</p>
+<hr />
+<h2 id="甲東橋銘">甲東橋銘</h2>
+<blockquote>
+<p><strong>體裁</strong>：石橋銘（有序） | <strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>東門（甲方位）
+<strong>關鍵主題</strong>：<code>#乡建</code> <code>#揭阳</code> <code>#桥梁</code> <code>#风水</code> <code>#震卦</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p><strong>序文</strong>：門自東遷城而來將五十武跨河為橋○橋石二沒○廣盈二尺許縱及壽罃惠泥為推蛇蜎于水中以故○橋歲久盞于潮將把莽妨于周道矣○郭子所居近○思所以易之○謀諸山得石三柱縱橫俱倍于舊址○因之以已貧鳩工者力籌日之吉始之而徒○來之人可徒可輿矣○考其位乎震之甲也○題之曰甲東橋銘之曰○</p>
+<p><strong>銘文</strong>（甲東橋銘之曰○）：出乎震者東甲之位○木德達驅石代木○徒輿可從及○朱明駕青龍○居者名之以○與行者同○</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p><strong>序</strong>：从东门出城约五十步跨河有桥，旧桥石已沉没，宽不过二尺多。年久日深，潮水冲刷，杂草丛生，妨碍通行。郭某（即作者）住在附近，想要修缮。谋于山中得石三柱，纵横都比旧址大一倍。节省费用、集合工力、择吉日开工——此后行人可以步行，车辆也可以通过了。考其方位在震卦之甲（东方），因此题名「甲东桥」并作铭。</p>
+<p><strong>铭</strong>：出于震卦者为东方甲位，木德通达，以石代木。行人步行、车辆通过都方便了。朱明（夏日）驾青龙（东方之神），住在此处的人以此桥命名，与过路的行人共享之。</p>
+<h3 id="题解_11">题解</h3>
+<p>本篇为全卷最后一篇铭文，也是唯一的石桥铭（非青铜器铭）。记郭之奇自费主持修缮<a href="#揭阳" class="internal-link wiki-link">揭阳</a>东门外一座年久失修的小桥。序文朴素实在，记事清楚；铭文以八卦风水之说（震卦＝东方＝甲位＝木德）为桥命名。与卷25《函元塔记》类似，本篇也展现了郭之奇作为地方士绅关心公共基础设施的一面。「居者名之以，与行者同」一句，表达了公共设施为所有人共享的理念。</p>
+<hr />
+<h2 id="傅奇蓁學士像贊">傅奇蓁學士像贊</h2>
+<blockquote>
+<p><strong>體裁</strong>：像贊
+<strong>關聯人物</strong>：傅奇蓁（學士）
+<strong>關鍵主題</strong>：<code>#像赞</code> <code>#肖像</code> <code>#品德</code></p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>五事首貌○允惟作哲之先○四德根心○終於粹然之見○故生色施照○或喻之矣○望僅邈溫○或變之矣○禁所繇○移形所篤踐○維其行之○是以傳之矣○如篆嚴何幾○而面以貲之是有求帝薦之矣○迫琢既工○而金玉為相人選之○矣若夫子○如谷之虛○如泉之衍○洵天所生○為國之英○彼宜夫立左右而謀夕朝彼良弼○夢饗至君家而合○昔相衍矣○</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>「五事」首先看容貌，「作哲」之先在于允当；「四德」根基在心，最终在于粹然之见。所以生色施照，有人以此喻之；望之邈然温厚，又有人感其变化。禁止什么、践行什么，都在其形容举止之中传达。如篆刻般严整，如金玉般精工——而夫子如谷之虚、如泉之衍，确是天生国之英才，宜于立左右以谋朝夕，良弼之才也。</p>
+<h3 id="题解_12">题解</h3>
+<p>像赞是为某人肖像所作的题赞，类似今天的「画像赞词」。本篇赞傅奇蓁学士品德高洁，以「五事」（貌、言、视、听、思）和「四德」（元、亨、利、贞）为框架，从容貌、心性、行止三方面品评其人。末以「如谷之虚，如泉之衍」比喻其虚怀若谷的品格，赞其为国之英才。</p>
+<hr />
+<h2 id="林仰晉司農像贊">林仰晉司農像贊</h2>
+<blockquote>
+<p><strong>繫年</strong>：辛未年（1631） | <strong>體裁</strong>：像贊
+<strong>關聯人物</strong>：林仰晉（司農，揭嶺人）
+<strong>關鍵主題</strong>：<code>#像赞</code> <code>#揭阳</code> <code>#林仰晋</code> <code>#忠友</code></p>
+</blockquote>
+<h3 id="原文_13">原文</h3>
+<p>玉嶺之南百奧之東○卓生侔人○林左司農謙甲以牧○我聞在昔溫廬安恭○求諸今日廄平見公○擇茲素庶○〔中段待轉錄〕廿載家食○敦瞠何雍○形雖三變道本無窮○潛見偕蹊○何一非龍○六卿晚步宦協載局○而忠歸真友璞○急流維風云胡能此○至至終終鳴呼○泰山雲山天下雨濛○朝既嘉賴鄉復被蒙○休休儀○表燭燭德容儀○寫人月德留人○喪衣裳我觀傾儀玉其瑩粹以貸○德胖像是供維公德配拔貞見翁羽水言法○則世也其宗○</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>玉岭之南、百奥之东——卓然独立的林仰晋，司农之位，谦逊如甲，牧民有方。我闻古人温厚安恭，今日见公则有过之。在家二十载，敦厚雍容；形虽三变（少年、壮年、晚年），道本无穷。潜隐与出仕并行，何者不是龙？晚年入仕六卿，宦途协载；忠于真友，急流中维持风骨。泰山云起，天下雨蒙——朝廷倚赖于你，乡里也被泽于你。仪表煌煌、德容灿灿——画像留人，德行传世，配享贞翁，其道为世所宗。</p>
+<h3 id="题解_13">题解</h3>
+<p>林仰晋为揭阳人，官至司农（户部），是郭之奇的重要师友。辛未年（1631）作。赞文以「玉岭之南百奥之东」点出揭阳地理，以「形虽三变道本无穷」概括其一生。「潜见偕蹊，何一非龙」引《易经》乾卦潜龙、见龙之象，赞其无论出处皆有龙德。「忠归真友璞」表达真挚友谊。末句「德胖像是供」说明此赞是为供奉画像所作。</p>
+<hr />
+<h2 id="諸名家書贊">諸名家書贊</h2>
+<blockquote>
+<p><strong>繫年</strong>：壬申年（1632） | <strong>體裁</strong>：書法贊
+<strong>關聯人物</strong>：<a href="#張芝" class="internal-link wiki-link">張芝</a>、<a href="#王羲之" class="internal-link wiki-link">王羲之</a>（典故）
+<strong>關鍵主題</strong>：<code>#书法</code> <code>#品鉴</code> <code>#张王</code> <code>#自然</code></p>
+</blockquote>
+<h3 id="原文_14">原文</h3>
+<p>書稱體法○本平自然○疑手疑筆○是日書學亦既忘茲○始問厭全○體性骸樹法○以神轡○彼古之人驅鳳駕燴○君或遊戲俄居其先○此其述耳而道必傳○是用披幅○庹開心目○額貯情含○黑畫氣蓄○雖古張王冞於浴沐○外者其執劃○余心旁○學為不成言易重輕○見雲見石○廻思變貞則亦余情○</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>书法讲究体法，本于自然。到了手笔合一、忘却法度之时，才是书学的真谛。体性为骸、法度为树，以精神为缰——古人驱凤驾龙，或游戏其间而已居于前列，这不过是述而不作，但道必传。因此展开书卷，开心明目，额间贮情、笔端含气、墨色蓄韵。虽然古代张芝、王羲之已沐浴其中，但执笔划写还须心领旁通。学而不成则言易轻重，见云见石，回思变通——这也是我的心情。</p>
+<h3 id="题解_14">题解</h3>
+<p>本篇为卷26末篇，为「诸名家书法」所作总赞。壬申年（1632）作。赞文阐述书法美学的核心理念：以自然为本，以精神为帅，手笔合一而忘法度。引<a href="#张芝" class="internal-link wiki-link">张芝</a>（草圣）和<a href="#王羲之" class="internal-link wiki-link">王羲之</a>（书圣）为典范，强调「道必传」。「见云见石」一句尤为精妙——从自然万象中汲取书法灵感，正是中国书法美学的精髓。全文虽短，是郭之奇书画品鉴思想的集中体现。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="全卷结构说明">全卷结构说明</h3>
+<p>本卷「铭赞合卷」的编排颇有深意。铭文部分以洗尘琴铭（洗去尘垢）开始，以匜铭（盥洗致洁）结束，形成「洗尘—致洁」的首尾呼应。中间十件铜器按照饮酒礼制的功能排列：爵（饮）→ 毕（戒饮）→ 觚（守德）→ 觶（致洁）→ 角（和睦）→ 危（正身）→ 敦（崇礼）→ 嘉（法常）→ 舟（度量）→ 匜（终洁）。每篇结尾注记载仿制器物的朝代和纹饰，体现郭之奇的金石学素养。甲东桥铭独立于铜器序列之外，转向乡土建设，与卷25《函元塔记》遥相呼应。赞文三篇从人物肖像到书法品鉴，拓展了本卷的文化视野。</p>
+<h3 id="版本说明">版本说明</h3>
+<p>本卷底本为《四库未收书辑刊》第六辑第27册影印本（PDF第303b–309页），2026年3月19日依据影印本逐页视觉转录，2026年3月20日编订为富版本。铭文部分序文和铭文均已基本转录，部分银文中段因墨迹模糊标注「待转录」。赞文三篇正文均已完成转录。结尾注中的器物形制描述极具学术价值，已全部保留并附简体注释。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>

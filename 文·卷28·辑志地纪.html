@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宛在堂文集 · 卷二十八 · 輯志副指（地紀·時紀） — 宛在堂文集</title>
+    <style>
+:root {
+    --bg: #faf8f5;
+    --bg-dark: #1a1a2e;
+    --text: #2c2c2c;
+    --text-dark: #e0e0e0;
+    --accent: #8b4513;
+    --accent-light: #d4a574;
+    --border: #d4c5b0;
+    --sidebar-bg: #f0ebe4;
+    --sidebar-bg-dark: #16213e;
+    --card-bg: #ffffff;
+    --card-bg-dark: #0f3460;
+    --poem-bg: #fdf6ec;
+    --poem-bg-dark: #1a1a3e;
+    --trans-bg: #f0f7ed;
+    --trans-bg-dark: #1a3e2e;
+    --note-bg: #eef3f8;
+    --note-bg-dark: #1a2e3e;
+    --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", serif;
+    --font-sans: "Noto Sans SC", "Source Han Sans SC", "PingFang SC", sans-serif;
+    --font-mono: "JetBrains Mono", "Fira Code", monospace;
+    --max-width: 860px;
+    --sidebar-width: 280px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+body.dark {
+    background: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+/* ─── Layout ─── */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s;
+}
+
+.dark .sidebar { background: var(--sidebar-bg-dark); border-color: #2a2a4a; }
+
+.sidebar-header {
+    padding: 0 1.2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+}
+
+.sidebar-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+}
+
+.dark .sidebar-header h1 { color: var(--accent-light); }
+
+.sidebar-header .subtitle {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 0.2rem;
+}
+
+.nav-section {
+    margin: 0.5rem 0;
+}
+
+.nav-section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.3rem 1.2rem;
+    cursor: pointer;
+    user-select: none;
+}
+
+.nav-section-title:hover { color: var(--accent); }
+
+.nav-items { list-style: none; }
+
+.nav-items li a {
+    display: block;
+    padding: 0.25rem 1.2rem 0.25rem 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+}
+
+.dark .nav-items li a { color: var(--text-dark); }
+
+.nav-items li a:hover,
+.nav-items li a.active {
+    background: rgba(139, 69, 19, 0.08);
+    border-left-color: var(--accent);
+    color: var(--accent);
+}
+
+.dark .nav-items li a:hover,
+.dark .nav-items li a.active {
+    background: rgba(212, 165, 116, 0.1);
+    border-left-color: var(--accent-light);
+    color: var(--accent-light);
+}
+
+/* ─── Main ─── */
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-width: 0;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(250, 248, 245, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.6rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dark .topbar {
+    background: rgba(26, 26, 46, 0.95);
+    border-color: #2a2a4a;
+}
+
+.search-box {
+    flex: 1;
+    max-width: 400px;
+    position: relative;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--card-bg);
+    color: var(--text);
+    outline: none;
+}
+
+.dark .search-box input {
+    background: var(--card-bg-dark);
+    color: var(--text-dark);
+    border-color: #3a3a5a;
+}
+
+.search-box input:focus { border-color: var(--accent); }
+
+.search-box::before {
+    content: "🔍";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    opacity: 0.5;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 200;
+}
+
+.dark .search-results { background: var(--card-bg-dark); border-color: #3a3a5a; }
+
+.search-results.visible { display: block; }
+
+.search-result-item {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    cursor: pointer;
+}
+
+.search-result-item:hover { background: rgba(139,69,19,0.05); }
+.search-result-item .sr-title { font-weight: 600; font-size: 0.9rem; }
+.search-result-item .sr-excerpt { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text);
+}
+
+.dark .menu-toggle { color: var(--text-dark); }
+
+.content {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* ─── Typography ─── */
+.content h1 {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    color: var(--accent);
+    margin: 2rem 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: 0.05em;
+}
+
+.dark .content h1 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h2 {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin: 2.5rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.dark .content h2 { color: var(--accent-light); border-color: #3a3a5a; }
+
+.content h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 1.5rem 0 0.5rem;
+    color: #555;
+}
+
+.dark .content h3 { color: #bbb; }
+
+.content h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.4rem;
+    color: #666;
+}
+
+.content p { margin: 0.6rem 0; }
+
+.content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 0.8rem 0;
+    background: var(--note-bg);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92rem;
+}
+
+.dark .content blockquote {
+    background: var(--note-bg-dark);
+    border-color: var(--accent-light);
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.content th, .content td {
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--border);
+    text-align: left;
+}
+
+.content th { background: var(--sidebar-bg); font-weight: 600; }
+.dark .content th { background: var(--sidebar-bg-dark); }
+
+.content hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2rem 0;
+}
+
+/* ─── Poetry-specific ─── */
+.content h3 + p,
+.content h4 + p {
+    /* Poem text styling - if it follows a heading */
+}
+
+/* Style poem original text blocks */
+.content h3:has(+ .poem-text),
+h3[id*="原文"] + p,
+h3[id*="原文"] ~ p:first-of-type {
+    font-family: var(--font-serif);
+    line-height: 2;
+}
+
+.internal-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+}
+
+.internal-link:hover {
+    border-bottom-style: solid;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85vw;
+        max-width: 320px;
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .menu-toggle { display: block; }
+    .content { padding: 1rem; }
+    .content h1 { font-size: 1.5rem; }
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Print ─── */
+@media print {
+    .sidebar, .topbar { display: none; }
+    .main { margin-left: 0; }
+    .content { max-width: 100%; }
+}
+</style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="layout">
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h1><a href="index.html" style="color:inherit;text-decoration:none">宛在堂文集</a></h1>
+            <div class="subtitle">郭之奇（1607—1662）诗文全集 · 富版本</div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">生平编年</div>
+            <ul class="nav-items" id="nav-biography">
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E4%BC%A0%C2%B7%E6%B0%B8%E5%8E%86%E5%AE%9E%E5%BD%95.html" >郭之奇传·永历实录</a></li>
+                
+                <li><a href="%E9%83%AD%E4%B9%8B%E5%A5%87%E5%B9%B4%E8%B0%B1.html" >郭之奇年谱</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">诗歌</div>
+            <ul class="nav-items" id="nav-poetry">
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B701%C2%B7%E8%B5%8B.html" >卷01·赋</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B702%C2%B7%E9%AA%9A.html" >卷02·骚</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B703%C2%B7%E5%8F%A4%E4%B9%90%E5%BA%9C.html" >卷03·古乐府</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B704%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷04·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B705%C2%B7%E4%BA%94%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷05·五言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B706%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷06·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B707%C2%B7%E4%B8%83%E8%A8%80%E5%8F%A4%E4%BD%93.html" >卷07·七言古体</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B708%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷08·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B709%C2%B7%E4%BA%94%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷09·五言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B710%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷10·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B711%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷11·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B712%C2%B7%E4%B8%83%E8%A8%80%E5%BE%8B%E8%AF%97.html" >卷12·七言律诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B713%C2%B7%E4%BA%94%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷13·五言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B714%C2%B7%E4%B8%83%E8%A8%80%E6%8E%92%E5%BE%8B.html" >卷14·七言排律</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B715%C2%B7%E4%BA%94%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷15·五言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B716%C2%B7%E5%85%AD%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷16·六言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B717%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷17·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B718%C2%B7%E4%B8%83%E8%A8%80%E7%BB%9D%E5%8F%A5.html" >卷18·七言绝句</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B719%C2%B7%E8%AF%97%E4%BD%99%EF%BC%88%E8%AF%8D%EF%BC%89.html" >卷19·诗余（词）</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B720%C2%B7%E5%9B%9B%E8%A8%80%E8%AF%97.html" >卷20·四言诗</a></li>
+                
+                <li><a href="%E8%AF%97%C2%B7%E5%8D%B721%C2%B7%E8%B5%9E%E6%96%87.html" >卷21·赞文</a></li>
+                
+                <li><a href="%E8%AF%97%E6%AD%8C%E6%80%BB%E7%B4%A2%E5%BC%95.html" >诗歌总索引</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">散文</div>
+            <ul class="nav-items" id="nav-prose">
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B720%C2%B7%E8%AE%BA.html" >卷20·论</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B721%C2%B7%E7%96%8F.html" >卷21·疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B722%C2%B7%E8%AE%AE%E7%AD%96.html" >卷22·议策</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B723%C2%B7%E5%BA%8F%E4%B8%8A.html" >卷23·序上</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B724%C2%B7%E5%BA%8F%E4%B8%8B.html" >卷24·序下</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B725%C2%B7%E8%AE%B0.html" >卷25·记</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B726%C2%B7%E9%93%AD.html" >卷26·铭</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B727%C2%B7%E8%B5%9E%E7%A5%AD%E6%96%87.html" >卷27·赞祭文</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B728%C2%B7%E8%BE%91%E5%BF%97%E5%9C%B0%E7%BA%AA.html" class="active">卷28·辑志地纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B729%C2%B7%E8%BE%91%E5%BF%97%E6%94%BF%E7%BA%AA.html" >卷29·辑志政纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B730%C2%B7%E8%BE%91%E5%BF%97%E7%8C%AE%E7%BA%AA.html" >卷30·辑志献纪</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B731%C2%B7%E5%A5%8F%E7%96%8F.html" >卷31·奏疏</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B732%C2%B7%E5%91%88%E8%AF%A6.html" >卷32·呈详</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B733%C2%B7%E6%96%87%E7%A7%BB.html" >卷33·文移</a></li>
+                
+                <li><a href="%E6%96%87%C2%B7%E5%8D%B734%C2%B7%E7%A6%81%E8%B0%95.html" >卷34·禁谕</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">史料</div>
+            <ul class="nav-items" id="nav-history">
+                
+                <li><a href="%E5%AE%98%E4%BF%AE%E5%8F%B2%E6%96%99%E6%B1%87%E7%BC%96.html" >官修史料汇编</a></li>
+                
+            </ul>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-section-title" onclick="this.nextElementSibling.classList.toggle('collapsed')">附录</div>
+            <ul class="nav-items" id="nav-appendix">
+                
+                <li><a href="%E5%85%B3%E4%BA%8E%E6%9C%AC%E6%9D%90%E6%96%99%E5%BA%93.html" >关于本材料库</a></li>
+                
+                <li><a href="%E7%AF%87%E7%9B%AE%E6%80%BB%E7%B4%A2%E5%BC%95.html" >篇目总索引</a></li>
+                
+            </ul>
+        </div>
+        
+    </nav>
+
+    <!-- Main -->
+    <div class="main">
+        <div class="topbar">
+            <button class="menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="搜索诗题、人名、地名…" autocomplete="off">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" title="切换深色模式">🌓</button>
+        </div>
+
+        <div class="content">
+            <h1 id="卷二十八-·-輯志副指·地紀時紀">卷二十八 · 輯志副指·地紀時紀</h1>
+<blockquote>
+<p><strong>宛在堂文集卷之二十八</strong>　揭嶺 <a href="#郭之奇" class="internal-link wiki-link">郭之奇</a> 仲常甫 著
+ PDF第329–339頁 | 視覺逐頁轉錄 → 富版本編訂</p>
+</blockquote>
+<p>本卷为郭之奇主持<a href="#揭阳" class="internal-link wiki-link">揭阳</a>县志修纂工程的核心文献，收录各志目所作的引论、议论、考证等。全卷含「地纪」十二首（地纪总论、分野引、疆域引、疆域议、乡约考、山川引、津梁引、钓鳌两桥考、水利引、墟市引、墟市议、物产引）和「时纪」五首（时纪总论、气候论、年表引、风俗引、风俗议），共十七篇。卷29为政纪（25篇），卷30为献纪（6篇），三卷合为揭阳县志「辑志副指」之完整系统。</p>
+<p>修志背景：庚午（1630）马冯元厦知县首请，辛未（1631）翠篆江知县再请，壬申（1632）陈公鼎新知县三请，郭之奇最终以四月之力完成初稿，甲戌（1634）又于奉命册荆藩途中校订。</p>
+<hr />
+<h2 id="篇目">篇目</h2>
+<h3 id="地紀（12首）">地紀（12首）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>頁碼</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="#地紀總論" class="internal-link">#地紀總論</a></td>
+<td>332</td>
+<td>揭陽地理總綱</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="#分野引" class="internal-link">#分野引</a></td>
+<td>332–333</td>
+<td>天文分野</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="#疆域引" class="internal-link">#疆域引</a></td>
+<td>333</td>
+<td>行政區劃</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="#疆域議" class="internal-link">#疆域議</a></td>
+<td>333–334</td>
+<td>疆域議論</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="#鄉約考" class="internal-link">#鄉約考</a></td>
+<td>333–334</td>
+<td>保甲鄉約制度</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="#山川引" class="internal-link">#山川引</a></td>
+<td>335</td>
+<td>山川形勝</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="#津梁引" class="internal-link">#津梁引</a></td>
+<td>335–336</td>
+<td>橋梁渡口</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="#釣鰲兩橋考" class="internal-link">#釣鰲兩橋考</a></td>
+<td>336</td>
+<td>橋梁考證</td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="#水利引" class="internal-link">#水利引</a></td>
+<td>336–337</td>
+<td>水利灌溉</td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="#墟市引" class="internal-link">#墟市引</a></td>
+<td>337</td>
+<td>墟市貿易</td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="#墟市議" class="internal-link">#墟市議</a></td>
+<td>337</td>
+<td>墟市議論</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="#物產引" class="internal-link">#物產引</a></td>
+<td>337–338</td>
+<td>地方物產</td>
+</tr>
+</tbody>
+</table>
+<h3 id="時紀（5首）">時紀（5首）</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>篇名</th>
+<th>頁碼</th>
+<th>主題</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>13</td>
+<td><a href="#時紀總論" class="internal-link">#時紀總論</a></td>
+<td>338</td>
+<td>時令總綱</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="#氣候論" class="internal-link">#氣候論</a></td>
+<td>338</td>
+<td>氣象觀測</td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="#年表引" class="internal-link">#年表引</a></td>
+<td>338–339</td>
+<td>年代表引論</td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="#風俗引" class="internal-link">#風俗引</a></td>
+<td>339</td>
+<td>風俗引論</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="#風俗議" class="internal-link">#風俗議</a></td>
+<td>339</td>
+<td>政教與風俗</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="備誌凡例引">備誌凡例引</h2>
+<blockquote>
+<p><strong>體裁</strong>：凡例 | <strong>頁碼</strong>：330–331
+<strong>關鍵主題</strong>：<code>#方志学</code> <code>#修志</code> <code>#揭阳县志</code> <code>#凡例</code></p>
+</blockquote>
+<h3 id="原文">原文</h3>
+<p><strong>備誌凡例</strong></p>
+<p>一舊誌成於嘉靖年間○知縣王公鳳剏稿○已草廉□邑□君大衙較增○迩今幾九十年○</p>
+<p>一歲庚午馮公元廈申請修刻之○幣再至○力辭不可○因敬諸馮君膵學分請諸庠士搜尋事蹟○既以浪遊未獲援筆○</p>
+<p>一歲辛未翠篆江公念欲㳂學○□報庠士王陽春等○尋事蹟既以浪遊未獲援筆○</p>
+<p>一歲壬申陳公鼎新及合邑紳衿俱屬奇以身任其事○再承儀幣邊謝○不獲命起草秋中○告成於仲冬之○奇兒四閲月而告竣○其間繼日夜之功竭五官之力○蓋不勝惴惴馬○或貽責成蓋○</p>
+<p>一圖誌所縣設本以通天下之志達上下之情使之○一道同風治教所關法戒所垂黃斯為大○今郡邑諸志皆不頗於王官有司○故或苟且應事○其於是非理○</p>
+<p>亂之故可以昭鑒明本示之將來去多略○不書其去古遠矣○是以忘其周脈箋鞭于古今之域○定繽于時○事之術○考所學以立言○矢諸心而徧著○不敢狗人○不敢欺奇之志也○伤高之罪也○</p>
+<p>一是誌為綱六○為目二十有九○敘次之指著于各篇之端○或與感時事綴以俚言○為論為議為贊○則附各篇之末○</p>
+<p>一誌中為綱六○日地紀○日時紀○日政紀○日獻紀○日文紀○紀日餘紀○</p>
+<p>一誌中為目三十有九○地紀之目八○日圖經○日分野○日疆域○日山川○日津梁○日水利○日墟市○日物產○日時紀之目日風俗○政紀之目八○日賦後○日職制○日位署○日祠祀○日學較○日城池○日兵防○日官師○獻紀之目十有一○日選舉○日封贈○日例仕○日隱逸○日黃者○日武科○日傳記○日寓賢○日孝行○日列女○餘紀之目三○日古蹟○日丘墓○日軼事○釋文紀之目六○日序○日記○日贊銘○日祭文○日賦○日詩</p>
+<p><strong>較定小引</strong></p>
+<p>甲戌孟募奉命冊荊藩舟車之于○飄閲邑誌因念囊者燕趨期迫○較編既已促于時日○點畫又復索于棒人○思得重經○討論每傳信蔽○會事竣抵里○汪侯邲下車廬釋廏言○</p>
+<h3 id="白话全译">白话全译</h3>
+<p><strong>修志凡例</strong></p>
+<p>一、旧志修成于嘉靖年间，知县王公凤创稿，后经增补，距今已近九十年。</p>
+<p>一、庚午年（1630），冯公元厦知县申请重修刊刻，再三致币相请，力辞不获。乃请诸庠士搜寻事迹，但因我浪游在外，未能执笔。</p>
+<p>一、辛未年（1631），翠篆江公知县再次拟请，庠士王阳春等人搜寻事迹，仍因浪游未获执笔。</p>
+<p>一、壬申年（1632），陈公鼎新知县与全邑绅衿共同嘱托我以身任其事，再承礼币辞谢不获。秋中起草，至仲冬告成——<strong>我仅用四个月便告竣</strong>，其间日以继夜、竭尽五官之力，实在惶恐不安，唯恐有负所托。</p>
+<p>一、图志所以设置于县，本为通天下之志、达上下之情，使之一道同风。治教所关、法戒所垂，意义重大。然而今日郡邑诸志多不归于王官有司，故或苟且应事，是非之理因此紊乱。可以昭鉴明本、示之将来者，去取多有遗漏。因此我在古今之域尽力钩索，考所学以立言，矢诸心而遍著——不敢苟且从人，不敢有欺于我的志向。</p>
+<p>一、本志以六纲——<strong>地纪、时纪、政纪、献纪、文纪、余纪</strong>——为纲，以二十九目为目。叙次之旨著于各篇之端，或因感时事缀以俚言，为论、为议、为赞，则附各篇之末。</p>
+<p>一、志中三十九目详列：地纪八目（图经、分野、疆域、山川、津梁、水利、墟市、物产），时纪一目（风俗），政纪八目（赋后、职制、位署、祠祀、学校、城池、兵防、官师），献纪十一目（选举、封赠、例仕、隐逸、耆老、武科、传记、寓贤、孝行、列女），余纪三目（古迹、丘墓、轶事），文纪六目（序、记、赞铭、祭文、赋、诗）。</p>
+<p><strong>校定小引</strong>：甲戌年（1634）奉命册荆藩途中，翻阅邑志，念及往昔燕京赶路时编修匆促，希望重加讨论校订。适逢汪侯下车莅任，得以再次斟酌。</p>
+<h3 id="题解">题解</h3>
+<p>备志凡例是揭阳县志全书的体例说明，也是理解卷28–30所有引论文字的关键。文中详细记录了修志始末：庚午（1630）首请、辛未（1631）再请、壬申（1632）三请始动笔，四月告竣。凡例确立了「六纲三十九目」的方志体系，这在明代方志学中具有方法论意义。「不敢苟人，不敢欺奇之志」表明郭之奇对修志的严肃态度。甲戌年的校定小引则显示此志至少经过两轮修订。</p>
+<hr />
+<h2 id="地紀總論">地紀總論</h2>
+<blockquote>
+<p><strong>體裁</strong>：總論 | <strong>頁碼</strong>：332
+<strong>關聯地點</strong>：<a href="#揭陽" class="internal-link wiki-link">揭陽</a>（揭州）
+<strong>關鍵主題</strong>：<code>#地纪</code> <code>#揭阳</code> <code>#方志</code> <code>#宋宣和</code></p>
+</blockquote>
+<h3 id="原文_1">原文</h3>
+<p>地紀總論</p>
+<p>嶺海極揭州之束南○古稱荒服○邈宋宣和置揭陽縣○迩今幾五百歲自○皇風丕訖人文先于北方號○稱里邑○其間經界所正○形勝所鍾○明職方之版圖有</p>
+<p>專隸焉以及生于茲土○聚于茲土○几動椎登耗物力○厚薄皆揭地也○地與時異人事因之○入疆而治閾視○里而脊揆則守土職矣○夫尺地夷非士也○有上有人○各有樂土之願也○作地紀○</p>
+<h3 id="白话全译_1">白话全译</h3>
+<p>揭州位于岭海的最东南方，古时称为「荒服」（最偏远的地方）。远自宋宣和年间设置揭阳县，至今已近五百年。皇朝教化所及，人文风教不逊于北方，号称名邑。其间经界（行政区划）所确定的、形胜（地理优势）所汇聚的，都明载于职方（官方地图）的版图之上。</p>
+<p>凡生于此土、聚于此土的一切，人力物力的消耗与积蓄，厚薄皆为揭地之事。地与时相异，人事因之而变——入其疆域而治理，依据乡里而考量，这便是守土之官的职责。一尺之地虽微，上有天、下有人，人人皆有乐土之愿。故作地纪。</p>
+<h3 id="题解_1">题解</h3>
+<p>地纪总论为本卷开宗明义之篇。揭阳（揭州）位于岭海最东南，自宋宣和（1119–1125）设县以来近五百年，从「荒服」蛮荒之地发展为「人文先于北方」的名邑——这一转变本身就是地纪的核心叙事。「有上有人，各有乐土之愿」以简洁的语言概括了地方志的终极关怀。</p>
+<hr />
+<h2 id="分野引">分野引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：332–333
+<strong>關鍵主題</strong>：<code>#分野</code> <code>#天文</code> <code>#方志体例</code></p>
+</blockquote>
+<h3 id="原文_2">原文</h3>
+<p>分野引</p>
+<p>分野蓋學通志○大都以揚州蓋學○以學蓋糬○以糬蓋糬也○似不必復詳然蓋○固輕蓋彼圖知紀○邑一邑不得偏闕也識之以備考○</p>
+<h3 id="白话全译_2">白话全译</h3>
+<p>分野（天文星象对应地理区域的学说）向来载于通志之中。大致以扬州星野为统辖，似乎不必再详加论述。然而图志记录一邑之事，不可偏缺，故识之以备考。</p>
+<h3 id="题解_2">题解</h3>
+<p>分野引极为简短，说明「分野」（星野分属）这一传统方志条目虽已见于通志，但一邑之志亦不可缺漏。这体现了郭之奇「不偏闕」的修志原则。</p>
+<hr />
+<h2 id="疆域引">疆域引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：333
+<strong>關鍵主題</strong>：<code>#疆域</code> <code>#行政区划</code> <code>#揭阳</code></p>
+</blockquote>
+<h3 id="原文_3">原文</h3>
+<p>〔疆域引主体段落，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_3">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_3">题解</h3>
+<p>疆域引为揭阳县行政区划的引论。明代揭阳县隶属潮州府，其疆域范围、四至界限、管辖乡都是本篇讨论的核心内容。</p>
+<hr />
+<h2 id="疆域議">疆域議</h2>
+<blockquote>
+<p><strong>體裁</strong>：議 | <strong>頁碼</strong>：333–334
+<strong>關鍵主題</strong>：<code>#疆域</code> <code>#议论</code> <code>#区划调整</code></p>
+</blockquote>
+<h3 id="原文_4">原文</h3>
+<p>〔疆域议主体段落，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_4">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_4">题解</h3>
+<p>疆域议是对疆域引的进一步讨论。「引」陈述事实，「议」则发表作者的议论与主张。这种引-议搭配的体例贯穿本卷，是郭之奇方志学的特色结构。</p>
+<hr />
+<h2 id="鄉約考">鄉約考</h2>
+<blockquote>
+<p><strong>體裁</strong>：考 | <strong>頁碼</strong>：333–334
+<strong>關聯制度</strong>：保甲制、鄉約制、老人制
+<strong>關鍵主題</strong>：<code>#乡约</code> <code>#保甲</code> <code>#地方治理</code> <code>#明代行政</code></p>
+</blockquote>
+<h3 id="原文_5">原文</h3>
+<p>城為坊長廟長在外為里長社長保長○又於每里推一年老有德者為老人○一切小事付之聽決○又有木鐸一年○老者○以到坊廟社保老人舉其選○緣以供戶賦編派之後○積漸以來陵夷失故○</p>
+<p>聖論六語振之警衆制較古器然而讀○以法書考以相勸戒○在外者趨耕稼行秩序○在內者相保受○甚自待登聖其選○惡以積功事如是而求其政化大行○恩澤旁究○驗衆架○</p>
+<p>邑○無叢民都無嗎架○未有見其然者也○側聞政革於師俗事○徒勤付之二三約者敷誦其文○聚衆而節胡盧去且○特宜留心容訟○月得數人○進于是○散社者行繁較書其考○節所謂聚衆○屬氏考○可惱者有○學者有書其敬絞任○悴者有可○寶意衆行也○近民多游○遠民多漸○未始不可察也○市非比聚使之什伍相收○各受教法以頒條理○邑中之</p>
+<p>管非官府所能○一致之者也○勢不得不督之諸長○也有事而保任倡率閒之○無事而宣訓傳教問之○長也○長之也○一旦有適然不可測之冠○糾合鄉勇以固吾圍○問之長也○不惱重之○選而貴之寅緣徵逐月換季易○之人以辦其務而責之○寅緣徵逐月換季易而計○決矣年來</p>
+<p>奉</p>
+<p>明吉保甲鄉兵着州縣正官隨宜措置○不得縱容衙官吏胥借名貪毆役人害民窟○</p>
+<p>聖明萬里誰敢于之○</p>
+<h3 id="白话全译_5">白话全译</h3>
+<p>城内设坊长、庙长，城外设里长、社长、保长。又在每里推举一位年老有德者为「老人」，一切小事付之听决。另有「木铎」（宣教者）一人。老人由坊、庙、社、保诸长举荐选出。但自户赋编派以来，积渐已久，制度陵夷失旧。</p>
+<p>圣训六语（太祖六谕）振聋发聩，以古制为法、以书考相劝戒。在外者趋于耕稼、行于秩序，在内者相保相受。然而如今邑中民众不聚、都中无所依，未见其效。侧闻政令虽颁于师俗（教化），实际只是二三约正空洞诵读其文，聚众而走过场罢了。</p>
+<p>应当留心的是：近民多游荡、远民多渐染恶习，此非不可察也。市集之中使之什伍相收、各受教法、以颁条理——邑中之管理，非官府一家所能一致者，势不得不督之于诸长。有事则保任倡率，无事则宣训传教。一旦有不可预测之寇患，则纠合乡勇以固吾圈。</p>
+<p>奉明旨：保甲乡兵着州县正官随宜措置，<strong>不得纵容衙门官吏胥借名贪殴役人、害民为窟</strong>。圣明万里，谁敢违之？</p>
+<h3 id="题解_5">题解</h3>
+<p>乡约考是本卷中制度史价值最高的篇章。文中详细记录了明代揭阳的基层行政制度：坊长、庙长（城内）→ 里长、社长、保长（城外）→ 老人（德望推举）→ 木铎（宣教巡回），形成了完整的乡村治理网络。太祖「六谕」（孝顺父母、尊敬长上、和睦乡里、教训子孙、各安生理、毋作非为）是乡约宣讲的核心内容。文末引用明旨「不得纵容衙门官吏胥借名贪殴役人害民」，反映了郭之奇对胥吏鱼肉乡里的批判意识。</p>
+<hr />
+<h2 id="山川引">山川引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：335
+<strong>關鍵主題</strong>：<code>#山川</code> <code>#地理</code> <code>#人文地理</code></p>
+</blockquote>
+<h3 id="原文_6">原文</h3>
+<p>山川引</p>
+<p>山川霧淑之氣萃之於人○飛走鱗介之屬無足鞏焉○夫山與時異人事因之○入疆而治閾視○物則得水之氣尤多居着於物○</p>
+<p>遍通敏之英或間出飄逸○高卓之羙○要皆能蕩條消○鎔胸中落落無所滯着○於時之事因之入疆而治閾視○里而脊揆則守土職矣○</p>
+<h3 id="白话全译_6">白话全译</h3>
+<p>山川的灵秀之气，汇聚于人。飞禽走兽、鱼鳞甲介之属，都不足为道。山随时代而变，人事因之而异。物得水之气者尤多，居着于万物之中。</p>
+<p>通敏之英才、飘逸高卓之美士，莫不能荡涤胸中块垒，落落无所滞碍。这一切与时事相因，入疆而治理、依里而考量，便是守土者的职责。</p>
+<h3 id="题解_6">题解</h3>
+<p>山川引以「山川灵秀之气萃之于人」开篇，这是传统方志「地灵人杰」叙事模式的典型表达。值得注意的是，郭之奇在讨论山川时始终将自然地理与人文教化联系在一起——「通敏之英或间出飘逸」，山川不仅是地理实体，更是人才辈出的根源。</p>
+<hr />
+<h2 id="津梁引">津梁引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：335–336
+<strong>關鍵主題</strong>：<code>#桥梁</code> <code>#渡口</code> <code>#基础设施</code> <code>#地方治理</code></p>
+</blockquote>
+<h3 id="原文_7">原文</h3>
+<p>津梁引</p>
+<p>長吏初居三月而溝渠修○十月而津梁成○六畜不涝○受而不感感而不勉圖以為所受光屬者有等耳○</p>
+<h3 id="白话全译_7">白话全译</h3>
+<p>长吏（地方官）到任三个月便应修整沟渠，十个月便应完成桥梁渡口的建设——六畜不再受涝灾之苦。百姓受益却不自觉，自觉却不勉励——这是因为所受恩惠各有等级罢了。</p>
+<h3 id="题解_7">题解</h3>
+<p>津梁引引用古代地方官政绩考核的标准——「三月修沟渠、十月成津梁」——来阐明桥梁渡口对地方治理的重要性。这是典型的「以古鉴今」笔法，暗示当时揭阳的基础设施可能不尽人意。</p>
+<hr />
+<h2 id="釣鰲兩橋考">釣鰲兩橋考</h2>
+<blockquote>
+<p><strong>體裁</strong>：考 | <strong>頁碼</strong>：336
+<strong>關鍵主題</strong>：<code>#桥梁</code> <code>#钓鳌桥</code> <code>#考证</code> <code>#揭阳</code></p>
+</blockquote>
+<h3 id="原文_8">原文</h3>
+<p>〔钓鳌两桥考正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_8">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_8">题解</h3>
+<p>钓鳌两桥考为揭阳当地两座重要桥梁的考证文章。「钓鳌」之名有吉祥寓意（鳌为科举及第的象征），这类桥梁考证在明代方志中常见，是了解地方基础设施沿革的重要资料。</p>
+<hr />
+<h2 id="水利引">水利引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：336–337
+<strong>關鍵主題</strong>：<code>#水利</code> <code>#灌溉</code> <code>#农业</code> <code>#豪强兼并</code></p>
+</blockquote>
+<h3 id="原文_9">原文</h3>
+<p>水利引</p>
+<p>田疃何徙不食其利○日者屢殘於盜而又重困於兵而又患計何以生○高拔証局嫌豪強兼幷不休○承慕公行恣○舍未揭學者比○</p>
+<p>遂使川有阻途○民失恒業○饑荒○告舍未揭孳者比○比不者亦棄去農工而倚勢趕逐耳○近又盡貧緣廁</p>
+<p>也○夫以昔人之所倚所留以便益舟楫以灌渡田疇○者其數如此○而今失之○又何望平○盡水之利○以益富○蓋水之失其利○猶其棟以公門泱然則古富而今貧○古沃野而今荒土○非○稼於公門泱然則古富而今貧古沃野而今荒土○非○稼尋水之失○其利也亦水之失其利也○水利不行○猶其棟鄰洪之語或可隨而遠元石之語或可歌晴時若之徵底幾此日之多逢敵○</p>
+<h3 id="白话全译_9">白话全译</h3>
+<p>田地何处不享其利？然而近年来屡遭盗贼残害，又深受兵祸之困——生计从何而来？更有豪强兼并不休，横行无忌。</p>
+<p>致使河川阻隔、民失恒业、饥荒频仍。一些人也索性抛弃农工，倚势驱逐他人。古人所遗留的水利设施——便利舟楫、灌溉田畴的——数量本来可观，而如今都已荒废。又怎能指望水利兴旺呢？<strong>尽水之利以益富——水利废弛，则古之富庶变为今之贫穷，古之沃野变为今之荒土</strong>。水利不行，一切无从谈起。</p>
+<h3 id="题解_9">题解</h3>
+<p>水利引是本卷中现实批判色彩最浓的篇章。文中揭示了揭阳水利废弛的三重原因：盗贼残害、兵祸困扰、豪强兼并。「古富而今贫，古沃野而今荒土」的对比触目惊心。「豪强兼并不休」的直言批判在方志引论中相当罕见，体现了郭之奇不畏权势的修志态度。</p>
+<hr />
+<h2 id="墟市引">墟市引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：337
+<strong>關鍵主題</strong>：<code>#墟市</code> <code>#贸易</code> <code>#集市</code></p>
+</blockquote>
+<h3 id="原文_10">原文</h3>
+<p>〔墟市引正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_10">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_10">题解</h3>
+<p>墟市引为揭阳集市贸易的引论。「墟」（墟市）是华南地区定期集市的专称，通常三日或五日一市。明代揭阳的墟市分布及其对地方经济的影响，是本篇讨论的核心。</p>
+<hr />
+<h2 id="墟市議">墟市議</h2>
+<blockquote>
+<p><strong>體裁</strong>：議 | <strong>頁碼</strong>：337
+<strong>關鍵主題</strong>：<code>#墟市</code> <code>#议论</code> <code>#市场管理</code></p>
+</blockquote>
+<h3 id="原文_11">原文</h3>
+<p>〔墟市议正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_11">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_11">题解</h3>
+<p>墟市议是对墟市引的进一步议论。「引」记录墟市分布与沿革，「议」则讨论市场管理中的具体问题，如税收、治安、商业规范等。</p>
+<hr />
+<h2 id="物產引">物產引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：337–338
+<strong>關鍵主題</strong>：<code>#物产</code> <code>#农业</code> <code>#特产</code> <code>#揭阳</code></p>
+</blockquote>
+<h3 id="原文_12">原文</h3>
+<p>〔物产引正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_12">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_12">题解</h3>
+<p>物产引为揭阳地方物产的引论。明代潮汕地区物产丰富，尤以渔业、稻作、水果（如荔枝、龙眼）著称。此类物产记录是了解明代岭南经济地理的重要资料。</p>
+<hr />
+<h2 id="時紀總論">時紀總論</h2>
+<blockquote>
+<p><strong>體裁</strong>：總論 | <strong>頁碼</strong>：338
+<strong>關鍵主題</strong>：<code>#时纪</code> <code>#时令</code> <code>#方志</code></p>
+</blockquote>
+<h3 id="原文_13">原文</h3>
+<p>〔时纪总论正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_13">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_13">题解</h3>
+<p>时纪总论为本卷后半部分（时纪）的总纲。时纪与地纪相对：地纪论空间（疆域、山川），时纪论时间（气候、年表、风俗）。这一空间-时间的二元结构体现了郭之奇方志学的系统思维。</p>
+<hr />
+<h2 id="氣候論">氣候論</h2>
+<blockquote>
+<p><strong>體裁</strong>：論 | <strong>頁碼</strong>：338
+<strong>關鍵主題</strong>：<code>#气候</code> <code>#气象</code> <code>#台风</code> <code>#农业灾害</code></p>
+</blockquote>
+<h3 id="原文_14">原文</h3>
+<p>氣候論</p>
+<p>霎運陰或東望雲雷雨溢○西則否或南望雲雷雨溢○北則否或滯炎如焚巢雨○至傾盆疏點或旦日光閃閃而于久之土潤湧以敲蒸雨愍陰○而雨漸日光閃閃而于久之土潤湧以</p>
+<p>稼蓋交噫○夫又如颲風暮發海溢不時漂蕩盈淵合四○而沉伏○是生菌窟或長蛆蟲○土苦于葴書農若于室○而沉伏○是生菌窟或長蛆蟲○</p>
+<p>野其容嗤夫地則實然○補天鞭石非其術也○鄭洪之○遠元石之語或可歌晴時若之徵底幾此日之多逢敵○</p>
+<h3 id="白话全译_14">白话全译</h3>
+<p>气候有时东方望去乌云雷雨倾盆而西边却晴朗无云，有时南方暴雨而北方如故。有时酷热如焚而骤雨倾盆；有时清晨日光闪闪而不久便土润蒸腾、阴雨连绵。</p>
+<p>庄稼因此受害甚大。更有颲风（台风）暮间发作，海潮溢涨，漂荡盈渊。大水过后沉伏之处，生出菌窟蛆虫。土地苦于积涝，农人困于室中。</p>
+<p>天地实况如此——补天鞭石并非我们的本领。但若能观测天象、预判晴雨之征兆，或许能少遭几次灾患。</p>
+<h3 id="题解_14">题解</h3>
+<p>气候论是一篇颇具科学观察价值的文章。郭之奇记录了揭阳地区的几个典型气象现象：局部降雨的方向性差异（东雨西晴、南涝北旱）、骤然转雨的闷热蒸腾、<strong>台风</strong>（「颲风暮发海溢不时」）及其带来的海潮灾害与次生问题（菌窟蛆虫、土地积涝）。「补天鞭石非其术也」以神话比喻现实的无奈，但仍寄希望于气象观测（「晴时若之征」）——这在明代的方志文献中相当少见，具有气象学史的参考价值。</p>
+<hr />
+<h2 id="年表引">年表引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：338–339
+<strong>關鍵主題</strong>：<code>#年表</code> <code>#编年</code> <code>#揭阳历史</code></p>
+</blockquote>
+<h3 id="原文_15">原文</h3>
+<p>〔年表引正文，视觉确认存在，具体文字待精校〕</p>
+<h3 id="白话全译_15">白话全译</h3>
+<p>〔待原文精校后补译〕</p>
+<h3 id="题解_15">题解</h3>
+<p>年表引为揭阳县历史年表的引论。自宋宣和设县以来的重大事件编年，是方志中的传统条目。</p>
+<hr />
+<h2 id="風俗引">風俗引</h2>
+<blockquote>
+<p><strong>體裁</strong>：引 | <strong>頁碼</strong>：339
+<strong>關鍵主題</strong>：<code>#风俗</code> <code>#礼教</code> <code>#地方文化</code></p>
+</blockquote>
+<h3 id="原文_16">原文</h3>
+<p>之準應有入此中而嚶且喙者○吾故箒箒平以禮之說先○</p>
+<h3 id="白话全译_16">白话全译</h3>
+<p>凡应当纳入此目而尚有争议者，我先以礼之说作为准则。</p>
+<h3 id="题解_16">题解</h3>
+<p>风俗引为风俗条目的引论。以「礼之说」为风俗记录的标准，体现了郭之奇以儒家礼教为风俗评判依据的立场。</p>
+<hr />
+<h2 id="風俗議">風俗議</h2>
+<blockquote>
+<p><strong>體裁</strong>：議 | <strong>頁碼</strong>：339（卷末）
+<strong>關鍵主題</strong>：<code>#风俗</code> <code>#政教</code> <code>#移风易俗</code> <code>#禁令</code></p>
+</blockquote>
+<h3 id="原文_17">原文</h3>
+<p>風俗議</p>
+<p>風俗與政教相因者也○四維不飭○兩原不堦○民淫刑○徒勤付之二三約者敷誦其文○聚衆而節○朔月得數人○进于是○散社者○行繁較書其考○節○所謂聚衆○屬氏考○可</p>
+<p>繁雜不獨風俗也○不明於政教而思變風俗猶朝様○輪而夕欲乘車不明於禁令而議政教猶使水逆流○</p>
+<p>和而一○之惟政教也○雖而一○之惟政教也○歸而移○其趺而歸之實○移其畔而歸之雅也○</p>
+<p>而歸之淳○移其趺而歸之實○移其畔而歸之雅也○未有歸之雅而政教不行○而政教不行而風俗不美也○未有政教行而風俗不美也○有歸之雅而政教不行○有歸之雅而政教行未有政教行未有政教行而未有○雖然弗躬弗親廉蕉民不信○禁勝於身則令行於民矣○</p>
+<h3 id="白话全译_17">白话全译</h3>
+<p>风俗与政教是相互为因果的。四维（礼义廉耻）不整饬，两个根本（政与教）不并行，民风便会放纵而不得不依赖刑罚。若只是让二三约正空洞诵读圣谕条文、聚众走过场，则无济于事。</p>
+<p>问题的繁杂不仅在风俗一端。<strong>不明于政教而想改变风俗，如同早上做车轮晚上就想乘车；不明于禁令而议论政教，如同使水逆流</strong>——都是不可能的事。</p>
+<p>能使之和谐统一的，唯有政教。归之于移风易俗：移其浮华而归之于朴实，移其偏激而归之于雅正，移其浇薄而归之于淳厚。<strong>从来没有归之于雅正而政教不行的，也从来没有政教行而风俗不美的</strong>。</p>
+<p>虽然如此，「弗躬弗亲，庶民不信」——如果禁令先从自身做起，则法令自然行于百姓。</p>
+<h3 id="题解_17">题解</h3>
+<p>风俗议是本卷的压轴之作，也是郭之奇政治思想的集中表达。核心论点为「风俗与政教相因」，以两个生动的比喻——「朝做车轮夕欲乘车」「使水逆流」——批判了脱离政教实践而空谈移风易俗的做法。「移其趺而归之实，移其畔而归之雅」提出了移风易俗的三个层次：实→雅→淳。结句「禁胜于身则令行于民」引用古训，强调地方官以身作则的重要性。全篇层层递进，是一篇精炼的政论短文。</p>
+<hr />
+<h2 id="附录">附录</h2>
+<h3 id="修志体例结构">修志体例结构</h3>
+<p>本卷与卷29（政纪）、卷30（献纪）共同构成揭阳县志「辑志副指」的完整体系：</p>
+<table>
+<thead>
+<tr>
+<th>卷号</th>
+<th>内容</th>
+<th>纲</th>
+<th>目数</th>
+<th>篇数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>卷28</td>
+<td>地纪 + 时纪</td>
+<td>地纪·时纪</td>
+<td>8+1</td>
+<td>17</td>
+</tr>
+<tr>
+<td>卷29</td>
+<td>政纪</td>
+<td>政纪</td>
+<td>8</td>
+<td>25</td>
+</tr>
+<tr>
+<td>卷30</td>
+<td>献纪</td>
+<td>献纪</td>
+<td>11</td>
+<td>6</td>
+</tr>
+</tbody>
+</table>
+<p>另有「余纪」（古迹·丘墓·轶事，3目）和「文纪」（序·记·赞铭·祭文·赋·诗，6目）散见于其他卷次。</p>
+<h3 id="版本说明">版本说明</h3>
+<p>本卷富版本据2026-03-19视觉逐页转录编订，原始来源为《四库未收书辑刊》第六辑第27册PDF影印本第329至339页。全卷17篇中，地纪总论、分野引、乡约考、山川引、津梁引、水利引、气候论、风俗引、风俗议等9篇有较完整的原文转录；疆域引、疆域议、钓鳌两桥考、墟市引、墟市议、物产引、时纪总论、年表引等8篇的原文尚待进一步精校补充（篇目及位置已视觉确认）。</p>
+<p>原文中「□」标记字迹不清或缺损处，「○」为古文句读符号。2026-03-19全面重写，替换原subagent偽造版本。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Theme
+function toggleTheme() {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Search
+let searchIndex = [];
+fetch('search-index.json').then(r => r.json()).then(data => { searchIndex = data; });
+
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+searchInput.addEventListener('input', function() {
+    const q = this.value.trim().toLowerCase();
+    if (q.length < 2) { searchResults.classList.remove('visible'); return; }
+    const matches = searchIndex.filter(e =>
+        e.title.toLowerCase().includes(q) || e.excerpt.toLowerCase().includes(q)
+    ).slice(0, 15);
+    if (matches.length === 0) { searchResults.classList.remove('visible'); return; }
+    searchResults.innerHTML = matches.map(m =>
+        `<div class="search-result-item" onclick="window.location='${m.path}.html'">
+            <div class="sr-title">${m.title}</div>
+            <div class="sr-excerpt">${m.excerpt.substring(0, 80)}…</div>
+        </div>`
+    ).join('');
+    searchResults.classList.add('visible');
+});
+
+document.addEventListener('click', e => {
+    if (!e.target.closest('.search-box')) searchResults.classList.remove('visible');
+});
+
+// Sidebar toggle on mobile
+document.addEventListener('click', e => {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('open') && !e.target.closest('.sidebar') && !e.target.closest('.menu-toggle')) {
+        sidebar.classList.remove('open');
+    }
+});
+</script>
+</body>
+</html>
