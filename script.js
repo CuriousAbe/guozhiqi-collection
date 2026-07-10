@@ -14,7 +14,7 @@ let selectedIndex = -1;
 function loadSearchIndex() {
     if (searchIndex !== null) return;
     searchIndex = [];
-    fetch('search-index.json')
+    fetch('search-index.json?v=20260710b')
         .then(r => r.json())
         .then(data => { searchIndex = data; })
         .catch(() => { searchIndex = []; });
@@ -51,7 +51,7 @@ searchInput.addEventListener('input', function() {
         const item = document.createElement('div');
         item.className = 'search-result-item';
         item.dataset.index = i;
-        item.dataset.href = m.path + '.html';
+        item.dataset.href = m.path;
         item.innerHTML =
             '<div class="sr-title">' + highlightMatch(m.title, q) + '</div>' +
             '<div class="sr-excerpt">' + highlightMatch(m.excerpt.substring(0, 80), q) + '\u2026</div>';
